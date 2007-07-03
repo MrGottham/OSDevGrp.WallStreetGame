@@ -23,7 +23,15 @@ namespace OSDevGrp.WallStreetGame
                 Game.BeforeResetEvent = this.BeforeReset;
                 Game.AfterResetEvent = this.AfterReset;
                 this.Text = PRODUCT_NAME;
-                this.abortToolStripMenuItem.Text = this.abortToolStripMenuItem.Text + " " + PRODUCT_NAME;
+                this.toolStripMenuItemAbout.Text = this.toolStripMenuItemAbout.Text + " " + PRODUCT_NAME;
+
+                this.comboBoxStockIndex.Items.Clear();
+                this.comboBoxStockIndex.DisplayMember = "Name";
+                foreach (StockIndex stockindex in Game.StockIndexes.Values)
+                    this.comboBoxStockIndex.Items.Add(stockindex);
+                if (this.comboBoxStockIndex.Items.Count > 0)
+                    this.comboBoxStockIndex.SelectedItem = this.comboBoxStockIndex.Items[0];
+
             }
             catch (System.Exception ex)
             {
@@ -75,19 +83,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                this.Close();
-            }
-            catch (System.Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-            }
-        }
-
-        private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemNewGame_Click(object sender, EventArgs e)
         {
             try
             {
@@ -99,7 +95,19 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private void abortToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.Close();
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemAbout_Click(object sender, EventArgs e)
         {
             try
             {
