@@ -8,13 +8,6 @@ namespace OSDevGrp.WallStreetGame
     {
         public StockIndexes() : base()
         {
-            try
-            {
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
         }
     }
 }
