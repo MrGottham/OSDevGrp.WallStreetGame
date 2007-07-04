@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItemFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemNewGame = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,6 +45,10 @@
             this.comboBoxStockIndex = new System.Windows.Forms.ComboBox();
             this.labelStockIndex = new System.Windows.Forms.Label();
             this.panelPlayerInformations = new System.Windows.Forms.Panel();
+            this.imageListLarge = new System.Windows.Forms.ImageList(this.components);
+            this.imageListSmall = new System.Windows.Forms.ImageList(this.components);
+            this.labelAverageText = new System.Windows.Forms.Label();
+            this.labelAverage = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.panelStockInformations.SuspendLayout();
             this.groupBoxStockInformations.SuspendLayout();
@@ -138,14 +144,19 @@
             // listViewStocks
             // 
             this.listViewStocks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewStocks.LargeImageList = this.imageListLarge;
             this.listViewStocks.Location = new System.Drawing.Point(0, 0);
             this.listViewStocks.Name = "listViewStocks";
             this.listViewStocks.Size = new System.Drawing.Size(786, 389);
+            this.listViewStocks.SmallImageList = this.imageListSmall;
             this.listViewStocks.TabIndex = 0;
             this.listViewStocks.UseCompatibleStateImageBehavior = false;
+            this.listViewStocks.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewStocks_ColumnClick);
             // 
             // panelStockIndex
             // 
+            this.panelStockIndex.Controls.Add(this.labelAverage);
+            this.panelStockIndex.Controls.Add(this.labelAverageText);
             this.panelStockIndex.Controls.Add(this.comboBoxStockIndex);
             this.panelStockIndex.Controls.Add(this.labelStockIndex);
             this.panelStockIndex.Dock = System.Windows.Forms.DockStyle.Top;
@@ -161,6 +172,7 @@
             this.comboBoxStockIndex.Name = "comboBoxStockIndex";
             this.comboBoxStockIndex.Size = new System.Drawing.Size(121, 21);
             this.comboBoxStockIndex.TabIndex = 1;
+            this.comboBoxStockIndex.SelectedIndexChanged += new System.EventHandler(this.comboBoxStockIndex_SelectedIndexChanged);
             // 
             // labelStockIndex
             // 
@@ -178,6 +190,36 @@
             this.panelPlayerInformations.Name = "panelPlayerInformations";
             this.panelPlayerInformations.Size = new System.Drawing.Size(792, 100);
             this.panelPlayerInformations.TabIndex = 2;
+            // 
+            // imageListLarge
+            // 
+            this.imageListLarge.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListLarge.ImageStream")));
+            this.imageListLarge.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListLarge.Images.SetKeyName(0, "Stock.bmp");
+            // 
+            // imageListSmall
+            // 
+            this.imageListSmall.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListSmall.ImageStream")));
+            this.imageListSmall.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListSmall.Images.SetKeyName(0, "Stock.bmp");
+            // 
+            // labelAverageText
+            // 
+            this.labelAverageText.AutoSize = true;
+            this.labelAverageText.Location = new System.Drawing.Point(175, 9);
+            this.labelAverageText.Name = "labelAverageText";
+            this.labelAverageText.Size = new System.Drawing.Size(63, 13);
+            this.labelAverageText.TabIndex = 2;
+            this.labelAverageText.Text = "Gennemsnit";
+            // 
+            // labelAverage
+            // 
+            this.labelAverage.AutoSize = true;
+            this.labelAverage.Location = new System.Drawing.Point(244, 9);
+            this.labelAverage.Name = "labelAverage";
+            this.labelAverage.Size = new System.Drawing.Size(0, 13);
+            this.labelAverage.TabIndex = 3;
+            this.labelAverage.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // MainForm
             // 
@@ -219,6 +261,10 @@
         private System.Windows.Forms.Label labelStockIndex;
         private System.Windows.Forms.Panel panelStocks;
         private System.Windows.Forms.ListView listViewStocks;
+        private System.Windows.Forms.ImageList imageListLarge;
+        private System.Windows.Forms.ImageList imageListSmall;
+        private System.Windows.Forms.Label labelAverage;
+        private System.Windows.Forms.Label labelAverageText;
     }
 }
 

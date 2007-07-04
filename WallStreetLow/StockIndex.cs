@@ -52,6 +52,23 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public double PriceAverage
+        {
+            get
+            {
+                if (Stocks.Count > 0)
+                {
+                    double d = 0;
+                    foreach(Stock stock in Stocks.Values)
+                    {
+                        d += stock.Price;
+                    }
+                    return System.Math.Round(d / Stocks.Count, 2);
+                }
+                return 0D;
+            }
+        }
+
         public Stocks Stocks
         {
             get

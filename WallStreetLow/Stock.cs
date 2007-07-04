@@ -9,12 +9,15 @@ namespace OSDevGrp.WallStreetGame
         private const double MIN_PRICE = 2.50D;
         private const double MAX_PRICE = 250000.00D;
         private const int MAX_INITIALIZE_PRICE = 10000;
+        private const int MIN_AVAILABLE = 0;
+        private const int MAX_AVAILABLE = 2500000;
 
         private string _Id = null;
         private string _Name = null;
         private StockIndexes _StockIndexes = null;
         private DoubleHistory _PriceHistory = null;
         private double _Price = MIN_PRICE;
+        private int _Available = MIN_AVAILABLE;
 
         public Stock(string id, string name, StockIndex stockindex) : base()
         {
@@ -109,7 +112,7 @@ namespace OSDevGrp.WallStreetGame
                 }
                 else if (d >= 75 && d < 100)
                 {
-                    _Price = (_Price - d + (d >= 88 ? 101 : 75)) / 100;
+                    _Price = (_Price - d + (d >= 88 ? 100 : 75)) / 100;
                 }
                 if (_Price < MIN_PRICE)
                     _Price = MIN_PRICE;
@@ -129,13 +132,29 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private double PriceDifferenceProcent
+        public double PriceDifferenceProcent
         {
             get
             {
                 if (PriceHistory.Count > 1)
                     return (PriceDifference * 100) / PriceHistory[PriceHistory.Count - 2];
                 return 0D;
+            }
+        }
+
+        public int Available
+        {
+            get
+            {
+                return _Available;
+            }
+            private set
+            {
+                _Available = value;
+                if (_Available < MIN_AVAILABLE)
+                    _Available = MIN_AVAILABLE;
+                if (_Available > MAX_AVAILABLE)
+                    _Available = MAX_AVAILABLE;
             }
         }
 
@@ -160,10 +179,12 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                System.Threading.Thread.Sleep(1);
                 System.Random r = new System.Random();
                 while (PriceHistory.Count > 0)
                     PriceHistory.Clear();
                 Price = r.Next(MAX_INITIALIZE_PRICE) + r.NextDouble();
+                Available = r.Next(MAX_AVAILABLE);
             }
             catch (System.Exception ex)
             {
