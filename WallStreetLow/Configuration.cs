@@ -9,13 +9,14 @@ namespace OSDevGrp.WallStreetGame
         private string _SetupFileName = null;
         private StockIndexes _StockIndexes = null;
         private Stocks _Stocks = null;
+        private Players _Players = null;
         private System.Xml.XmlDocument _XmlDocument = null;
 
-        public Configuration(string setupfilename) : this(setupfilename, null, null)
+        public Configuration(string setupfilename) : this(setupfilename, null, null, null)
         {
         }
 
-        public Configuration(string setupfilename, StockIndexes stockindexes, Stocks stocks) : base()
+        public Configuration(string setupfilename, StockIndexes stockindexes, Stocks stocks, Players players) : base()
         {
             try
             {
@@ -26,6 +27,9 @@ namespace OSDevGrp.WallStreetGame
                 Stocks = stocks;
                 if (Stocks == null)
                     Stocks = new Stocks();
+                Players = players;
+                if (Players == null)
+                    Players = new Players();
                 Load();
             }
             catch (System.Exception ex)
@@ -67,6 +71,18 @@ namespace OSDevGrp.WallStreetGame
             private set
             {
                 _Stocks = value;
+            }
+        }
+
+        public Players Players
+        {
+            get
+            {
+                return _Players;
+            }
+            private set
+            {
+                _Players = value;
             }
         }
 
@@ -124,14 +140,31 @@ namespace OSDevGrp.WallStreetGame
                         {
                             if (xmlchildnode.HasChildNodes)
                             {
-                                stock = new Stock(xmlchildnode.Attributes["stockid"].Value, xmlchildnode.FirstChild.Value, stockindex);
-                                Stocks.Add(stock.Id, stock);
+                                if (xmlchildnode.HasChildNodes)
+                                {
+                                    stock = new Stock(xmlchildnode.Attributes["stockid"].Value, xmlchildnode.FirstChild.Value, stockindex);
+                                    Stocks.Add(stock.Id, stock);
+                                }
                             }
                         }
                         else if (xmlchildnode.HasChildNodes)
                         {
                             stock.AddStockIndex(stockindex);
                         }
+                    }
+                }
+                xmlnodes = XmlDocument.DocumentElement.SelectNodes("Player");
+                if (xmlnodes == null)
+                    throw new System.Exception("No nodes named 'Player' in the file named '" + SetupFileName + "'.");
+                else if (xmlnodes.Count == 0)
+                    throw new System.Exception("No nodes named 'Player' in the file named '" + SetupFileName + "'.");
+                foreach (System.Xml.XmlNode xmlnode in xmlnodes)
+                {
+                    if (xmlnode.Attributes["company"] == null)
+                        throw new System.Exception("No attribute named 'company' on a node named '" + xmlnode.LocalName + "' in the file named '" + SetupFileName + "'.");
+                    if (xmlnode.HasChildNodes)
+                    {
+                        Players.Add(new Player(xmlnode.Attributes["company"].Value, xmlnode.FirstChild.Value, Stocks));
                     }
                 }
             }

@@ -10,7 +10,9 @@ namespace OSDevGrp.WallStreetGame
 
         private StockIndexes _StockIndexes = null;
         private Stocks _Stocks = null;
+        private Players _Players = null;
         private Configuration _Configuration = null;
+        private Player _CurrentPlayer = null;
 
         public delegate bool BeforeReset();
         public delegate void AfterReset();
@@ -32,11 +34,16 @@ namespace OSDevGrp.WallStreetGame
             {
                 StockIndexes = new StockIndexes();
                 Stocks = new Stocks();
-                Configuration = new Configuration(setupfilename, StockIndexes, Stocks);
+                Players = new Players();
+                Configuration = new Configuration(setupfilename, StockIndexes, Stocks, Players);
                 if (StockIndexes == null)
                     StockIndexes = Configuration.StockIndexes;
                 if (Stocks == null)
                     Stocks = Configuration.Stocks;
+                if (Players == null)
+                    Players = Configuration.Players;
+                CurrentPlayer = new Player(String.Empty, String.Empty, Stocks, false, true);
+                Players.Add(CurrentPlayer);
             }
             catch (System.Exception ex)
             {
@@ -65,6 +72,30 @@ namespace OSDevGrp.WallStreetGame
             private set
             {
                 _Stocks = value;
+            }
+        }
+
+        public Players Players
+        {
+            get
+            {
+                return _Players;
+            }
+            private set
+            {
+                _Players = value;
+            }
+        }
+
+        public Player CurrentPlayer
+        {
+            get
+            {
+                return _CurrentPlayer;
+            }
+            private set
+            {
+                _CurrentPlayer = value;
             }
         }
 
@@ -138,12 +169,13 @@ namespace OSDevGrp.WallStreetGame
                 if (b)
                 {
                     Stocks.Reset();
+                    Players.Reset();
+                    if (AfterResetEvent != null)
+                        AfterResetEvent();
                     if (UpdateStockInformationsEvent != null)
                         UpdateStockInformationsEvent();
                     if (UpdatePlayerInformationsEvent != null)
                         UpdatePlayerInformationsEvent();
-                    if (AfterResetEvent != null)
-                        AfterResetEvent();
                 }
             }
             catch (System.Exception ex)

@@ -41,19 +41,80 @@
             this.groupBoxStockInformations = new System.Windows.Forms.GroupBox();
             this.panelStocks = new System.Windows.Forms.Panel();
             this.listViewStocks = new System.Windows.Forms.ListView();
+            this.imageListLarge = new System.Windows.Forms.ImageList(this.components);
+            this.imageListSmall = new System.Windows.Forms.ImageList(this.components);
             this.panelStockIndex = new System.Windows.Forms.Panel();
+            this.labelAverage = new System.Windows.Forms.Label();
+            this.labelAverageText = new System.Windows.Forms.Label();
             this.comboBoxStockIndex = new System.Windows.Forms.ComboBox();
             this.labelStockIndex = new System.Windows.Forms.Label();
             this.panelPlayerInformations = new System.Windows.Forms.Panel();
-            this.imageListLarge = new System.Windows.Forms.ImageList(this.components);
-            this.imageListSmall = new System.Windows.Forms.ImageList(this.components);
-            this.labelAverageText = new System.Windows.Forms.Label();
-            this.labelAverage = new System.Windows.Forms.Label();
+            this.panelPlayer3And4 = new System.Windows.Forms.Panel();
+            this.panelPlayer4 = new System.Windows.Forms.Panel();
+            this.groupBoxPlayer4 = new System.Windows.Forms.GroupBox();
+            this.textBoxPlayer4Name = new System.Windows.Forms.TextBox();
+            this.labelPlayer4Name = new System.Windows.Forms.Label();
+            this.comboBoxPlayer4Company = new System.Windows.Forms.ComboBox();
+            this.labelPlayer4Company = new System.Windows.Forms.Label();
+            this.panelPlayer3 = new System.Windows.Forms.Panel();
+            this.groupBoxPlayer3 = new System.Windows.Forms.GroupBox();
+            this.textBoxPlayer3Name = new System.Windows.Forms.TextBox();
+            this.labelPlayer3Name = new System.Windows.Forms.Label();
+            this.comboBoxPlayer3Company = new System.Windows.Forms.ComboBox();
+            this.labelPlayer3Company = new System.Windows.Forms.Label();
+            this.panelPlayer1And2 = new System.Windows.Forms.Panel();
+            this.panelPlayer2 = new System.Windows.Forms.Panel();
+            this.groupBoxPlayer2 = new System.Windows.Forms.GroupBox();
+            this.textBoxPlayer2Name = new System.Windows.Forms.TextBox();
+            this.labelPlayer2Name = new System.Windows.Forms.Label();
+            this.comboBoxPlayer2Company = new System.Windows.Forms.ComboBox();
+            this.labelPlayer2Company = new System.Windows.Forms.Label();
+            this.panelPlayer1 = new System.Windows.Forms.Panel();
+            this.groupBoxPlayer1 = new System.Windows.Forms.GroupBox();
+            this.textBoxPlayer1Name = new System.Windows.Forms.TextBox();
+            this.labelPlayer1Name = new System.Windows.Forms.Label();
+            this.textBoxPlayer1Company = new System.Windows.Forms.TextBox();
+            this.labelPlayer1Company = new System.Windows.Forms.Label();
+            this.labelPlayer1Capital = new System.Windows.Forms.Label();
+            this.textBoxPlayer1Capital = new System.Windows.Forms.TextBox();
+            this.labelPlayer1DepositValue = new System.Windows.Forms.Label();
+            this.textBoxPlayer1DepositValue = new System.Windows.Forms.TextBox();
+            this.labelPlayer1Value = new System.Windows.Forms.Label();
+            this.textBoxPlayer1Value = new System.Windows.Forms.TextBox();
+            this.labelPlayer2Capital = new System.Windows.Forms.Label();
+            this.textBoxPlayer2Capital = new System.Windows.Forms.TextBox();
+            this.labelPlayer2DepositValue = new System.Windows.Forms.Label();
+            this.textBoxPlayer2DepositValue = new System.Windows.Forms.TextBox();
+            this.labelPlayer2Value = new System.Windows.Forms.Label();
+            this.textBoxPlayer2Value = new System.Windows.Forms.TextBox();
+            this.labelPlayer3Capital = new System.Windows.Forms.Label();
+            this.textBoxPlayer3Capital = new System.Windows.Forms.TextBox();
+            this.labelPlayer3DepositValue = new System.Windows.Forms.Label();
+            this.textBoxPlayer3DepositValue = new System.Windows.Forms.TextBox();
+            this.labelPlayer3Value = new System.Windows.Forms.Label();
+            this.textBoxPlayer3Value = new System.Windows.Forms.TextBox();
+            this.labelPlayer4Capital = new System.Windows.Forms.Label();
+            this.textBoxPlayer4Capital = new System.Windows.Forms.TextBox();
+            this.labelPlayer4DepositValue = new System.Windows.Forms.Label();
+            this.textBoxPlayer4DepositValue = new System.Windows.Forms.TextBox();
+            this.labelPlayer4Value = new System.Windows.Forms.Label();
+            this.textBoxPlayer4Value = new System.Windows.Forms.TextBox();
             this.menuStrip.SuspendLayout();
             this.panelStockInformations.SuspendLayout();
             this.groupBoxStockInformations.SuspendLayout();
             this.panelStocks.SuspendLayout();
             this.panelStockIndex.SuspendLayout();
+            this.panelPlayerInformations.SuspendLayout();
+            this.panelPlayer3And4.SuspendLayout();
+            this.panelPlayer4.SuspendLayout();
+            this.groupBoxPlayer4.SuspendLayout();
+            this.panelPlayer3.SuspendLayout();
+            this.groupBoxPlayer3.SuspendLayout();
+            this.panelPlayer1And2.SuspendLayout();
+            this.panelPlayer2.SuspendLayout();
+            this.groupBoxPlayer2.SuspendLayout();
+            this.panelPlayer1.SuspendLayout();
+            this.groupBoxPlayer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -117,7 +178,7 @@
             this.panelStockInformations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelStockInformations.Location = new System.Drawing.Point(0, 24);
             this.panelStockInformations.Name = "panelStockInformations";
-            this.panelStockInformations.Size = new System.Drawing.Size(792, 442);
+            this.panelStockInformations.Size = new System.Drawing.Size(792, 246);
             this.panelStockInformations.TabIndex = 1;
             // 
             // groupBoxStockInformations
@@ -127,7 +188,7 @@
             this.groupBoxStockInformations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxStockInformations.Location = new System.Drawing.Point(0, 0);
             this.groupBoxStockInformations.Name = "groupBoxStockInformations";
-            this.groupBoxStockInformations.Size = new System.Drawing.Size(792, 442);
+            this.groupBoxStockInformations.Size = new System.Drawing.Size(792, 246);
             this.groupBoxStockInformations.TabIndex = 0;
             this.groupBoxStockInformations.TabStop = false;
             this.groupBoxStockInformations.Text = "Aktier";
@@ -138,7 +199,7 @@
             this.panelStocks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelStocks.Location = new System.Drawing.Point(3, 50);
             this.panelStocks.Name = "panelStocks";
-            this.panelStocks.Size = new System.Drawing.Size(786, 389);
+            this.panelStocks.Size = new System.Drawing.Size(786, 193);
             this.panelStocks.TabIndex = 1;
             // 
             // listViewStocks
@@ -147,49 +208,11 @@
             this.listViewStocks.LargeImageList = this.imageListLarge;
             this.listViewStocks.Location = new System.Drawing.Point(0, 0);
             this.listViewStocks.Name = "listViewStocks";
-            this.listViewStocks.Size = new System.Drawing.Size(786, 389);
+            this.listViewStocks.Size = new System.Drawing.Size(786, 193);
             this.listViewStocks.SmallImageList = this.imageListSmall;
             this.listViewStocks.TabIndex = 0;
             this.listViewStocks.UseCompatibleStateImageBehavior = false;
             this.listViewStocks.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewStocks_ColumnClick);
-            // 
-            // panelStockIndex
-            // 
-            this.panelStockIndex.Controls.Add(this.labelAverage);
-            this.panelStockIndex.Controls.Add(this.labelAverageText);
-            this.panelStockIndex.Controls.Add(this.comboBoxStockIndex);
-            this.panelStockIndex.Controls.Add(this.labelStockIndex);
-            this.panelStockIndex.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelStockIndex.Location = new System.Drawing.Point(3, 16);
-            this.panelStockIndex.Name = "panelStockIndex";
-            this.panelStockIndex.Size = new System.Drawing.Size(786, 34);
-            this.panelStockIndex.TabIndex = 0;
-            // 
-            // comboBoxStockIndex
-            // 
-            this.comboBoxStockIndex.FormattingEnabled = true;
-            this.comboBoxStockIndex.Location = new System.Drawing.Point(48, 6);
-            this.comboBoxStockIndex.Name = "comboBoxStockIndex";
-            this.comboBoxStockIndex.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxStockIndex.TabIndex = 1;
-            this.comboBoxStockIndex.SelectedIndexChanged += new System.EventHandler(this.comboBoxStockIndex_SelectedIndexChanged);
-            // 
-            // labelStockIndex
-            // 
-            this.labelStockIndex.AutoSize = true;
-            this.labelStockIndex.Location = new System.Drawing.Point(9, 9);
-            this.labelStockIndex.Name = "labelStockIndex";
-            this.labelStockIndex.Size = new System.Drawing.Size(33, 13);
-            this.labelStockIndex.TabIndex = 0;
-            this.labelStockIndex.Text = "Index";
-            // 
-            // panelPlayerInformations
-            // 
-            this.panelPlayerInformations.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelPlayerInformations.Location = new System.Drawing.Point(0, 466);
-            this.panelPlayerInformations.Name = "panelPlayerInformations";
-            this.panelPlayerInformations.Size = new System.Drawing.Size(792, 100);
-            this.panelPlayerInformations.TabIndex = 2;
             // 
             // imageListLarge
             // 
@@ -203,6 +226,28 @@
             this.imageListSmall.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListSmall.Images.SetKeyName(0, "Stock.bmp");
             // 
+            // panelStockIndex
+            // 
+            this.panelStockIndex.Controls.Add(this.labelAverage);
+            this.panelStockIndex.Controls.Add(this.labelAverageText);
+            this.panelStockIndex.Controls.Add(this.comboBoxStockIndex);
+            this.panelStockIndex.Controls.Add(this.labelStockIndex);
+            this.panelStockIndex.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelStockIndex.Location = new System.Drawing.Point(3, 16);
+            this.panelStockIndex.Name = "panelStockIndex";
+            this.panelStockIndex.Size = new System.Drawing.Size(786, 34);
+            this.panelStockIndex.TabIndex = 0;
+            // 
+            // labelAverage
+            // 
+            this.labelAverage.AutoSize = true;
+            this.labelAverage.Location = new System.Drawing.Point(244, 9);
+            this.labelAverage.Name = "labelAverage";
+            this.labelAverage.Size = new System.Drawing.Size(14, 13);
+            this.labelAverage.TabIndex = 3;
+            this.labelAverage.Text = "#";
+            this.labelAverage.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // labelAverageText
             // 
             this.labelAverageText.AutoSize = true;
@@ -212,14 +257,495 @@
             this.labelAverageText.TabIndex = 2;
             this.labelAverageText.Text = "Gennemsnit";
             // 
-            // labelAverage
+            // comboBoxStockIndex
             // 
-            this.labelAverage.AutoSize = true;
-            this.labelAverage.Location = new System.Drawing.Point(244, 9);
-            this.labelAverage.Name = "labelAverage";
-            this.labelAverage.Size = new System.Drawing.Size(0, 13);
-            this.labelAverage.TabIndex = 3;
-            this.labelAverage.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.comboBoxStockIndex.FormattingEnabled = true;
+            this.comboBoxStockIndex.Location = new System.Drawing.Point(42, 6);
+            this.comboBoxStockIndex.Name = "comboBoxStockIndex";
+            this.comboBoxStockIndex.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxStockIndex.TabIndex = 1;
+            this.comboBoxStockIndex.SelectedIndexChanged += new System.EventHandler(this.comboBoxStockIndex_SelectedIndexChanged);
+            // 
+            // labelStockIndex
+            // 
+            this.labelStockIndex.AutoSize = true;
+            this.labelStockIndex.Location = new System.Drawing.Point(3, 9);
+            this.labelStockIndex.Name = "labelStockIndex";
+            this.labelStockIndex.Size = new System.Drawing.Size(33, 13);
+            this.labelStockIndex.TabIndex = 0;
+            this.labelStockIndex.Text = "Index";
+            // 
+            // panelPlayerInformations
+            // 
+            this.panelPlayerInformations.Controls.Add(this.panelPlayer3And4);
+            this.panelPlayerInformations.Controls.Add(this.panelPlayer1And2);
+            this.panelPlayerInformations.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelPlayerInformations.Location = new System.Drawing.Point(0, 270);
+            this.panelPlayerInformations.Name = "panelPlayerInformations";
+            this.panelPlayerInformations.Size = new System.Drawing.Size(792, 296);
+            this.panelPlayerInformations.TabIndex = 2;
+            // 
+            // panelPlayer3And4
+            // 
+            this.panelPlayer3And4.Controls.Add(this.panelPlayer4);
+            this.panelPlayer3And4.Controls.Add(this.panelPlayer3);
+            this.panelPlayer3And4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelPlayer3And4.Location = new System.Drawing.Point(0, 148);
+            this.panelPlayer3And4.Name = "panelPlayer3And4";
+            this.panelPlayer3And4.Size = new System.Drawing.Size(792, 148);
+            this.panelPlayer3And4.TabIndex = 1;
+            // 
+            // panelPlayer4
+            // 
+            this.panelPlayer4.Controls.Add(this.groupBoxPlayer4);
+            this.panelPlayer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelPlayer4.Location = new System.Drawing.Point(396, 0);
+            this.panelPlayer4.Name = "panelPlayer4";
+            this.panelPlayer4.Size = new System.Drawing.Size(396, 148);
+            this.panelPlayer4.TabIndex = 1;
+            this.panelPlayer4.Resize += new System.EventHandler(this.panelPlayer_Resize);
+            // 
+            // groupBoxPlayer4
+            // 
+            this.groupBoxPlayer4.Controls.Add(this.textBoxPlayer4Value);
+            this.groupBoxPlayer4.Controls.Add(this.labelPlayer4Value);
+            this.groupBoxPlayer4.Controls.Add(this.textBoxPlayer4DepositValue);
+            this.groupBoxPlayer4.Controls.Add(this.labelPlayer4DepositValue);
+            this.groupBoxPlayer4.Controls.Add(this.textBoxPlayer4Capital);
+            this.groupBoxPlayer4.Controls.Add(this.labelPlayer4Capital);
+            this.groupBoxPlayer4.Controls.Add(this.textBoxPlayer4Name);
+            this.groupBoxPlayer4.Controls.Add(this.labelPlayer4Name);
+            this.groupBoxPlayer4.Controls.Add(this.comboBoxPlayer4Company);
+            this.groupBoxPlayer4.Controls.Add(this.labelPlayer4Company);
+            this.groupBoxPlayer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxPlayer4.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxPlayer4.Name = "groupBoxPlayer4";
+            this.groupBoxPlayer4.Size = new System.Drawing.Size(396, 148);
+            this.groupBoxPlayer4.TabIndex = 0;
+            this.groupBoxPlayer4.TabStop = false;
+            // 
+            // textBoxPlayer4Name
+            // 
+            this.textBoxPlayer4Name.Location = new System.Drawing.Point(44, 40);
+            this.textBoxPlayer4Name.Name = "textBoxPlayer4Name";
+            this.textBoxPlayer4Name.Size = new System.Drawing.Size(346, 20);
+            this.textBoxPlayer4Name.TabIndex = 3;
+            // 
+            // labelPlayer4Name
+            // 
+            this.labelPlayer4Name.AutoSize = true;
+            this.labelPlayer4Name.Location = new System.Drawing.Point(6, 43);
+            this.labelPlayer4Name.Name = "labelPlayer4Name";
+            this.labelPlayer4Name.Size = new System.Drawing.Size(33, 13);
+            this.labelPlayer4Name.TabIndex = 2;
+            this.labelPlayer4Name.Text = "Navn";
+            // 
+            // comboBoxPlayer4Company
+            // 
+            this.comboBoxPlayer4Company.FormattingEnabled = true;
+            this.comboBoxPlayer4Company.Location = new System.Drawing.Point(44, 13);
+            this.comboBoxPlayer4Company.Name = "comboBoxPlayer4Company";
+            this.comboBoxPlayer4Company.Size = new System.Drawing.Size(346, 21);
+            this.comboBoxPlayer4Company.TabIndex = 1;
+            this.comboBoxPlayer4Company.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlayerCompany_SelectedIndexChanged);
+            // 
+            // labelPlayer4Company
+            // 
+            this.labelPlayer4Company.AutoSize = true;
+            this.labelPlayer4Company.Location = new System.Drawing.Point(6, 16);
+            this.labelPlayer4Company.Name = "labelPlayer4Company";
+            this.labelPlayer4Company.Size = new System.Drawing.Size(32, 13);
+            this.labelPlayer4Company.TabIndex = 0;
+            this.labelPlayer4Company.Text = "Firma";
+            // 
+            // panelPlayer3
+            // 
+            this.panelPlayer3.Controls.Add(this.groupBoxPlayer3);
+            this.panelPlayer3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelPlayer3.Location = new System.Drawing.Point(0, 0);
+            this.panelPlayer3.Name = "panelPlayer3";
+            this.panelPlayer3.Size = new System.Drawing.Size(396, 148);
+            this.panelPlayer3.TabIndex = 0;
+            this.panelPlayer3.Resize += new System.EventHandler(this.panelPlayer_Resize);
+            // 
+            // groupBoxPlayer3
+            // 
+            this.groupBoxPlayer3.Controls.Add(this.textBoxPlayer3Value);
+            this.groupBoxPlayer3.Controls.Add(this.labelPlayer3Value);
+            this.groupBoxPlayer3.Controls.Add(this.textBoxPlayer3DepositValue);
+            this.groupBoxPlayer3.Controls.Add(this.labelPlayer3DepositValue);
+            this.groupBoxPlayer3.Controls.Add(this.textBoxPlayer3Capital);
+            this.groupBoxPlayer3.Controls.Add(this.labelPlayer3Capital);
+            this.groupBoxPlayer3.Controls.Add(this.textBoxPlayer3Name);
+            this.groupBoxPlayer3.Controls.Add(this.labelPlayer3Name);
+            this.groupBoxPlayer3.Controls.Add(this.comboBoxPlayer3Company);
+            this.groupBoxPlayer3.Controls.Add(this.labelPlayer3Company);
+            this.groupBoxPlayer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxPlayer3.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxPlayer3.Name = "groupBoxPlayer3";
+            this.groupBoxPlayer3.Size = new System.Drawing.Size(396, 148);
+            this.groupBoxPlayer3.TabIndex = 0;
+            this.groupBoxPlayer3.TabStop = false;
+            // 
+            // textBoxPlayer3Name
+            // 
+            this.textBoxPlayer3Name.Location = new System.Drawing.Point(44, 40);
+            this.textBoxPlayer3Name.Name = "textBoxPlayer3Name";
+            this.textBoxPlayer3Name.Size = new System.Drawing.Size(346, 20);
+            this.textBoxPlayer3Name.TabIndex = 3;
+            // 
+            // labelPlayer3Name
+            // 
+            this.labelPlayer3Name.AutoSize = true;
+            this.labelPlayer3Name.Location = new System.Drawing.Point(6, 43);
+            this.labelPlayer3Name.Name = "labelPlayer3Name";
+            this.labelPlayer3Name.Size = new System.Drawing.Size(33, 13);
+            this.labelPlayer3Name.TabIndex = 2;
+            this.labelPlayer3Name.Text = "Navn";
+            // 
+            // comboBoxPlayer3Company
+            // 
+            this.comboBoxPlayer3Company.FormattingEnabled = true;
+            this.comboBoxPlayer3Company.Location = new System.Drawing.Point(44, 13);
+            this.comboBoxPlayer3Company.Name = "comboBoxPlayer3Company";
+            this.comboBoxPlayer3Company.Size = new System.Drawing.Size(346, 21);
+            this.comboBoxPlayer3Company.TabIndex = 1;
+            this.comboBoxPlayer3Company.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlayerCompany_SelectedIndexChanged);
+            // 
+            // labelPlayer3Company
+            // 
+            this.labelPlayer3Company.AutoSize = true;
+            this.labelPlayer3Company.Location = new System.Drawing.Point(6, 16);
+            this.labelPlayer3Company.Name = "labelPlayer3Company";
+            this.labelPlayer3Company.Size = new System.Drawing.Size(32, 13);
+            this.labelPlayer3Company.TabIndex = 0;
+            this.labelPlayer3Company.Text = "Firma";
+            // 
+            // panelPlayer1And2
+            // 
+            this.panelPlayer1And2.Controls.Add(this.panelPlayer2);
+            this.panelPlayer1And2.Controls.Add(this.panelPlayer1);
+            this.panelPlayer1And2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelPlayer1And2.Location = new System.Drawing.Point(0, 0);
+            this.panelPlayer1And2.Name = "panelPlayer1And2";
+            this.panelPlayer1And2.Size = new System.Drawing.Size(792, 148);
+            this.panelPlayer1And2.TabIndex = 0;
+            // 
+            // panelPlayer2
+            // 
+            this.panelPlayer2.Controls.Add(this.groupBoxPlayer2);
+            this.panelPlayer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelPlayer2.Location = new System.Drawing.Point(396, 0);
+            this.panelPlayer2.Name = "panelPlayer2";
+            this.panelPlayer2.Size = new System.Drawing.Size(396, 148);
+            this.panelPlayer2.TabIndex = 1;
+            this.panelPlayer2.Resize += new System.EventHandler(this.panelPlayer_Resize);
+            // 
+            // groupBoxPlayer2
+            // 
+            this.groupBoxPlayer2.Controls.Add(this.textBoxPlayer2Value);
+            this.groupBoxPlayer2.Controls.Add(this.labelPlayer2Value);
+            this.groupBoxPlayer2.Controls.Add(this.textBoxPlayer2DepositValue);
+            this.groupBoxPlayer2.Controls.Add(this.labelPlayer2DepositValue);
+            this.groupBoxPlayer2.Controls.Add(this.textBoxPlayer2Capital);
+            this.groupBoxPlayer2.Controls.Add(this.labelPlayer2Capital);
+            this.groupBoxPlayer2.Controls.Add(this.textBoxPlayer2Name);
+            this.groupBoxPlayer2.Controls.Add(this.labelPlayer2Name);
+            this.groupBoxPlayer2.Controls.Add(this.comboBoxPlayer2Company);
+            this.groupBoxPlayer2.Controls.Add(this.labelPlayer2Company);
+            this.groupBoxPlayer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxPlayer2.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxPlayer2.Name = "groupBoxPlayer2";
+            this.groupBoxPlayer2.Size = new System.Drawing.Size(396, 148);
+            this.groupBoxPlayer2.TabIndex = 0;
+            this.groupBoxPlayer2.TabStop = false;
+            // 
+            // textBoxPlayer2Name
+            // 
+            this.textBoxPlayer2Name.Location = new System.Drawing.Point(44, 39);
+            this.textBoxPlayer2Name.Name = "textBoxPlayer2Name";
+            this.textBoxPlayer2Name.Size = new System.Drawing.Size(346, 20);
+            this.textBoxPlayer2Name.TabIndex = 3;
+            // 
+            // labelPlayer2Name
+            // 
+            this.labelPlayer2Name.AutoSize = true;
+            this.labelPlayer2Name.Location = new System.Drawing.Point(6, 42);
+            this.labelPlayer2Name.Name = "labelPlayer2Name";
+            this.labelPlayer2Name.Size = new System.Drawing.Size(33, 13);
+            this.labelPlayer2Name.TabIndex = 2;
+            this.labelPlayer2Name.Text = "Navn";
+            // 
+            // comboBoxPlayer2Company
+            // 
+            this.comboBoxPlayer2Company.FormattingEnabled = true;
+            this.comboBoxPlayer2Company.Location = new System.Drawing.Point(44, 13);
+            this.comboBoxPlayer2Company.Name = "comboBoxPlayer2Company";
+            this.comboBoxPlayer2Company.Size = new System.Drawing.Size(346, 21);
+            this.comboBoxPlayer2Company.TabIndex = 1;
+            this.comboBoxPlayer2Company.SelectedIndexChanged += new System.EventHandler(this.comboBoxPlayerCompany_SelectedIndexChanged);
+            // 
+            // labelPlayer2Company
+            // 
+            this.labelPlayer2Company.AutoSize = true;
+            this.labelPlayer2Company.Location = new System.Drawing.Point(6, 16);
+            this.labelPlayer2Company.Name = "labelPlayer2Company";
+            this.labelPlayer2Company.Size = new System.Drawing.Size(32, 13);
+            this.labelPlayer2Company.TabIndex = 0;
+            this.labelPlayer2Company.Text = "Firma";
+            // 
+            // panelPlayer1
+            // 
+            this.panelPlayer1.Controls.Add(this.groupBoxPlayer1);
+            this.panelPlayer1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelPlayer1.Location = new System.Drawing.Point(0, 0);
+            this.panelPlayer1.Name = "panelPlayer1";
+            this.panelPlayer1.Size = new System.Drawing.Size(396, 148);
+            this.panelPlayer1.TabIndex = 0;
+            this.panelPlayer1.Resize += new System.EventHandler(this.panelPlayer_Resize);
+            // 
+            // groupBoxPlayer1
+            // 
+            this.groupBoxPlayer1.Controls.Add(this.textBoxPlayer1Value);
+            this.groupBoxPlayer1.Controls.Add(this.labelPlayer1Value);
+            this.groupBoxPlayer1.Controls.Add(this.textBoxPlayer1DepositValue);
+            this.groupBoxPlayer1.Controls.Add(this.labelPlayer1DepositValue);
+            this.groupBoxPlayer1.Controls.Add(this.textBoxPlayer1Capital);
+            this.groupBoxPlayer1.Controls.Add(this.labelPlayer1Capital);
+            this.groupBoxPlayer1.Controls.Add(this.textBoxPlayer1Name);
+            this.groupBoxPlayer1.Controls.Add(this.labelPlayer1Name);
+            this.groupBoxPlayer1.Controls.Add(this.textBoxPlayer1Company);
+            this.groupBoxPlayer1.Controls.Add(this.labelPlayer1Company);
+            this.groupBoxPlayer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxPlayer1.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxPlayer1.Name = "groupBoxPlayer1";
+            this.groupBoxPlayer1.Size = new System.Drawing.Size(396, 148);
+            this.groupBoxPlayer1.TabIndex = 0;
+            this.groupBoxPlayer1.TabStop = false;
+            // 
+            // textBoxPlayer1Name
+            // 
+            this.textBoxPlayer1Name.Location = new System.Drawing.Point(44, 39);
+            this.textBoxPlayer1Name.Name = "textBoxPlayer1Name";
+            this.textBoxPlayer1Name.Size = new System.Drawing.Size(346, 20);
+            this.textBoxPlayer1Name.TabIndex = 3;
+            // 
+            // labelPlayer1Name
+            // 
+            this.labelPlayer1Name.AutoSize = true;
+            this.labelPlayer1Name.Location = new System.Drawing.Point(6, 42);
+            this.labelPlayer1Name.Name = "labelPlayer1Name";
+            this.labelPlayer1Name.Size = new System.Drawing.Size(33, 13);
+            this.labelPlayer1Name.TabIndex = 2;
+            this.labelPlayer1Name.Text = "Navn";
+            // 
+            // textBoxPlayer1Company
+            // 
+            this.textBoxPlayer1Company.Location = new System.Drawing.Point(44, 13);
+            this.textBoxPlayer1Company.Name = "textBoxPlayer1Company";
+            this.textBoxPlayer1Company.Size = new System.Drawing.Size(346, 20);
+            this.textBoxPlayer1Company.TabIndex = 1;
+            // 
+            // labelPlayer1Company
+            // 
+            this.labelPlayer1Company.AutoSize = true;
+            this.labelPlayer1Company.Location = new System.Drawing.Point(6, 16);
+            this.labelPlayer1Company.Name = "labelPlayer1Company";
+            this.labelPlayer1Company.Size = new System.Drawing.Size(32, 13);
+            this.labelPlayer1Company.TabIndex = 0;
+            this.labelPlayer1Company.Text = "Firma";
+            // 
+            // labelPlayer1Capital
+            // 
+            this.labelPlayer1Capital.AutoSize = true;
+            this.labelPlayer1Capital.Location = new System.Drawing.Point(195, 68);
+            this.labelPlayer1Capital.Name = "labelPlayer1Capital";
+            this.labelPlayer1Capital.Size = new System.Drawing.Size(39, 13);
+            this.labelPlayer1Capital.TabIndex = 4;
+            this.labelPlayer1Capital.Text = "Kapital";
+            // 
+            // textBoxPlayer1Capital
+            // 
+            this.textBoxPlayer1Capital.Location = new System.Drawing.Point(240, 65);
+            this.textBoxPlayer1Capital.Name = "textBoxPlayer1Capital";
+            this.textBoxPlayer1Capital.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer1Capital.TabIndex = 5;
+            // 
+            // labelPlayer1DepositValue
+            // 
+            this.labelPlayer1DepositValue.AutoSize = true;
+            this.labelPlayer1DepositValue.Location = new System.Drawing.Point(123, 94);
+            this.labelPlayer1DepositValue.Name = "labelPlayer1DepositValue";
+            this.labelPlayer1DepositValue.Size = new System.Drawing.Size(111, 13);
+            this.labelPlayer1DepositValue.TabIndex = 6;
+            this.labelPlayer1DepositValue.Text = "Værdi af aktier i depot";
+            // 
+            // textBoxPlayer1DepositValue
+            // 
+            this.textBoxPlayer1DepositValue.Location = new System.Drawing.Point(240, 91);
+            this.textBoxPlayer1DepositValue.Name = "textBoxPlayer1DepositValue";
+            this.textBoxPlayer1DepositValue.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer1DepositValue.TabIndex = 7;
+            // 
+            // labelPlayer1Value
+            // 
+            this.labelPlayer1Value.AutoSize = true;
+            this.labelPlayer1Value.Location = new System.Drawing.Point(175, 120);
+            this.labelPlayer1Value.Name = "labelPlayer1Value";
+            this.labelPlayer1Value.Size = new System.Drawing.Size(59, 13);
+            this.labelPlayer1Value.TabIndex = 8;
+            this.labelPlayer1Value.Text = "Aktiver i alt";
+            // 
+            // textBoxPlayer1Value
+            // 
+            this.textBoxPlayer1Value.Location = new System.Drawing.Point(240, 117);
+            this.textBoxPlayer1Value.Name = "textBoxPlayer1Value";
+            this.textBoxPlayer1Value.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer1Value.TabIndex = 9;
+            // 
+            // labelPlayer2Capital
+            // 
+            this.labelPlayer2Capital.AutoSize = true;
+            this.labelPlayer2Capital.Location = new System.Drawing.Point(195, 68);
+            this.labelPlayer2Capital.Name = "labelPlayer2Capital";
+            this.labelPlayer2Capital.Size = new System.Drawing.Size(39, 13);
+            this.labelPlayer2Capital.TabIndex = 4;
+            this.labelPlayer2Capital.Text = "Kapital";
+            // 
+            // textBoxPlayer2Capital
+            // 
+            this.textBoxPlayer2Capital.Location = new System.Drawing.Point(240, 65);
+            this.textBoxPlayer2Capital.Name = "textBoxPlayer2Capital";
+            this.textBoxPlayer2Capital.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer2Capital.TabIndex = 5;
+            // 
+            // labelPlayer2DepositValue
+            // 
+            this.labelPlayer2DepositValue.AutoSize = true;
+            this.labelPlayer2DepositValue.Location = new System.Drawing.Point(123, 94);
+            this.labelPlayer2DepositValue.Name = "labelPlayer2DepositValue";
+            this.labelPlayer2DepositValue.Size = new System.Drawing.Size(111, 13);
+            this.labelPlayer2DepositValue.TabIndex = 6;
+            this.labelPlayer2DepositValue.Text = "Værdi af aktier i depot";
+            // 
+            // textBoxPlayer2DepositValue
+            // 
+            this.textBoxPlayer2DepositValue.Location = new System.Drawing.Point(240, 91);
+            this.textBoxPlayer2DepositValue.Name = "textBoxPlayer2DepositValue";
+            this.textBoxPlayer2DepositValue.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer2DepositValue.TabIndex = 7;
+            // 
+            // labelPlayer2Value
+            // 
+            this.labelPlayer2Value.AutoSize = true;
+            this.labelPlayer2Value.Location = new System.Drawing.Point(175, 120);
+            this.labelPlayer2Value.Name = "labelPlayer2Value";
+            this.labelPlayer2Value.Size = new System.Drawing.Size(59, 13);
+            this.labelPlayer2Value.TabIndex = 8;
+            this.labelPlayer2Value.Text = "Aktiver i alt";
+            // 
+            // textBoxPlayer2Value
+            // 
+            this.textBoxPlayer2Value.Location = new System.Drawing.Point(240, 117);
+            this.textBoxPlayer2Value.Name = "textBoxPlayer2Value";
+            this.textBoxPlayer2Value.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer2Value.TabIndex = 9;
+            // 
+            // labelPlayer3Capital
+            // 
+            this.labelPlayer3Capital.AutoSize = true;
+            this.labelPlayer3Capital.Location = new System.Drawing.Point(195, 69);
+            this.labelPlayer3Capital.Name = "labelPlayer3Capital";
+            this.labelPlayer3Capital.Size = new System.Drawing.Size(39, 13);
+            this.labelPlayer3Capital.TabIndex = 4;
+            this.labelPlayer3Capital.Text = "Kapital";
+            // 
+            // textBoxPlayer3Capital
+            // 
+            this.textBoxPlayer3Capital.Location = new System.Drawing.Point(240, 66);
+            this.textBoxPlayer3Capital.Name = "textBoxPlayer3Capital";
+            this.textBoxPlayer3Capital.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer3Capital.TabIndex = 5;
+            // 
+            // labelPlayer3DepositValue
+            // 
+            this.labelPlayer3DepositValue.AutoSize = true;
+            this.labelPlayer3DepositValue.Location = new System.Drawing.Point(123, 95);
+            this.labelPlayer3DepositValue.Name = "labelPlayer3DepositValue";
+            this.labelPlayer3DepositValue.Size = new System.Drawing.Size(111, 13);
+            this.labelPlayer3DepositValue.TabIndex = 6;
+            this.labelPlayer3DepositValue.Text = "Værdi af aktier i depot";
+            // 
+            // textBoxPlayer3DepositValue
+            // 
+            this.textBoxPlayer3DepositValue.Location = new System.Drawing.Point(240, 92);
+            this.textBoxPlayer3DepositValue.Name = "textBoxPlayer3DepositValue";
+            this.textBoxPlayer3DepositValue.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer3DepositValue.TabIndex = 7;
+            // 
+            // labelPlayer3Value
+            // 
+            this.labelPlayer3Value.AutoSize = true;
+            this.labelPlayer3Value.Location = new System.Drawing.Point(175, 121);
+            this.labelPlayer3Value.Name = "labelPlayer3Value";
+            this.labelPlayer3Value.Size = new System.Drawing.Size(59, 13);
+            this.labelPlayer3Value.TabIndex = 8;
+            this.labelPlayer3Value.Text = "Aktiver i alt";
+            // 
+            // textBoxPlayer3Value
+            // 
+            this.textBoxPlayer3Value.Location = new System.Drawing.Point(240, 118);
+            this.textBoxPlayer3Value.Name = "textBoxPlayer3Value";
+            this.textBoxPlayer3Value.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer3Value.TabIndex = 9;
+            // 
+            // labelPlayer4Capital
+            // 
+            this.labelPlayer4Capital.AutoSize = true;
+            this.labelPlayer4Capital.Location = new System.Drawing.Point(195, 69);
+            this.labelPlayer4Capital.Name = "labelPlayer4Capital";
+            this.labelPlayer4Capital.Size = new System.Drawing.Size(39, 13);
+            this.labelPlayer4Capital.TabIndex = 4;
+            this.labelPlayer4Capital.Text = "Kapital";
+            // 
+            // textBoxPlayer4Capital
+            // 
+            this.textBoxPlayer4Capital.Location = new System.Drawing.Point(240, 66);
+            this.textBoxPlayer4Capital.Name = "textBoxPlayer4Capital";
+            this.textBoxPlayer4Capital.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer4Capital.TabIndex = 5;
+            // 
+            // labelPlayer4DepositValue
+            // 
+            this.labelPlayer4DepositValue.AutoSize = true;
+            this.labelPlayer4DepositValue.Location = new System.Drawing.Point(123, 95);
+            this.labelPlayer4DepositValue.Name = "labelPlayer4DepositValue";
+            this.labelPlayer4DepositValue.Size = new System.Drawing.Size(111, 13);
+            this.labelPlayer4DepositValue.TabIndex = 6;
+            this.labelPlayer4DepositValue.Text = "Værdi af aktier i depot";
+            // 
+            // textBoxPlayer4DepositValue
+            // 
+            this.textBoxPlayer4DepositValue.Location = new System.Drawing.Point(240, 92);
+            this.textBoxPlayer4DepositValue.Name = "textBoxPlayer4DepositValue";
+            this.textBoxPlayer4DepositValue.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer4DepositValue.TabIndex = 7;
+            // 
+            // labelPlayer4Value
+            // 
+            this.labelPlayer4Value.AutoSize = true;
+            this.labelPlayer4Value.Location = new System.Drawing.Point(175, 121);
+            this.labelPlayer4Value.Name = "labelPlayer4Value";
+            this.labelPlayer4Value.Size = new System.Drawing.Size(59, 13);
+            this.labelPlayer4Value.TabIndex = 8;
+            this.labelPlayer4Value.Text = "Aktiver i alt";
+            // 
+            // textBoxPlayer4Value
+            // 
+            this.textBoxPlayer4Value.Location = new System.Drawing.Point(240, 118);
+            this.textBoxPlayer4Value.Name = "textBoxPlayer4Value";
+            this.textBoxPlayer4Value.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer4Value.TabIndex = 9;
             // 
             // MainForm
             // 
@@ -232,6 +758,7 @@
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.Text = "Aktiespillet";
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.panelStockInformations.ResumeLayout(false);
@@ -239,6 +766,21 @@
             this.panelStocks.ResumeLayout(false);
             this.panelStockIndex.ResumeLayout(false);
             this.panelStockIndex.PerformLayout();
+            this.panelPlayerInformations.ResumeLayout(false);
+            this.panelPlayer3And4.ResumeLayout(false);
+            this.panelPlayer4.ResumeLayout(false);
+            this.groupBoxPlayer4.ResumeLayout(false);
+            this.groupBoxPlayer4.PerformLayout();
+            this.panelPlayer3.ResumeLayout(false);
+            this.groupBoxPlayer3.ResumeLayout(false);
+            this.groupBoxPlayer3.PerformLayout();
+            this.panelPlayer1And2.ResumeLayout(false);
+            this.panelPlayer2.ResumeLayout(false);
+            this.groupBoxPlayer2.ResumeLayout(false);
+            this.groupBoxPlayer2.PerformLayout();
+            this.panelPlayer1.ResumeLayout(false);
+            this.groupBoxPlayer1.ResumeLayout(false);
+            this.groupBoxPlayer1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -265,6 +807,56 @@
         private System.Windows.Forms.ImageList imageListSmall;
         private System.Windows.Forms.Label labelAverage;
         private System.Windows.Forms.Label labelAverageText;
+        private System.Windows.Forms.Panel panelPlayer1And2;
+        private System.Windows.Forms.Panel panelPlayer3And4;
+        private System.Windows.Forms.Panel panelPlayer1;
+        private System.Windows.Forms.Panel panelPlayer2;
+        private System.Windows.Forms.Panel panelPlayer4;
+        private System.Windows.Forms.Panel panelPlayer3;
+        private System.Windows.Forms.GroupBox groupBoxPlayer1;
+        private System.Windows.Forms.GroupBox groupBoxPlayer2;
+        private System.Windows.Forms.GroupBox groupBoxPlayer3;
+        private System.Windows.Forms.GroupBox groupBoxPlayer4;
+        private System.Windows.Forms.TextBox textBoxPlayer1Company;
+        private System.Windows.Forms.Label labelPlayer1Company;
+        private System.Windows.Forms.TextBox textBoxPlayer1Name;
+        private System.Windows.Forms.Label labelPlayer1Name;
+        private System.Windows.Forms.Label labelPlayer2Company;
+        private System.Windows.Forms.Label labelPlayer4Company;
+        private System.Windows.Forms.Label labelPlayer3Company;
+        private System.Windows.Forms.ComboBox comboBoxPlayer4Company;
+        private System.Windows.Forms.ComboBox comboBoxPlayer3Company;
+        private System.Windows.Forms.ComboBox comboBoxPlayer2Company;
+        private System.Windows.Forms.Label labelPlayer2Name;
+        private System.Windows.Forms.TextBox textBoxPlayer2Name;
+        private System.Windows.Forms.TextBox textBoxPlayer3Name;
+        private System.Windows.Forms.Label labelPlayer3Name;
+        private System.Windows.Forms.TextBox textBoxPlayer4Name;
+        private System.Windows.Forms.Label labelPlayer4Name;
+        private System.Windows.Forms.Label labelPlayer1Capital;
+        private System.Windows.Forms.TextBox textBoxPlayer1Capital;
+        private System.Windows.Forms.TextBox textBoxPlayer1DepositValue;
+        private System.Windows.Forms.Label labelPlayer1DepositValue;
+        private System.Windows.Forms.TextBox textBoxPlayer1Value;
+        private System.Windows.Forms.Label labelPlayer1Value;
+        private System.Windows.Forms.TextBox textBoxPlayer2Value;
+        private System.Windows.Forms.Label labelPlayer2Value;
+        private System.Windows.Forms.TextBox textBoxPlayer2DepositValue;
+        private System.Windows.Forms.Label labelPlayer2DepositValue;
+        private System.Windows.Forms.TextBox textBoxPlayer2Capital;
+        private System.Windows.Forms.Label labelPlayer2Capital;
+        private System.Windows.Forms.TextBox textBoxPlayer3DepositValue;
+        private System.Windows.Forms.Label labelPlayer3DepositValue;
+        private System.Windows.Forms.TextBox textBoxPlayer3Capital;
+        private System.Windows.Forms.Label labelPlayer3Capital;
+        private System.Windows.Forms.TextBox textBoxPlayer3Value;
+        private System.Windows.Forms.Label labelPlayer3Value;
+        private System.Windows.Forms.TextBox textBoxPlayer4DepositValue;
+        private System.Windows.Forms.Label labelPlayer4DepositValue;
+        private System.Windows.Forms.TextBox textBoxPlayer4Capital;
+        private System.Windows.Forms.Label labelPlayer4Capital;
+        private System.Windows.Forms.TextBox textBoxPlayer4Value;
+        private System.Windows.Forms.Label labelPlayer4Value;
     }
 }
 

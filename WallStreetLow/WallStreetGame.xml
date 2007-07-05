@@ -229,4 +229,9 @@
     <Stock stockid="OJBA">Østjysk Bank</Stock>
     <Stock stockid="ELITE-B">Århus Elite B</Stock>
   </StockIndex>
+  <Player company="Ændernes Investeringsselskab">Anders And</Player>
+  <Player company="Von And Holding">Joakim von And</Player>
+  <Player company="Flintesten Invest">Guld-Iver Flintesten</Player>
+  <Player company="Næbhøj A/S">Næbhøj</Player>
+  <Player company="Andeby Bank">Sorteper</Player>
 </WallStreetGame>

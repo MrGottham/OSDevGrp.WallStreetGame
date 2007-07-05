@@ -38,8 +38,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="Deposit.cs" />
+    <Compile Include="DepositContent.cs" />
     <Compile Include="History.cs" />
     <Compile Include="Interfaces.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="Players.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Stock.cs" />

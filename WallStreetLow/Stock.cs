@@ -8,7 +8,7 @@ namespace OSDevGrp.WallStreetGame
     {
         private const double MIN_PRICE = 2.50D;
         private const double MAX_PRICE = 250000.00D;
-        private const int MAX_INITIALIZE_PRICE = 10000;
+        private const int MAX_INITIALIZE_PRICE = 5000;
         private const int MIN_AVAILABLE = 0;
         private const int MAX_AVAILABLE = 2500000;
 
@@ -183,7 +183,10 @@ namespace OSDevGrp.WallStreetGame
                 System.Random r = new System.Random();
                 while (PriceHistory.Count > 0)
                     PriceHistory.Clear();
-                Price = r.Next(MAX_INITIALIZE_PRICE) + r.NextDouble();
+                if (r.Next(100) > 95)
+                    Price = r.Next(MAX_INITIALIZE_PRICE * 5) + r.NextDouble();
+                else
+                    Price = r.Next(MAX_INITIALIZE_PRICE) + r.NextDouble();
                 Available = r.Next(MAX_AVAILABLE);
             }
             catch (System.Exception ex)
