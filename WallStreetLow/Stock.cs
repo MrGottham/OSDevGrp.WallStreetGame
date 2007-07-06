@@ -19,7 +19,7 @@ namespace OSDevGrp.WallStreetGame
         private double _Price = MIN_PRICE;
         private int _Available = MIN_AVAILABLE;
 
-        public Stock(string id, string name, StockIndex stockindex) : base()
+        public Stock(string id, string name, StockIndex stockindex, System.Random random) : base()
         {
             try
             {
@@ -28,7 +28,7 @@ namespace OSDevGrp.WallStreetGame
                 StockIndexes = new StockIndexes();
                 PriceHistory = new DoubleHistory();
                 AddStockIndex(stockindex);
-                Reset();
+                Reset(random);
             }
             catch (System.Exception ex)
             {
@@ -175,19 +175,17 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Reset()
+        public void Reset(System.Random random)
         {
             try
             {
-                System.Threading.Thread.Sleep(1);
-                System.Random r = new System.Random();
                 while (PriceHistory.Count > 0)
                     PriceHistory.Clear();
-                if (r.Next(100) > 95)
-                    Price = r.Next(MAX_INITIALIZE_PRICE * 5) + r.NextDouble();
+                if (random.Next(100) > 95)
+                    Price = random.Next(MAX_INITIALIZE_PRICE * 5) + random.NextDouble();
                 else
-                    Price = r.Next(MAX_INITIALIZE_PRICE) + r.NextDouble();
-                Available = r.Next(MAX_AVAILABLE);
+                    Price = random.Next(MAX_INITIALIZE_PRICE) + random.NextDouble();
+                Available = random.Next(MAX_AVAILABLE);
             }
             catch (System.Exception ex)
             {

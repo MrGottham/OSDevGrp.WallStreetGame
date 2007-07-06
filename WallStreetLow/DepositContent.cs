@@ -14,7 +14,7 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 Stock = stock;
-                Reset();
+                Reset(null);
             }
             catch (System.Exception ex)
             {
@@ -59,7 +59,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Reset()
+        public void Reset(System.Random random)
         {
             try
             {

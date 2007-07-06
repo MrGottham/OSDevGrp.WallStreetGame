@@ -184,7 +184,6 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private int _Delta_W = 0;
         private Game _Game = null;
 
         public MainForm()
@@ -192,7 +191,7 @@ namespace OSDevGrp.WallStreetGame
             InitializeComponent();
             try
             {
-                Game = new Game();
+                Game = new Game(this);
                 Game.BeforeResetEvent = this.BeforeReset;
                 Game.AfterResetEvent = this.AfterReset;
                 Game.UpdateStockInformationsEvent = this.UpdateStockInformations;
@@ -256,12 +255,13 @@ namespace OSDevGrp.WallStreetGame
                 this.listViewStocks.Columns.Add(ch);
                 if (this.comboBoxStockIndex.Items.Count > 0)
                     this.comboBoxStockIndex.SelectedItem = this.comboBoxStockIndex.Items[0];
-                Delta_W = (this.panelPlayer1And2.Width / 2) - this.panelPlayer1.Width;
-                this.panelPlayer1.Width += Delta_W;
-                Delta_W = (this.panelPlayer3And4.Width / 2) - this.panelPlayer3.Width;
-                this.panelPlayer3.Width += Delta_W;
-                Delta_W = 0;
-                int m = this.labelPlayer1Name.Location.X;
+                this.panelPlayer1.Tag = this.panelPlayer1.Width;
+                this.panelPlayer2.Tag = this.panelPlayer2.Width;
+                this.panelPlayer3.Tag = this.panelPlayer3.Width;
+                this.panelPlayer4.Tag = this.panelPlayer4.Width;
+                this.panelPlayer1.Width = (this.panelPlayer1And2.Width / 2);
+                this.panelPlayer3.Width = (this.panelPlayer3And4.Width / 2);
+                int m = this.labelPlayer1Company.Location.X;
                 this.panelPlayer1.MinimumSize = new System.Drawing.Size(m + this.labelPlayer1DepositValue.Width + m + this.textBoxPlayer1DepositValue.Width + m, this.panelPlayer1.Height);
                 this.textBoxPlayer1Company.DataBindings.Add(new System.Windows.Forms.Binding("Text", Game.CurrentPlayer, "Company", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
                 this.textBoxPlayer1Name.DataBindings.Add(new System.Windows.Forms.Binding("Text", Game.CurrentPlayer, "Name", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -277,7 +277,7 @@ namespace OSDevGrp.WallStreetGame
                 this.textBoxPlayer1Value.ReadOnly = true;
                 this.textBoxPlayer1Value.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
                 this.textBoxPlayer1Value.TabStop = false;
-                m = this.labelPlayer2Name.Location.X;
+                m = this.labelPlayer2Company.Location.X;
                 this.panelPlayer2.MinimumSize = new System.Drawing.Size(m + this.labelPlayer2DepositValue.Width + m + this.textBoxPlayer2DepositValue.Width + m, this.panelPlayer2.Height);
                 this.textBoxPlayer2Name.ReadOnly = true;
                 this.textBoxPlayer2Name.TabStop = false;
@@ -293,7 +293,7 @@ namespace OSDevGrp.WallStreetGame
                 this.textBoxPlayer2Value.ReadOnly = true;
                 this.textBoxPlayer2Value.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
                 this.textBoxPlayer2Value.TabStop = false;
-                m = this.labelPlayer3Name.Location.X;
+                m = this.labelPlayer3Company.Location.X;
                 this.panelPlayer3.MinimumSize = new System.Drawing.Size(m + this.labelPlayer3DepositValue.Width + m + this.textBoxPlayer3DepositValue.Width + m, this.panelPlayer3.Height);
                 this.textBoxPlayer3Name.ReadOnly = true;
                 this.textBoxPlayer3Name.TabStop = false;
@@ -309,7 +309,7 @@ namespace OSDevGrp.WallStreetGame
                 this.textBoxPlayer3Value.ReadOnly = true;
                 this.textBoxPlayer3Value.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
                 this.textBoxPlayer3Value.TabStop = false;
-                m = this.labelPlayer4Name.Location.X;
+                m = this.labelPlayer4Company.Location.X;
                 this.panelPlayer4.MinimumSize = new System.Drawing.Size(m + this.labelPlayer4DepositValue.Width + m + this.textBoxPlayer4DepositValue.Width + m, this.panelPlayer4.Height);
                 this.textBoxPlayer4Name.ReadOnly = true;
                 this.textBoxPlayer4Name.TabStop = false;
@@ -325,9 +325,11 @@ namespace OSDevGrp.WallStreetGame
                 this.textBoxPlayer4Value.ReadOnly = true;
                 this.textBoxPlayer4Value.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
                 this.textBoxPlayer4Value.TabStop = false;
-
-
-
+                this.panelPlayer1And2.MinimumSize = new System.Drawing.Size(this.panelPlayer1.MinimumSize.Width + this.panelPlayer2.MinimumSize.Width, this.panelPlayer1.MinimumSize.Height);
+                this.panelPlayer3And4.MinimumSize = new System.Drawing.Size(this.panelPlayer3.MinimumSize.Width + this.panelPlayer4.MinimumSize.Width, this.panelPlayer3.MinimumSize.Height);
+                this.panelPlayerInformations.MinimumSize = new System.Drawing.Size(this.panelPlayer1And2.MinimumSize.Width, this.panelPlayer1And2.MinimumSize.Height + this.panelPlayer3And4.MinimumSize.Height);
+                m = this.panelPlayerInformations.Location.X;
+                this.MinimumSize = new System.Drawing.Size(m + this.panelPlayerInformations.MinimumSize.Width + m + this.Width - this.panelPlayerInformations.Width, this.panelPlayerInformations.MinimumSize.Height * 2);
                 UpdatePlayerInformations();
                 this.textBoxPlayer1Company.Select();
                 GrayItems();
@@ -335,18 +337,6 @@ namespace OSDevGrp.WallStreetGame
             catch (System.Exception ex)
             {
                 throw ex;
-            }
-        }
-
-        private int Delta_W
-        {
-            get
-            {
-                return _Delta_W;
-            }
-            set
-            {
-                _Delta_W = value;
             }
         }
 
@@ -565,6 +555,18 @@ namespace OSDevGrp.WallStreetGame
                         this.listViewStocks.EndUpdate();
                     }
                 }
+                switch (Game.MarketState.State)
+                {
+                    case MarketStateType.Normal:
+                        this.labelMarketState.Text = "Normal";
+                        break;
+                    case MarketStateType.Depression:
+                        this.labelMarketState.Text = "Lav";
+                        break;
+                    case MarketStateType.Boom:
+                        this.labelMarketState.Text = "Høj";
+                        break;
+                }
                 this.Cursor = System.Windows.Forms.Cursors.Default;
             }
             catch (System.Exception ex)
@@ -583,6 +585,7 @@ namespace OSDevGrp.WallStreetGame
                 if (panel.Controls["GroupBoxPlayer" + panelno.ToString()] != null)
                 {
                     Player player = null;
+                    System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
                     if (panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Company"] != null)
                     {
                         player = Game.CurrentPlayer;
@@ -615,16 +618,37 @@ namespace OSDevGrp.WallStreetGame
                         if (panelno > 1)
                         {
                             System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox) panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Name"];
-
                             if (player != null)
                                 textbox.Text = player.Name;
                             else
                                 textbox.Text = String.Empty;
-                            textbox.Update();
                         }
                     }
+                    if (panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Capital"] != null)
+                    {
+                        System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox)panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Capital"];
+                        if (player != null)
+                            textbox.Text = player.Capital.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                        else
+                            textbox.Text = String.Empty;
+                    }
+                    if (panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "DepositValue"] != null)
+                    {
+                        System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox)panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "DepositValue"];
+                        if (player != null)
+                            textbox.Text = player.Deposit.Value.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                        else
+                            textbox.Text = String.Empty;
+                    }
+                    if (panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Value"] != null)
+                    {
+                        System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox)panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Value"];
+                        if (player != null)
+                            textbox.Text = player.Value.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                        else
+                            textbox.Text = String.Empty;
+                    }
                 }
-
             }
             catch (System.Exception ex)
             {
@@ -666,11 +690,8 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                Delta_W = (this.panelPlayer1And2.Width / 2) - this.panelPlayer1.Width;
-                this.panelPlayer1.Width += Delta_W;
-                Delta_W = (this.panelPlayer3And4.Width / 2) - this.panelPlayer3.Width;
-                this.panelPlayer3.Width += Delta_W;
-                Delta_W = 0;
+                this.panelPlayer1.Width = (this.panelPlayer1And2.Width / 2);
+                this.panelPlayer3.Width = (this.panelPlayer3And4.Width / 2);
             }
             catch (System.Exception ex)
             {
@@ -779,10 +800,12 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                
                 if (sender is System.Windows.Forms.Panel)
                 {
-                    System.Windows.Forms.Panel panel = (System.Windows.Forms.Panel)sender;
-                    if (panel.Controls.Count > 0)
+                    System.Windows.Forms.Panel panel = (System.Windows.Forms.Panel) sender;
+                    int delta_w = panel.Width - (int) panel.Tag;
+                    if (panel.Controls.Count > 0 && delta_w != 0)
                     {
                         foreach (System.Windows.Forms.Control control in panel.Controls)
                         {
@@ -796,35 +819,36 @@ namespace OSDevGrp.WallStreetGame
                                         {
                                             if (subcontrol.Name.Substring(subcontrol.Name.Length - 7) == "Capital")
                                             {
-                                                subcontrol.Location = new System.Drawing.Point(subcontrol.Location.X + Delta_W, subcontrol.Location.Y);
+                                                subcontrol.Location = new System.Drawing.Point(subcontrol.Location.X + delta_w, subcontrol.Location.Y);
                                             }
                                             else if (subcontrol.Name.Substring(subcontrol.Name.Length - 5) == "Value")
                                             {
-                                                subcontrol.Location = new System.Drawing.Point(subcontrol.Location.X + Delta_W, subcontrol.Location.Y);
+                                                subcontrol.Location = new System.Drawing.Point(subcontrol.Location.X + delta_w, subcontrol.Location.Y);
                                             }
                                         }
                                         else if (subcontrol is System.Windows.Forms.TextBox)
                                         {
                                             if (subcontrol.Name.Substring(subcontrol.Name.Length - 7) == "Capital")
                                             {
-                                                subcontrol.Location = new System.Drawing.Point(subcontrol.Location.X + Delta_W, subcontrol.Location.Y);
+                                                subcontrol.Location = new System.Drawing.Point(subcontrol.Location.X + delta_w, subcontrol.Location.Y);
                                             }
                                             else if (subcontrol.Name.Substring(subcontrol.Name.Length - 5) == "Value")
                                             {
-                                                subcontrol.Location = new System.Drawing.Point(subcontrol.Location.X + Delta_W, subcontrol.Location.Y);
+                                                subcontrol.Location = new System.Drawing.Point(subcontrol.Location.X + delta_w, subcontrol.Location.Y);
                                             }
                                             else
-                                                subcontrol.Width += Delta_W;
+                                                subcontrol.Width += delta_w;
                                         }
                                         else if (subcontrol is System.Windows.Forms.ComboBox)
                                         {
-                                            subcontrol.Width += Delta_W;
+                                            subcontrol.Width += delta_w;
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                    panel.Tag = panel.Width;
                 }
             }
             catch (System.Exception ex)

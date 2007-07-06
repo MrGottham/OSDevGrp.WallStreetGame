@@ -42,6 +42,7 @@
     <Compile Include="DepositContent.cs" />
     <Compile Include="History.cs" />
     <Compile Include="Interfaces.cs" />
+    <Compile Include="MarketState.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Players.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

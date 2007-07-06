@@ -44,6 +44,8 @@
             this.imageListLarge = new System.Windows.Forms.ImageList(this.components);
             this.imageListSmall = new System.Windows.Forms.ImageList(this.components);
             this.panelStockIndex = new System.Windows.Forms.Panel();
+            this.labelMarketState = new System.Windows.Forms.Label();
+            this.labelMarketStateText = new System.Windows.Forms.Label();
             this.labelAverage = new System.Windows.Forms.Label();
             this.labelAverageText = new System.Windows.Forms.Label();
             this.comboBoxStockIndex = new System.Windows.Forms.ComboBox();
@@ -52,12 +54,24 @@
             this.panelPlayer3And4 = new System.Windows.Forms.Panel();
             this.panelPlayer4 = new System.Windows.Forms.Panel();
             this.groupBoxPlayer4 = new System.Windows.Forms.GroupBox();
+            this.textBoxPlayer4Value = new System.Windows.Forms.TextBox();
+            this.labelPlayer4Value = new System.Windows.Forms.Label();
+            this.textBoxPlayer4DepositValue = new System.Windows.Forms.TextBox();
+            this.labelPlayer4DepositValue = new System.Windows.Forms.Label();
+            this.textBoxPlayer4Capital = new System.Windows.Forms.TextBox();
+            this.labelPlayer4Capital = new System.Windows.Forms.Label();
             this.textBoxPlayer4Name = new System.Windows.Forms.TextBox();
             this.labelPlayer4Name = new System.Windows.Forms.Label();
             this.comboBoxPlayer4Company = new System.Windows.Forms.ComboBox();
             this.labelPlayer4Company = new System.Windows.Forms.Label();
             this.panelPlayer3 = new System.Windows.Forms.Panel();
             this.groupBoxPlayer3 = new System.Windows.Forms.GroupBox();
+            this.textBoxPlayer3Value = new System.Windows.Forms.TextBox();
+            this.labelPlayer3Value = new System.Windows.Forms.Label();
+            this.textBoxPlayer3DepositValue = new System.Windows.Forms.TextBox();
+            this.labelPlayer3DepositValue = new System.Windows.Forms.Label();
+            this.textBoxPlayer3Capital = new System.Windows.Forms.TextBox();
+            this.labelPlayer3Capital = new System.Windows.Forms.Label();
             this.textBoxPlayer3Name = new System.Windows.Forms.TextBox();
             this.labelPlayer3Name = new System.Windows.Forms.Label();
             this.comboBoxPlayer3Company = new System.Windows.Forms.ComboBox();
@@ -65,40 +79,28 @@
             this.panelPlayer1And2 = new System.Windows.Forms.Panel();
             this.panelPlayer2 = new System.Windows.Forms.Panel();
             this.groupBoxPlayer2 = new System.Windows.Forms.GroupBox();
+            this.textBoxPlayer2Value = new System.Windows.Forms.TextBox();
+            this.labelPlayer2Value = new System.Windows.Forms.Label();
+            this.textBoxPlayer2DepositValue = new System.Windows.Forms.TextBox();
+            this.labelPlayer2DepositValue = new System.Windows.Forms.Label();
+            this.textBoxPlayer2Capital = new System.Windows.Forms.TextBox();
+            this.labelPlayer2Capital = new System.Windows.Forms.Label();
             this.textBoxPlayer2Name = new System.Windows.Forms.TextBox();
             this.labelPlayer2Name = new System.Windows.Forms.Label();
             this.comboBoxPlayer2Company = new System.Windows.Forms.ComboBox();
             this.labelPlayer2Company = new System.Windows.Forms.Label();
             this.panelPlayer1 = new System.Windows.Forms.Panel();
             this.groupBoxPlayer1 = new System.Windows.Forms.GroupBox();
+            this.textBoxPlayer1Value = new System.Windows.Forms.TextBox();
+            this.labelPlayer1Value = new System.Windows.Forms.Label();
+            this.textBoxPlayer1DepositValue = new System.Windows.Forms.TextBox();
+            this.labelPlayer1DepositValue = new System.Windows.Forms.Label();
+            this.textBoxPlayer1Capital = new System.Windows.Forms.TextBox();
+            this.labelPlayer1Capital = new System.Windows.Forms.Label();
             this.textBoxPlayer1Name = new System.Windows.Forms.TextBox();
             this.labelPlayer1Name = new System.Windows.Forms.Label();
             this.textBoxPlayer1Company = new System.Windows.Forms.TextBox();
             this.labelPlayer1Company = new System.Windows.Forms.Label();
-            this.labelPlayer1Capital = new System.Windows.Forms.Label();
-            this.textBoxPlayer1Capital = new System.Windows.Forms.TextBox();
-            this.labelPlayer1DepositValue = new System.Windows.Forms.Label();
-            this.textBoxPlayer1DepositValue = new System.Windows.Forms.TextBox();
-            this.labelPlayer1Value = new System.Windows.Forms.Label();
-            this.textBoxPlayer1Value = new System.Windows.Forms.TextBox();
-            this.labelPlayer2Capital = new System.Windows.Forms.Label();
-            this.textBoxPlayer2Capital = new System.Windows.Forms.TextBox();
-            this.labelPlayer2DepositValue = new System.Windows.Forms.Label();
-            this.textBoxPlayer2DepositValue = new System.Windows.Forms.TextBox();
-            this.labelPlayer2Value = new System.Windows.Forms.Label();
-            this.textBoxPlayer2Value = new System.Windows.Forms.TextBox();
-            this.labelPlayer3Capital = new System.Windows.Forms.Label();
-            this.textBoxPlayer3Capital = new System.Windows.Forms.TextBox();
-            this.labelPlayer3DepositValue = new System.Windows.Forms.Label();
-            this.textBoxPlayer3DepositValue = new System.Windows.Forms.TextBox();
-            this.labelPlayer3Value = new System.Windows.Forms.Label();
-            this.textBoxPlayer3Value = new System.Windows.Forms.TextBox();
-            this.labelPlayer4Capital = new System.Windows.Forms.Label();
-            this.textBoxPlayer4Capital = new System.Windows.Forms.TextBox();
-            this.labelPlayer4DepositValue = new System.Windows.Forms.Label();
-            this.textBoxPlayer4DepositValue = new System.Windows.Forms.TextBox();
-            this.labelPlayer4Value = new System.Windows.Forms.Label();
-            this.textBoxPlayer4Value = new System.Windows.Forms.TextBox();
             this.menuStrip.SuspendLayout();
             this.panelStockInformations.SuspendLayout();
             this.groupBoxStockInformations.SuspendLayout();
@@ -228,6 +230,8 @@
             // 
             // panelStockIndex
             // 
+            this.panelStockIndex.Controls.Add(this.labelMarketState);
+            this.panelStockIndex.Controls.Add(this.labelMarketStateText);
             this.panelStockIndex.Controls.Add(this.labelAverage);
             this.panelStockIndex.Controls.Add(this.labelAverageText);
             this.panelStockIndex.Controls.Add(this.comboBoxStockIndex);
@@ -238,15 +242,32 @@
             this.panelStockIndex.Size = new System.Drawing.Size(786, 34);
             this.panelStockIndex.TabIndex = 0;
             // 
+            // labelMarketState
+            // 
+            this.labelMarketState.AutoSize = true;
+            this.labelMarketState.Location = new System.Drawing.Point(393, 9);
+            this.labelMarketState.Name = "labelMarketState";
+            this.labelMarketState.Size = new System.Drawing.Size(14, 13);
+            this.labelMarketState.TabIndex = 5;
+            this.labelMarketState.Text = "#";
+            // 
+            // labelMarketStateText
+            // 
+            this.labelMarketStateText.AutoSize = true;
+            this.labelMarketStateText.Location = new System.Drawing.Point(329, 9);
+            this.labelMarketStateText.Name = "labelMarketStateText";
+            this.labelMarketStateText.Size = new System.Drawing.Size(58, 13);
+            this.labelMarketStateText.TabIndex = 4;
+            this.labelMarketStateText.Text = "Konjunktur";
+            // 
             // labelAverage
             // 
             this.labelAverage.AutoSize = true;
             this.labelAverage.Location = new System.Drawing.Point(244, 9);
             this.labelAverage.Name = "labelAverage";
-            this.labelAverage.Size = new System.Drawing.Size(14, 13);
+            this.labelAverage.Size = new System.Drawing.Size(79, 13);
             this.labelAverage.TabIndex = 3;
-            this.labelAverage.Text = "#";
-            this.labelAverage.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelAverage.Text = "#.###.###,##";
             // 
             // labelAverageText
             // 
@@ -324,6 +345,54 @@
             this.groupBoxPlayer4.TabIndex = 0;
             this.groupBoxPlayer4.TabStop = false;
             // 
+            // textBoxPlayer4Value
+            // 
+            this.textBoxPlayer4Value.Location = new System.Drawing.Point(240, 118);
+            this.textBoxPlayer4Value.Name = "textBoxPlayer4Value";
+            this.textBoxPlayer4Value.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer4Value.TabIndex = 9;
+            // 
+            // labelPlayer4Value
+            // 
+            this.labelPlayer4Value.AutoSize = true;
+            this.labelPlayer4Value.Location = new System.Drawing.Point(175, 121);
+            this.labelPlayer4Value.Name = "labelPlayer4Value";
+            this.labelPlayer4Value.Size = new System.Drawing.Size(59, 13);
+            this.labelPlayer4Value.TabIndex = 8;
+            this.labelPlayer4Value.Text = "Aktiver i alt";
+            // 
+            // textBoxPlayer4DepositValue
+            // 
+            this.textBoxPlayer4DepositValue.Location = new System.Drawing.Point(240, 92);
+            this.textBoxPlayer4DepositValue.Name = "textBoxPlayer4DepositValue";
+            this.textBoxPlayer4DepositValue.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer4DepositValue.TabIndex = 7;
+            // 
+            // labelPlayer4DepositValue
+            // 
+            this.labelPlayer4DepositValue.AutoSize = true;
+            this.labelPlayer4DepositValue.Location = new System.Drawing.Point(123, 95);
+            this.labelPlayer4DepositValue.Name = "labelPlayer4DepositValue";
+            this.labelPlayer4DepositValue.Size = new System.Drawing.Size(111, 13);
+            this.labelPlayer4DepositValue.TabIndex = 6;
+            this.labelPlayer4DepositValue.Text = "Værdi af aktier i depot";
+            // 
+            // textBoxPlayer4Capital
+            // 
+            this.textBoxPlayer4Capital.Location = new System.Drawing.Point(240, 66);
+            this.textBoxPlayer4Capital.Name = "textBoxPlayer4Capital";
+            this.textBoxPlayer4Capital.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer4Capital.TabIndex = 5;
+            // 
+            // labelPlayer4Capital
+            // 
+            this.labelPlayer4Capital.AutoSize = true;
+            this.labelPlayer4Capital.Location = new System.Drawing.Point(195, 69);
+            this.labelPlayer4Capital.Name = "labelPlayer4Capital";
+            this.labelPlayer4Capital.Size = new System.Drawing.Size(39, 13);
+            this.labelPlayer4Capital.TabIndex = 4;
+            this.labelPlayer4Capital.Text = "Kapital";
+            // 
             // textBoxPlayer4Name
             // 
             this.textBoxPlayer4Name.Location = new System.Drawing.Point(44, 40);
@@ -386,6 +455,54 @@
             this.groupBoxPlayer3.Size = new System.Drawing.Size(396, 148);
             this.groupBoxPlayer3.TabIndex = 0;
             this.groupBoxPlayer3.TabStop = false;
+            // 
+            // textBoxPlayer3Value
+            // 
+            this.textBoxPlayer3Value.Location = new System.Drawing.Point(240, 118);
+            this.textBoxPlayer3Value.Name = "textBoxPlayer3Value";
+            this.textBoxPlayer3Value.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer3Value.TabIndex = 9;
+            // 
+            // labelPlayer3Value
+            // 
+            this.labelPlayer3Value.AutoSize = true;
+            this.labelPlayer3Value.Location = new System.Drawing.Point(175, 121);
+            this.labelPlayer3Value.Name = "labelPlayer3Value";
+            this.labelPlayer3Value.Size = new System.Drawing.Size(59, 13);
+            this.labelPlayer3Value.TabIndex = 8;
+            this.labelPlayer3Value.Text = "Aktiver i alt";
+            // 
+            // textBoxPlayer3DepositValue
+            // 
+            this.textBoxPlayer3DepositValue.Location = new System.Drawing.Point(240, 92);
+            this.textBoxPlayer3DepositValue.Name = "textBoxPlayer3DepositValue";
+            this.textBoxPlayer3DepositValue.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer3DepositValue.TabIndex = 7;
+            // 
+            // labelPlayer3DepositValue
+            // 
+            this.labelPlayer3DepositValue.AutoSize = true;
+            this.labelPlayer3DepositValue.Location = new System.Drawing.Point(123, 95);
+            this.labelPlayer3DepositValue.Name = "labelPlayer3DepositValue";
+            this.labelPlayer3DepositValue.Size = new System.Drawing.Size(111, 13);
+            this.labelPlayer3DepositValue.TabIndex = 6;
+            this.labelPlayer3DepositValue.Text = "Værdi af aktier i depot";
+            // 
+            // textBoxPlayer3Capital
+            // 
+            this.textBoxPlayer3Capital.Location = new System.Drawing.Point(240, 66);
+            this.textBoxPlayer3Capital.Name = "textBoxPlayer3Capital";
+            this.textBoxPlayer3Capital.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer3Capital.TabIndex = 5;
+            // 
+            // labelPlayer3Capital
+            // 
+            this.labelPlayer3Capital.AutoSize = true;
+            this.labelPlayer3Capital.Location = new System.Drawing.Point(195, 69);
+            this.labelPlayer3Capital.Name = "labelPlayer3Capital";
+            this.labelPlayer3Capital.Size = new System.Drawing.Size(39, 13);
+            this.labelPlayer3Capital.TabIndex = 4;
+            this.labelPlayer3Capital.Text = "Kapital";
             // 
             // textBoxPlayer3Name
             // 
@@ -460,6 +577,54 @@
             this.groupBoxPlayer2.TabIndex = 0;
             this.groupBoxPlayer2.TabStop = false;
             // 
+            // textBoxPlayer2Value
+            // 
+            this.textBoxPlayer2Value.Location = new System.Drawing.Point(240, 117);
+            this.textBoxPlayer2Value.Name = "textBoxPlayer2Value";
+            this.textBoxPlayer2Value.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer2Value.TabIndex = 9;
+            // 
+            // labelPlayer2Value
+            // 
+            this.labelPlayer2Value.AutoSize = true;
+            this.labelPlayer2Value.Location = new System.Drawing.Point(175, 120);
+            this.labelPlayer2Value.Name = "labelPlayer2Value";
+            this.labelPlayer2Value.Size = new System.Drawing.Size(59, 13);
+            this.labelPlayer2Value.TabIndex = 8;
+            this.labelPlayer2Value.Text = "Aktiver i alt";
+            // 
+            // textBoxPlayer2DepositValue
+            // 
+            this.textBoxPlayer2DepositValue.Location = new System.Drawing.Point(240, 91);
+            this.textBoxPlayer2DepositValue.Name = "textBoxPlayer2DepositValue";
+            this.textBoxPlayer2DepositValue.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer2DepositValue.TabIndex = 7;
+            // 
+            // labelPlayer2DepositValue
+            // 
+            this.labelPlayer2DepositValue.AutoSize = true;
+            this.labelPlayer2DepositValue.Location = new System.Drawing.Point(123, 94);
+            this.labelPlayer2DepositValue.Name = "labelPlayer2DepositValue";
+            this.labelPlayer2DepositValue.Size = new System.Drawing.Size(111, 13);
+            this.labelPlayer2DepositValue.TabIndex = 6;
+            this.labelPlayer2DepositValue.Text = "Værdi af aktier i depot";
+            // 
+            // textBoxPlayer2Capital
+            // 
+            this.textBoxPlayer2Capital.Location = new System.Drawing.Point(240, 65);
+            this.textBoxPlayer2Capital.Name = "textBoxPlayer2Capital";
+            this.textBoxPlayer2Capital.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer2Capital.TabIndex = 5;
+            // 
+            // labelPlayer2Capital
+            // 
+            this.labelPlayer2Capital.AutoSize = true;
+            this.labelPlayer2Capital.Location = new System.Drawing.Point(195, 68);
+            this.labelPlayer2Capital.Name = "labelPlayer2Capital";
+            this.labelPlayer2Capital.Size = new System.Drawing.Size(39, 13);
+            this.labelPlayer2Capital.TabIndex = 4;
+            this.labelPlayer2Capital.Text = "Kapital";
+            // 
             // textBoxPlayer2Name
             // 
             this.textBoxPlayer2Name.Location = new System.Drawing.Point(44, 39);
@@ -523,6 +688,54 @@
             this.groupBoxPlayer1.TabIndex = 0;
             this.groupBoxPlayer1.TabStop = false;
             // 
+            // textBoxPlayer1Value
+            // 
+            this.textBoxPlayer1Value.Location = new System.Drawing.Point(240, 117);
+            this.textBoxPlayer1Value.Name = "textBoxPlayer1Value";
+            this.textBoxPlayer1Value.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer1Value.TabIndex = 9;
+            // 
+            // labelPlayer1Value
+            // 
+            this.labelPlayer1Value.AutoSize = true;
+            this.labelPlayer1Value.Location = new System.Drawing.Point(175, 120);
+            this.labelPlayer1Value.Name = "labelPlayer1Value";
+            this.labelPlayer1Value.Size = new System.Drawing.Size(59, 13);
+            this.labelPlayer1Value.TabIndex = 8;
+            this.labelPlayer1Value.Text = "Aktiver i alt";
+            // 
+            // textBoxPlayer1DepositValue
+            // 
+            this.textBoxPlayer1DepositValue.Location = new System.Drawing.Point(240, 91);
+            this.textBoxPlayer1DepositValue.Name = "textBoxPlayer1DepositValue";
+            this.textBoxPlayer1DepositValue.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer1DepositValue.TabIndex = 7;
+            // 
+            // labelPlayer1DepositValue
+            // 
+            this.labelPlayer1DepositValue.AutoSize = true;
+            this.labelPlayer1DepositValue.Location = new System.Drawing.Point(123, 94);
+            this.labelPlayer1DepositValue.Name = "labelPlayer1DepositValue";
+            this.labelPlayer1DepositValue.Size = new System.Drawing.Size(111, 13);
+            this.labelPlayer1DepositValue.TabIndex = 6;
+            this.labelPlayer1DepositValue.Text = "Værdi af aktier i depot";
+            // 
+            // textBoxPlayer1Capital
+            // 
+            this.textBoxPlayer1Capital.Location = new System.Drawing.Point(240, 65);
+            this.textBoxPlayer1Capital.Name = "textBoxPlayer1Capital";
+            this.textBoxPlayer1Capital.Size = new System.Drawing.Size(150, 20);
+            this.textBoxPlayer1Capital.TabIndex = 5;
+            // 
+            // labelPlayer1Capital
+            // 
+            this.labelPlayer1Capital.AutoSize = true;
+            this.labelPlayer1Capital.Location = new System.Drawing.Point(195, 68);
+            this.labelPlayer1Capital.Name = "labelPlayer1Capital";
+            this.labelPlayer1Capital.Size = new System.Drawing.Size(39, 13);
+            this.labelPlayer1Capital.TabIndex = 4;
+            this.labelPlayer1Capital.Text = "Kapital";
+            // 
             // textBoxPlayer1Name
             // 
             this.textBoxPlayer1Name.Location = new System.Drawing.Point(44, 39);
@@ -554,198 +767,6 @@
             this.labelPlayer1Company.Size = new System.Drawing.Size(32, 13);
             this.labelPlayer1Company.TabIndex = 0;
             this.labelPlayer1Company.Text = "Firma";
-            // 
-            // labelPlayer1Capital
-            // 
-            this.labelPlayer1Capital.AutoSize = true;
-            this.labelPlayer1Capital.Location = new System.Drawing.Point(195, 68);
-            this.labelPlayer1Capital.Name = "labelPlayer1Capital";
-            this.labelPlayer1Capital.Size = new System.Drawing.Size(39, 13);
-            this.labelPlayer1Capital.TabIndex = 4;
-            this.labelPlayer1Capital.Text = "Kapital";
-            // 
-            // textBoxPlayer1Capital
-            // 
-            this.textBoxPlayer1Capital.Location = new System.Drawing.Point(240, 65);
-            this.textBoxPlayer1Capital.Name = "textBoxPlayer1Capital";
-            this.textBoxPlayer1Capital.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer1Capital.TabIndex = 5;
-            // 
-            // labelPlayer1DepositValue
-            // 
-            this.labelPlayer1DepositValue.AutoSize = true;
-            this.labelPlayer1DepositValue.Location = new System.Drawing.Point(123, 94);
-            this.labelPlayer1DepositValue.Name = "labelPlayer1DepositValue";
-            this.labelPlayer1DepositValue.Size = new System.Drawing.Size(111, 13);
-            this.labelPlayer1DepositValue.TabIndex = 6;
-            this.labelPlayer1DepositValue.Text = "Værdi af aktier i depot";
-            // 
-            // textBoxPlayer1DepositValue
-            // 
-            this.textBoxPlayer1DepositValue.Location = new System.Drawing.Point(240, 91);
-            this.textBoxPlayer1DepositValue.Name = "textBoxPlayer1DepositValue";
-            this.textBoxPlayer1DepositValue.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer1DepositValue.TabIndex = 7;
-            // 
-            // labelPlayer1Value
-            // 
-            this.labelPlayer1Value.AutoSize = true;
-            this.labelPlayer1Value.Location = new System.Drawing.Point(175, 120);
-            this.labelPlayer1Value.Name = "labelPlayer1Value";
-            this.labelPlayer1Value.Size = new System.Drawing.Size(59, 13);
-            this.labelPlayer1Value.TabIndex = 8;
-            this.labelPlayer1Value.Text = "Aktiver i alt";
-            // 
-            // textBoxPlayer1Value
-            // 
-            this.textBoxPlayer1Value.Location = new System.Drawing.Point(240, 117);
-            this.textBoxPlayer1Value.Name = "textBoxPlayer1Value";
-            this.textBoxPlayer1Value.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer1Value.TabIndex = 9;
-            // 
-            // labelPlayer2Capital
-            // 
-            this.labelPlayer2Capital.AutoSize = true;
-            this.labelPlayer2Capital.Location = new System.Drawing.Point(195, 68);
-            this.labelPlayer2Capital.Name = "labelPlayer2Capital";
-            this.labelPlayer2Capital.Size = new System.Drawing.Size(39, 13);
-            this.labelPlayer2Capital.TabIndex = 4;
-            this.labelPlayer2Capital.Text = "Kapital";
-            // 
-            // textBoxPlayer2Capital
-            // 
-            this.textBoxPlayer2Capital.Location = new System.Drawing.Point(240, 65);
-            this.textBoxPlayer2Capital.Name = "textBoxPlayer2Capital";
-            this.textBoxPlayer2Capital.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer2Capital.TabIndex = 5;
-            // 
-            // labelPlayer2DepositValue
-            // 
-            this.labelPlayer2DepositValue.AutoSize = true;
-            this.labelPlayer2DepositValue.Location = new System.Drawing.Point(123, 94);
-            this.labelPlayer2DepositValue.Name = "labelPlayer2DepositValue";
-            this.labelPlayer2DepositValue.Size = new System.Drawing.Size(111, 13);
-            this.labelPlayer2DepositValue.TabIndex = 6;
-            this.labelPlayer2DepositValue.Text = "Værdi af aktier i depot";
-            // 
-            // textBoxPlayer2DepositValue
-            // 
-            this.textBoxPlayer2DepositValue.Location = new System.Drawing.Point(240, 91);
-            this.textBoxPlayer2DepositValue.Name = "textBoxPlayer2DepositValue";
-            this.textBoxPlayer2DepositValue.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer2DepositValue.TabIndex = 7;
-            // 
-            // labelPlayer2Value
-            // 
-            this.labelPlayer2Value.AutoSize = true;
-            this.labelPlayer2Value.Location = new System.Drawing.Point(175, 120);
-            this.labelPlayer2Value.Name = "labelPlayer2Value";
-            this.labelPlayer2Value.Size = new System.Drawing.Size(59, 13);
-            this.labelPlayer2Value.TabIndex = 8;
-            this.labelPlayer2Value.Text = "Aktiver i alt";
-            // 
-            // textBoxPlayer2Value
-            // 
-            this.textBoxPlayer2Value.Location = new System.Drawing.Point(240, 117);
-            this.textBoxPlayer2Value.Name = "textBoxPlayer2Value";
-            this.textBoxPlayer2Value.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer2Value.TabIndex = 9;
-            // 
-            // labelPlayer3Capital
-            // 
-            this.labelPlayer3Capital.AutoSize = true;
-            this.labelPlayer3Capital.Location = new System.Drawing.Point(195, 69);
-            this.labelPlayer3Capital.Name = "labelPlayer3Capital";
-            this.labelPlayer3Capital.Size = new System.Drawing.Size(39, 13);
-            this.labelPlayer3Capital.TabIndex = 4;
-            this.labelPlayer3Capital.Text = "Kapital";
-            // 
-            // textBoxPlayer3Capital
-            // 
-            this.textBoxPlayer3Capital.Location = new System.Drawing.Point(240, 66);
-            this.textBoxPlayer3Capital.Name = "textBoxPlayer3Capital";
-            this.textBoxPlayer3Capital.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer3Capital.TabIndex = 5;
-            // 
-            // labelPlayer3DepositValue
-            // 
-            this.labelPlayer3DepositValue.AutoSize = true;
-            this.labelPlayer3DepositValue.Location = new System.Drawing.Point(123, 95);
-            this.labelPlayer3DepositValue.Name = "labelPlayer3DepositValue";
-            this.labelPlayer3DepositValue.Size = new System.Drawing.Size(111, 13);
-            this.labelPlayer3DepositValue.TabIndex = 6;
-            this.labelPlayer3DepositValue.Text = "Værdi af aktier i depot";
-            // 
-            // textBoxPlayer3DepositValue
-            // 
-            this.textBoxPlayer3DepositValue.Location = new System.Drawing.Point(240, 92);
-            this.textBoxPlayer3DepositValue.Name = "textBoxPlayer3DepositValue";
-            this.textBoxPlayer3DepositValue.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer3DepositValue.TabIndex = 7;
-            // 
-            // labelPlayer3Value
-            // 
-            this.labelPlayer3Value.AutoSize = true;
-            this.labelPlayer3Value.Location = new System.Drawing.Point(175, 121);
-            this.labelPlayer3Value.Name = "labelPlayer3Value";
-            this.labelPlayer3Value.Size = new System.Drawing.Size(59, 13);
-            this.labelPlayer3Value.TabIndex = 8;
-            this.labelPlayer3Value.Text = "Aktiver i alt";
-            // 
-            // textBoxPlayer3Value
-            // 
-            this.textBoxPlayer3Value.Location = new System.Drawing.Point(240, 118);
-            this.textBoxPlayer3Value.Name = "textBoxPlayer3Value";
-            this.textBoxPlayer3Value.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer3Value.TabIndex = 9;
-            // 
-            // labelPlayer4Capital
-            // 
-            this.labelPlayer4Capital.AutoSize = true;
-            this.labelPlayer4Capital.Location = new System.Drawing.Point(195, 69);
-            this.labelPlayer4Capital.Name = "labelPlayer4Capital";
-            this.labelPlayer4Capital.Size = new System.Drawing.Size(39, 13);
-            this.labelPlayer4Capital.TabIndex = 4;
-            this.labelPlayer4Capital.Text = "Kapital";
-            // 
-            // textBoxPlayer4Capital
-            // 
-            this.textBoxPlayer4Capital.Location = new System.Drawing.Point(240, 66);
-            this.textBoxPlayer4Capital.Name = "textBoxPlayer4Capital";
-            this.textBoxPlayer4Capital.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer4Capital.TabIndex = 5;
-            // 
-            // labelPlayer4DepositValue
-            // 
-            this.labelPlayer4DepositValue.AutoSize = true;
-            this.labelPlayer4DepositValue.Location = new System.Drawing.Point(123, 95);
-            this.labelPlayer4DepositValue.Name = "labelPlayer4DepositValue";
-            this.labelPlayer4DepositValue.Size = new System.Drawing.Size(111, 13);
-            this.labelPlayer4DepositValue.TabIndex = 6;
-            this.labelPlayer4DepositValue.Text = "Værdi af aktier i depot";
-            // 
-            // textBoxPlayer4DepositValue
-            // 
-            this.textBoxPlayer4DepositValue.Location = new System.Drawing.Point(240, 92);
-            this.textBoxPlayer4DepositValue.Name = "textBoxPlayer4DepositValue";
-            this.textBoxPlayer4DepositValue.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer4DepositValue.TabIndex = 7;
-            // 
-            // labelPlayer4Value
-            // 
-            this.labelPlayer4Value.AutoSize = true;
-            this.labelPlayer4Value.Location = new System.Drawing.Point(175, 121);
-            this.labelPlayer4Value.Name = "labelPlayer4Value";
-            this.labelPlayer4Value.Size = new System.Drawing.Size(59, 13);
-            this.labelPlayer4Value.TabIndex = 8;
-            this.labelPlayer4Value.Text = "Aktiver i alt";
-            // 
-            // textBoxPlayer4Value
-            // 
-            this.textBoxPlayer4Value.Location = new System.Drawing.Point(240, 118);
-            this.textBoxPlayer4Value.Name = "textBoxPlayer4Value";
-            this.textBoxPlayer4Value.Size = new System.Drawing.Size(150, 20);
-            this.textBoxPlayer4Value.TabIndex = 9;
             // 
             // MainForm
             // 
@@ -857,6 +878,8 @@
         private System.Windows.Forms.Label labelPlayer4Capital;
         private System.Windows.Forms.TextBox textBoxPlayer4Value;
         private System.Windows.Forms.Label labelPlayer4Value;
+        private System.Windows.Forms.Label labelMarketStateText;
+        private System.Windows.Forms.Label labelMarketState;
     }
 }
 

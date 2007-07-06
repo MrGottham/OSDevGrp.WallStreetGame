@@ -45,7 +45,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Reset()
+        public void Reset(System.Random random)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace OSDevGrp.WallStreetGame
                 {
                     foreach (IResetable r in this.Values)
                     {
-                        r.Reset();
+                        r.Reset(random);
                     }
                 }
             }

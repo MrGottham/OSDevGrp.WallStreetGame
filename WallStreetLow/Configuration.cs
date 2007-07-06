@@ -12,11 +12,11 @@ namespace OSDevGrp.WallStreetGame
         private Players _Players = null;
         private System.Xml.XmlDocument _XmlDocument = null;
 
-        public Configuration(string setupfilename) : this(setupfilename, null, null, null)
+        public Configuration(string setupfilename, System.Random random) : this(setupfilename, random, null, null, null)
         {
         }
 
-        public Configuration(string setupfilename, StockIndexes stockindexes, Stocks stocks, Players players) : base()
+        public Configuration(string setupfilename, System.Random random, StockIndexes stockindexes, Stocks stocks, Players players) : base()
         {
             try
             {
@@ -30,7 +30,7 @@ namespace OSDevGrp.WallStreetGame
                 Players = players;
                 if (Players == null)
                     Players = new Players();
-                Load();
+                Load(random);
             }
             catch (System.Exception ex)
             {
@@ -98,7 +98,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Load()
+        public void Load(System.Random random)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace OSDevGrp.WallStreetGame
                             {
                                 if (xmlchildnode.HasChildNodes)
                                 {
-                                    stock = new Stock(xmlchildnode.Attributes["stockid"].Value, xmlchildnode.FirstChild.Value, stockindex);
+                                    stock = new Stock(xmlchildnode.Attributes["stockid"].Value, xmlchildnode.FirstChild.Value, stockindex, random);
                                     Stocks.Add(stock.Id, stock);
                                 }
                             }

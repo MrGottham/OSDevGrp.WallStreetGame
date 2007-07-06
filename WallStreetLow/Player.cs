@@ -30,7 +30,7 @@ namespace OSDevGrp.WallStreetGame
                 IsYou = isyou && !IsComputer;
                 Deposit = new Deposit(stocks);
                 ValueHistory = new DoubleHistory();
-                Reset();
+                Reset(null);
             }
             catch (System.Exception ex)
             {
@@ -140,12 +140,12 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Reset()
+        public void Reset(System.Random random)
         {
             try
             {
                 Capital = CAPITAL_INITIALIZE;
-                Deposit.Reset();
+                Deposit.Reset(random);
                 while (ValueHistory.Count > 0)
                     ValueHistory.Clear();
                 ValueHistory.Add(Value);

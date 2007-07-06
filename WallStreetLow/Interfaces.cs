@@ -6,6 +6,11 @@ namespace OSDevGrp.WallStreetGame
 {
     public interface IResetable
     {
-        void Reset();
+        void Reset(System.Random random);
+    }
+
+    public interface IPlayable
+    {
+        void Play(MarketState marketstate, System.Random random);
     }
 }
