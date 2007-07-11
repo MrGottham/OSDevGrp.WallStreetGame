@@ -432,7 +432,7 @@ namespace OSDevGrp.WallStreetGame
                                     lvi.Text = stock.PriceDifference.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
                                     break;
                                 case "PriceDifferenceProcent":
-                                    lvi.Text = stock.PriceDifferenceProcent.ToString("n", nfi) + " " + System.Globalization.NumberFormatInfo.CurrentInfo.PercentSymbol;
+                                    lvi.Text = stock.PriceDifferenceProcent.ToString("n", nfi) + " " + nfi.PercentSymbol;
                                     break;
                                 case "Available":
                                     lvi.Text = stock.Available.ToString("#,##0", nfi);
@@ -575,6 +575,14 @@ namespace OSDevGrp.WallStreetGame
                                 this.listViewStocks.ListViewItemSorter = new ListViewItemComparer(0, (ListViewItemComparerMethod) this.listViewStocks.Columns[0].Tag, System.Windows.Forms.SortOrder.Ascending);
                         }
                         this.listViewStocks.EndUpdate();
+                    }
+                    if (this.StockForms.Count > 0)
+                    {
+                        foreach (StockForm stockform in this.StockForms)
+                        {
+                            if (stockform.Visible)
+                                stockform.UpdateStockInformations();
+                        }
                     }
                 }
                 switch (Game.MarketState.State)
