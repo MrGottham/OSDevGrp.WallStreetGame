@@ -8,9 +8,9 @@ namespace OSDevGrp.WallStreetGame
     {
         private const double MIN_PRICE = 2.50D;
         private const double MAX_PRICE = 250000.00D;
-        private const int MAX_INITIALIZE_PRICE = 5000;
+        private const int MAX_INITIALIZE_PRICE = 1000;
         private const int MIN_AVAILABLE = 0;
-        private const int MAX_AVAILABLE = 2500000;
+        private const int MAX_AVAILABLE = 250000;
 
         private string _Id = null;
         private string _Name = null;
@@ -18,6 +18,7 @@ namespace OSDevGrp.WallStreetGame
         private DoubleHistory _PriceHistory = null;
         private double _Price = MIN_PRICE;
         private int _Available = MIN_AVAILABLE;
+        private int _OwnedByPlayers = 0;
 
         public Stock(string id, string name, StockIndex stockindex, System.Random random) : base()
         {
@@ -153,8 +154,24 @@ namespace OSDevGrp.WallStreetGame
                 _Available = value;
                 if (_Available < MIN_AVAILABLE)
                     _Available = MIN_AVAILABLE;
-                if (_Available > MAX_AVAILABLE)
-                    _Available = MAX_AVAILABLE;
+                if (_Available > MAX_AVAILABLE - OwnedByPlayers)
+                    _Available = MAX_AVAILABLE - OwnedByPlayers;
+            }
+        }
+
+        public int OwnedByPlayers
+        {
+            get
+            {
+                return _OwnedByPlayers;
+            }
+            set
+            {
+                _OwnedByPlayers = value;
+                if (_OwnedByPlayers < MIN_AVAILABLE)
+                    _OwnedByPlayers = MIN_AVAILABLE;
+                if (_OwnedByPlayers > MAX_AVAILABLE)
+                    _OwnedByPlayers = MAX_AVAILABLE;
             }
         }
 
@@ -251,6 +268,7 @@ namespace OSDevGrp.WallStreetGame
                 else
                     Price = random.Next(MAX_INITIALIZE_PRICE) + random.NextDouble();
                 Available = random.Next(MAX_AVAILABLE);
+                OwnedByPlayers = 0;
             }
             catch (System.Exception ex)
             {

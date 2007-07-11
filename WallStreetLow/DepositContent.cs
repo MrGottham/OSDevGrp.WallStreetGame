@@ -104,6 +104,7 @@ namespace OSDevGrp.WallStreetGame
                 {
                     Count += stockstobuy;
                     Stock.Available -= stockstobuy;
+                    Stock.OwnedByPlayers += stockstobuy;
                     LastBuyPrice = Stock.Price;
                     Deposit.Player.Capital -= Stock.CalculatePrice(stockstobuy) + Stock.CalculateBrokerage(marketstate, stockstobuy);
                 }
@@ -121,6 +122,7 @@ namespace OSDevGrp.WallStreetGame
                 if (stockstosell > 0 && stockstosell <= Count && Stock.CalculatePrice(stockstosell) >= Stock.CalculateBrokerage(marketstate, stockstosell))
                 {
                     Count -= stockstosell;
+                    Stock.OwnedByPlayers -= stockstosell;
                     Stock.Available += stockstosell;
                     if (Count <= 0)
                     {
