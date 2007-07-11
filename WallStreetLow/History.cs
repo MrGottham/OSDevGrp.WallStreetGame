@@ -47,10 +47,18 @@ namespace OSDevGrp.WallStreetGame
         }
     }
 
-    public class History<T> : System.Collections.Generic.List<T>
+    public class History<T> : System.Collections.Generic.List<T>, IResetable
     {
         public History() : base(256)
         {
+            try
+            {
+                Reset(null);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public void AddHistory(T value)
@@ -60,6 +68,19 @@ namespace OSDevGrp.WallStreetGame
                 while (this.Count >= this.Capacity)
                     this.RemoveAt(0);
                 this.Add(value);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Reset(System.Random random)
+        {
+            try
+            {
+                while (this.Count > 0)
+                    this.Clear();
             }
             catch (System.Exception ex)
             {

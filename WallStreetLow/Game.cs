@@ -380,6 +380,9 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                Players.Play(marketstate, random);
+                Stocks.Play(marketstate, random);
+                MarketState.Play(marketstate, random);
                 if (UpdateStockInformationsEvent != null)
                     UpdateStockInformationsEvent();
                 if (UpdatePlayerInformationsEvent != null)

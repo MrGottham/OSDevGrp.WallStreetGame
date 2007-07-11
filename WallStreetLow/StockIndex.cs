@@ -61,7 +61,8 @@ namespace OSDevGrp.WallStreetGame
                     double d = 0;
                     foreach(Stock stock in Stocks.Values)
                     {
-                        d += stock.Price;
+                        if (d + stock.Price >= 0 && d + stock.Price <= double.MaxValue)
+                            d += stock.Price;
                     }
                     return System.Math.Round(d / Stocks.Count, 2);
                 }

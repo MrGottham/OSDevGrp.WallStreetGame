@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Stock : System.Object, IResetable
+    public class Stock : System.Object, IResetable, IPlayable
     {
         private const double MIN_PRICE = 2.50D;
         private const double MAX_PRICE = 250000.00D;
@@ -137,7 +137,7 @@ namespace OSDevGrp.WallStreetGame
             get
             {
                 if (PriceHistory.Count > 1)
-                    return (PriceDifference * 100) / PriceHistory[PriceHistory.Count - 2];
+                    return (PriceDifference / PriceHistory[PriceHistory.Count - 2]) * 100;
                 return 0D;
             }
         }
@@ -148,7 +148,7 @@ namespace OSDevGrp.WallStreetGame
             {
                 return _Available;
             }
-            private set
+            set
             {
                 _Available = value;
                 if (_Available < MIN_AVAILABLE)
@@ -175,17 +175,121 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public double CalculatePrice(int count)
+        {
+            try
+            {
+                return count * Price;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public double CalculateBrokerage(MarketState marketstate, int count)
+        {
+            try
+            {
+                double brokerage = (CalculatePrice(count) * (marketstate.Brokerage / 100)) * 100;
+                double d = brokerage % 100;
+                if (d >= 0 && d < 26)
+                {
+                    brokerage = (brokerage - d + (d >= 13 ? 25 : 0)) / 100;
+                }
+                else if (d >= 26 && d < 51)
+                {
+                    brokerage = (brokerage - d + (d >= 38 ? 50 : 25)) / 100;
+                }
+                else if (d >= 51 && d < 75)
+                {
+                    brokerage = (brokerage - d + (d >= 63 ? 75 : 50)) / 100;
+                }
+                else if (d >= 75 && d < 100)
+                {
+                    brokerage = (brokerage - d + (d >= 88 ? 100 : 75)) / 100;
+                }
+                return brokerage;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Buy(Player player, MarketState marketstate, int stockstobuy)
+        {
+            try
+            {
+                player.Buy(this, marketstate, stockstobuy);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Sell(Player player, MarketState marketstate, int stockstosell)
+        {
+            try
+            {
+                player.Sell(this, marketstate, stockstosell);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void Reset(System.Random random)
         {
             try
             {
-                while (PriceHistory.Count > 0)
-                    PriceHistory.Clear();
+                PriceHistory.Reset(random);
                 if (random.Next(100) > 95)
                     Price = random.Next(MAX_INITIALIZE_PRICE * 5) + random.NextDouble();
                 else
                     Price = random.Next(MAX_INITIALIZE_PRICE) + random.NextDouble();
                 Available = random.Next(MAX_AVAILABLE);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Play(MarketState marketstate, System.Random random)
+        {
+            try
+            {
+                double d_up = 0D, d_down = 0D;
+                int i_up_down = 0;
+                switch (marketstate.State)
+                {
+                    case MarketStateType.Normal:
+                        d_up = (Price / 100) * 5;
+                        d_down = (Price / 100) * 5;
+                        i_up_down = (Available / 100) * 10;
+                        break;
+                    case MarketStateType.Depression:
+                        d_up = (Price / 100) * 2.5;
+                        d_down = (Price / 100) * 5;
+                        i_up_down = (Available / 100) * 5;
+                        break;
+                    case MarketStateType.Boom:
+                        d_up = (Price / 100) * 5;
+                        d_down = (Price / 100) * 2.5;
+                        i_up_down = (Available / 100) * 15;
+                        break;
+                }
+                if (d_up <= 0)
+                    d_up = MIN_PRICE;
+                if (d_down <= 0)
+                    d_down = MIN_PRICE;
+                if (i_up_down <= 0)
+                    i_up_down = MAX_AVAILABLE / 1000;
+                Price += random.Next(d_up > int.MaxValue ? int.MaxValue : (int) d_up) - random.Next(d_down > int.MaxValue ? int.MaxValue : (int) d_down);
+                Available += random.Next(i_up_down) - random.Next(i_up_down);
             }
             catch (System.Exception ex)
             {
