@@ -117,14 +117,14 @@ namespace OSDevGrp.WallStreetGame
                                 {
                                     x_s = x_s.Substring(0, x_p);
                                 }
-                                int x_i = int.Parse(x_s, System.Globalization.NumberStyles.AllowThousands, nfi);
+                                int x_i = int.Parse(x_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands, nfi);
                                 string y_s = y_lvi.SubItems[ColumnToSort].Text;
                                 int y_p = y_s.IndexOf(' ');
                                 if (y_p >= 0)
                                 {
                                     y_s = y_s.Substring(0, y_p);
                                 }
-                                int y_i = int.Parse(y_s, System.Globalization.NumberStyles.AllowThousands, nfi);
+                                int y_i = int.Parse(y_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands, nfi);
                                 switch (SortOrder)
                                 {
                                     case System.Windows.Forms.SortOrder.Ascending:
@@ -145,14 +145,14 @@ namespace OSDevGrp.WallStreetGame
                                 {
                                     x_s = x_s.Substring(0, x_p);
                                 }
-                                double x_d = double.Parse(x_s, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowDecimalPoint, nfi);
+                                double x_d = double.Parse(x_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowDecimalPoint, nfi);
                                 string y_s = y_lvi.SubItems[ColumnToSort].Text;
                                 int y_p = y_s.IndexOf(' ');
                                 if (y_p >= 0)
                                 {
                                     y_s = y_s.Substring(0, y_p);
                                 }
-                                double y_d = double.Parse(y_s, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowDecimalPoint, nfi);
+                                double y_d = double.Parse(y_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowDecimalPoint, nfi);
                                 switch (SortOrder)
                                 {
                                     case System.Windows.Forms.SortOrder.Ascending:
@@ -185,8 +185,9 @@ namespace OSDevGrp.WallStreetGame
         }
 
         private Game _Game = null;
+        private StockForms _StockForms = null;
 
-        public MainForm()
+        public MainForm() : base()
         {
             InitializeComponent();
             try
@@ -196,8 +197,9 @@ namespace OSDevGrp.WallStreetGame
                 Game.AfterResetEvent = this.AfterReset;
                 Game.UpdateStockInformationsEvent = this.UpdateStockInformations;
                 Game.UpdatePlayerInformationsEvent = this.UpdatePlayerInformations;
-                this.Text = PRODUCT_NAME;
-                this.toolStripMenuItemAbout.Text = this.toolStripMenuItemAbout.Text + " " + PRODUCT_NAME;
+                StockForms = new StockForms();
+                this.Text = ProductName;
+                this.toolStripMenuItemAbout.Text = this.toolStripMenuItemAbout.Text + " " + ProductName;
                 this.comboBoxStockIndex.Items.Clear();
                 this.comboBoxStockIndex.DisplayMember = "Name";
                 if (Game.StockIndexes.Count > 0)
@@ -340,6 +342,14 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public string ProductName
+        {
+            get
+            {
+                return PRODUCT_NAME;
+            }
+        }
+
         public Game Game
         {
             get
@@ -352,11 +362,23 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public StockForms StockForms
+        {
+            get
+            {
+                return _StockForms;
+            }
+            private set
+            {
+                _StockForms = value;
+            }
+        }
+
         private bool BeforeReset()
         {
             try
             {
-                if (System.Windows.Forms.MessageBox.Show(this, "Nyt spil?", PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                if (System.Windows.Forms.MessageBox.Show(this, "Nyt spil?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                 {
                     this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                     return true;
@@ -389,10 +411,10 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
-                StockIndex stockindex = (StockIndex) this.comboBoxStockIndex.SelectedItem;
+                System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
+                StockIndex stockindex = (StockIndex)this.comboBoxStockIndex.SelectedItem;
                 if (stockindex != null)
                 {
-                    System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
                     this.labelAverage.Text = stockindex.PriceAverage.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
                     if (this.listViewStocks.Items.Count > 0)
                     {
@@ -567,13 +589,14 @@ namespace OSDevGrp.WallStreetGame
                         this.labelMarketState.Text = "Høj";
                         break;
                 }
+                this.labelBrokerage.Text = Game.MarketState.Brokerage.ToString("n", nfi) + " " + System.Globalization.NumberFormatInfo.CurrentInfo.PercentSymbol;
                 this.Cursor = System.Windows.Forms.Cursors.Default;
             }
             catch (System.Exception ex)
             {
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -671,7 +694,7 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -679,6 +702,11 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                this.toolStripMenuItemTrade.Enabled = false;
+                if (this.listViewStocks.Items.Count > 0)
+                {
+                    this.toolStripMenuItemTrade.Enabled = (this.listViewStocks.SelectedItems.Count > 0);
+                }
             }
             catch (System.Exception ex)
             {
@@ -695,7 +723,7 @@ namespace OSDevGrp.WallStreetGame
             }
             catch (System.Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -707,7 +735,7 @@ namespace OSDevGrp.WallStreetGame
             }
             catch (System.Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -719,7 +747,7 @@ namespace OSDevGrp.WallStreetGame
             }
             catch (System.Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -727,11 +755,11 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                System.Windows.Forms.MessageBox.Show(this, PRODUCT_NAME + "\nVersion: " + this.ProductVersion + "\n\nUdviklingsteam:\n" + this.CompanyName, "About", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                System.Windows.Forms.MessageBox.Show(this, ProductName + "\nVersion: " + this.ProductVersion + "\n\nUdviklingsteam:\n" + this.CompanyName, "About", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
             catch (System.Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -752,7 +780,39 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        private void listViewStocks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                GrayItems();
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        private void listViewStocks_DoubleClick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.listViewStocks.Items.Count > 0 && this.listViewStocks.SelectedItems.Count > 0)
+                {
+                    foreach (System.Windows.Forms.ListViewItem lvi in this.listViewStocks.SelectedItems)
+                    {
+                        StockForm stockform = new StockForm(this, Game, (Stock) lvi.Tag);
+                        this.StockForms.Add(stockform);
+                        stockform.Show(this);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -792,7 +852,7 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -853,7 +913,7 @@ namespace OSDevGrp.WallStreetGame
             }
             catch (System.Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -869,7 +929,7 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
-                System.Windows.Forms.MessageBox.Show(this, ex.Message, PRODUCT_NAME, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
     }

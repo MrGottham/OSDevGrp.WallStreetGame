@@ -35,6 +35,8 @@
             this.toolStripMenuItemNewGame = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorExit = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemFunctions = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemTrade = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.panelStockInformations = new System.Windows.Forms.Panel();
@@ -44,6 +46,8 @@
             this.imageListLarge = new System.Windows.Forms.ImageList(this.components);
             this.imageListSmall = new System.Windows.Forms.ImageList(this.components);
             this.panelStockIndex = new System.Windows.Forms.Panel();
+            this.labelBrokerage = new System.Windows.Forms.Label();
+            this.labelBrokerageText = new System.Windows.Forms.Label();
             this.labelMarketState = new System.Windows.Forms.Label();
             this.labelMarketStateText = new System.Windows.Forms.Label();
             this.labelAverage = new System.Windows.Forms.Label();
@@ -123,6 +127,7 @@
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemFiles,
+            this.toolStripMenuItemFunctions,
             this.toolStripMenuItemHelp});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
@@ -158,6 +163,21 @@
             this.toolStripMenuItemExit.Size = new System.Drawing.Size(120, 22);
             this.toolStripMenuItemExit.Text = "&Afslut";
             this.toolStripMenuItemExit.Click += new System.EventHandler(this.toolStripMenuItemExit_Click);
+            // 
+            // toolStripMenuItemFunctions
+            // 
+            this.toolStripMenuItemFunctions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemTrade});
+            this.toolStripMenuItemFunctions.Name = "toolStripMenuItemFunctions";
+            this.toolStripMenuItemFunctions.Size = new System.Drawing.Size(70, 20);
+            this.toolStripMenuItemFunctions.Text = "F&unktioner";
+            // 
+            // toolStripMenuItemTrade
+            // 
+            this.toolStripMenuItemTrade.Name = "toolStripMenuItemTrade";
+            this.toolStripMenuItemTrade.Size = new System.Drawing.Size(178, 22);
+            this.toolStripMenuItemTrade.Text = "&Købe / sælge aktier";
+            this.toolStripMenuItemTrade.Click += new System.EventHandler(this.listViewStocks_DoubleClick);
             // 
             // toolStripMenuItemHelp
             // 
@@ -214,6 +234,8 @@
             this.listViewStocks.SmallImageList = this.imageListSmall;
             this.listViewStocks.TabIndex = 0;
             this.listViewStocks.UseCompatibleStateImageBehavior = false;
+            this.listViewStocks.DoubleClick += new System.EventHandler(this.listViewStocks_DoubleClick);
+            this.listViewStocks.SelectedIndexChanged += new System.EventHandler(this.listViewStocks_SelectedIndexChanged);
             this.listViewStocks.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewStocks_ColumnClick);
             // 
             // imageListLarge
@@ -230,6 +252,8 @@
             // 
             // panelStockIndex
             // 
+            this.panelStockIndex.Controls.Add(this.labelBrokerage);
+            this.panelStockIndex.Controls.Add(this.labelBrokerageText);
             this.panelStockIndex.Controls.Add(this.labelMarketState);
             this.panelStockIndex.Controls.Add(this.labelMarketStateText);
             this.panelStockIndex.Controls.Add(this.labelAverage);
@@ -242,14 +266,33 @@
             this.panelStockIndex.Size = new System.Drawing.Size(786, 34);
             this.panelStockIndex.TabIndex = 0;
             // 
+            // labelBrokerage
+            // 
+            this.labelBrokerage.AutoSize = true;
+            this.labelBrokerage.Location = new System.Drawing.Point(498, 9);
+            this.labelBrokerage.Name = "labelBrokerage";
+            this.labelBrokerage.Size = new System.Drawing.Size(31, 13);
+            this.labelBrokerage.TabIndex = 7;
+            this.labelBrokerage.Text = "#,##";
+            // 
+            // labelBrokerageText
+            // 
+            this.labelBrokerageText.AutoSize = true;
+            this.labelBrokerageText.Location = new System.Drawing.Point(448, 9);
+            this.labelBrokerageText.Name = "labelBrokerageText";
+            this.labelBrokerageText.Size = new System.Drawing.Size(44, 13);
+            this.labelBrokerageText.TabIndex = 6;
+            this.labelBrokerageText.Text = "Kurtage";
+            // 
             // labelMarketState
             // 
             this.labelMarketState.AutoSize = true;
             this.labelMarketState.Location = new System.Drawing.Point(393, 9);
             this.labelMarketState.Name = "labelMarketState";
-            this.labelMarketState.Size = new System.Drawing.Size(14, 13);
+            this.labelMarketState.Size = new System.Drawing.Size(49, 13);
             this.labelMarketState.TabIndex = 5;
-            this.labelMarketState.Text = "#";
+            this.labelMarketState.Text = "######";
+            this.labelMarketState.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // labelMarketStateText
             // 
@@ -776,6 +819,7 @@
             this.Controls.Add(this.panelStockInformations);
             this.Controls.Add(this.panelPlayerInformations);
             this.Controls.Add(this.menuStrip);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.Text = "Aktiespillet";
@@ -880,6 +924,10 @@
         private System.Windows.Forms.Label labelPlayer4Value;
         private System.Windows.Forms.Label labelMarketStateText;
         private System.Windows.Forms.Label labelMarketState;
+        private System.Windows.Forms.Label labelBrokerageText;
+        private System.Windows.Forms.Label labelBrokerage;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFunctions;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTrade;
     }
 }
 
