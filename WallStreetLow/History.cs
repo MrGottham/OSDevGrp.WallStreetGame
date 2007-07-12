@@ -94,5 +94,53 @@ namespace OSDevGrp.WallStreetGame
         public DoubleHistory() : base()
         {
         }
+
+        public double Min
+        {
+            get
+            {
+                System.Nullable<double> m = null;
+                if (this.Count > 0)
+                {
+                    foreach (double d in this)
+                    {
+                        if (m.HasValue)
+                        {
+                            if (m > d)
+                                m = d;
+                        }
+                        else
+                            m = d;
+                    }
+                    if (m.HasValue)
+                        return m.Value;
+                }
+                return 0D;
+            }
+        }
+
+        public double Max
+        {
+            get
+            {
+                System.Nullable<double> m = null;
+                if (this.Count > 0)
+                {
+                    foreach (double d in this)
+                    {
+                        if (m.HasValue)
+                        {
+                            if (m < d)
+                                m = d;
+                        }
+                        else
+                            m = d;
+                    }
+                    if (m.HasValue)
+                        return m.Value;
+                }
+                return 0D;
+            }
+        }
     }
 }

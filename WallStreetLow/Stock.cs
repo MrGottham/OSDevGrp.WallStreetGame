@@ -300,9 +300,9 @@ namespace OSDevGrp.WallStreetGame
                         i_up_down = (Available / 100) * 15;
                         break;
                 }
-                if (d_up <= 1)
+                if (d_up <= MIN_PRICE)
                     d_up = MIN_PRICE;
-                if (d_down <= 1)
+                if (d_down <= MIN_PRICE)
                     d_down = MIN_PRICE;
                 if (i_up_down <= 0)
                     i_up_down = MAX_AVAILABLE / 1000;

@@ -234,9 +234,9 @@ namespace OSDevGrp.WallStreetGame
                                     switch (marketstate.State)
                                     {
                                         case MarketStateType.Normal:
-                                            buyprocentlow = 70;
-                                            buyprocentmiddle = 80;
-                                            buyprocenthigh = 90;
+                                            buyprocentlow = 75;
+                                            buyprocentmiddle = 85;
+                                            buyprocenthigh = 95;
                                             sellprocentlow = 50;
                                             sellprocentmiddle = 70;
                                             sellprocenthigh = 90;
@@ -250,9 +250,9 @@ namespace OSDevGrp.WallStreetGame
                                             sellprocenthigh = 70;
                                             break;
                                         case MarketStateType.Boom:
-                                            buyprocentlow = 50;
-                                            buyprocentmiddle = 60;
-                                            buyprocenthigh = 70;
+                                            buyprocentlow = 70;
+                                            buyprocentmiddle = 80;
+                                            buyprocenthigh = 90;
                                             sellprocentlow = 70;
                                             sellprocentmiddle = 80;
                                             sellprocenthigh = 90;

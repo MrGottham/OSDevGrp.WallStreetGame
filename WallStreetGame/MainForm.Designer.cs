@@ -17,6 +17,22 @@
             {
                 components.Dispose();
             }
+            if (disposing && (StockForms != null))
+            {
+                while (StockForms.Count > 0)
+                {
+                    StockForm stockform = StockForms[0];
+                    StockForms.Remove(stockform);
+                    stockform.Dispose();
+                    stockform = null;
+                }
+                StockForms = null;
+            }
+            if (disposing && (Game != null))
+            {
+                Game.Dispose();
+                Game = null;
+            }
             base.Dispose(disposing);
         }
 

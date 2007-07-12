@@ -576,14 +576,6 @@ namespace OSDevGrp.WallStreetGame
                         }
                         this.listViewStocks.EndUpdate();
                     }
-                    if (this.StockForms.Count > 0)
-                    {
-                        foreach (StockForm stockform in this.StockForms)
-                        {
-                            if (stockform.Visible)
-                                stockform.UpdateStockInformations();
-                        }
-                    }
                 }
                 switch (Game.MarketState.State)
                 {
@@ -598,6 +590,14 @@ namespace OSDevGrp.WallStreetGame
                         break;
                 }
                 this.labelBrokerage.Text = Game.MarketState.Brokerage.ToString("n", nfi) + " " + System.Globalization.NumberFormatInfo.CurrentInfo.PercentSymbol;
+                if (this.StockForms.Count > 0)
+                {
+                    foreach (StockForm stockform in this.StockForms)
+                    {
+                        if (stockform.Visible)
+                            stockform.UpdateStockInformations();
+                    }
+                }
                 this.Cursor = System.Windows.Forms.Cursors.Default;
             }
             catch (System.Exception ex)
@@ -696,6 +696,14 @@ namespace OSDevGrp.WallStreetGame
                 this.UpdatePlayerInformations(this.panelPlayer2);
                 this.UpdatePlayerInformations(this.panelPlayer3);
                 this.UpdatePlayerInformations(this.panelPlayer4);
+                if (this.StockForms.Count > 0)
+                {
+                    foreach (StockForm stockform in this.StockForms)
+                    {
+                        if (stockform.Visible)
+                            stockform.UpdatePlayerInformations();
+                    }
+                }
                 this.Cursor = System.Windows.Forms.Cursors.Default;
             }
             catch (System.Exception ex)
@@ -763,7 +771,7 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                System.Windows.Forms.MessageBox.Show(this, ProductName + "\nVersion: " + this.ProductVersion + "\n\nUdviklingsteam:\n" + this.CompanyName, "About", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                System.Windows.Forms.MessageBox.Show(this, ProductName + "\nVersion: " + ProductVersion + "\n\nUdviklingsteam:\n" + CompanyName, "Om " + ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
             catch (System.Exception ex)
             {
@@ -812,7 +820,7 @@ namespace OSDevGrp.WallStreetGame
                 {
                     foreach (System.Windows.Forms.ListViewItem lvi in this.listViewStocks.SelectedItems)
                     {
-                        StockForm stockform = new StockForm(this, Game, (Stock) lvi.Tag);
+                        StockForm stockform = new StockForm(this, (Stock) lvi.Tag, Game.CurrentPlayer);
                         this.StockForms.Add(stockform);
                         stockform.Show(this);
                     }
