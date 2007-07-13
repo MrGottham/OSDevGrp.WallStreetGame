@@ -195,9 +195,14 @@ namespace OSDevGrp.WallStreetGame
                 Game = new Game(this);
                 Game.BeforeResetEvent = this.BeforeReset;
                 Game.AfterResetEvent = this.AfterReset;
+                Game.BeforeLoadEvent = this.BeforeLoad;
+                Game.AfterLoadEvent = this.AfterLoad;
+                Game.BeforeSaveEvent = this.BeforeSave;
+                Game.AfterSaveEvent = this.AfterSave;
                 Game.UpdateStockInformationsEvent = this.UpdateStockInformations;
                 Game.UpdatePlayerInformationsEvent = this.UpdatePlayerInformations;
                 StockForms = new StockForms();
+                System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
                 this.Text = ProductName;
                 this.toolStripMenuItemAbout.Text = this.toolStripMenuItemAbout.Text + " " + ProductName;
                 this.comboBoxStockIndex.Items.Clear();
@@ -227,13 +232,13 @@ namespace OSDevGrp.WallStreetGame
                 this.listViewStocks.Columns.Add(ch);
                 ch = new System.Windows.Forms.ColumnHeader();
                 ch.Name = "PriceDifference";
-                ch.Text = System.Globalization.NumberFormatInfo.CurrentInfo.PositiveSign + "/" + System.Globalization.NumberFormatInfo.CurrentInfo.NegativeSign;
+                ch.Text = nfi.PositiveSign + "/" + nfi.NegativeSign;
                 ch.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
                 ch.Tag = ListViewItemComparerMethod.Double;
                 this.listViewStocks.Columns.Add(ch);
                 ch = new System.Windows.Forms.ColumnHeader();
                 ch.Name = "PriceDifferenceProcent";
-                ch.Text = System.Globalization.NumberFormatInfo.CurrentInfo.PercentSymbol;
+                ch.Text = nfi.PercentSymbol;
                 ch.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
                 ch.Tag = ListViewItemComparerMethod.Double;
                 this.listViewStocks.Columns.Add(ch);
@@ -406,16 +411,75 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private void UpdateStockInformations()
+        private void BeforeSave()
+        {
+            try
+            {
+                this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void AfterSave()
+        {
+            try
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void BeforeLoad()
+        {
+            try
+            {
+                while (StockForms.Count > 0)
+                {
+                    StockForm stockform = StockForms[0];
+                    StockForms.Remove(stockform);
+                    if (stockform.Visible)
+                        stockform.Close();
+                    stockform.Dispose();
+                }
+                this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void AfterLoad()
+        {
+            try
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void UpdateStockInformations()
         {
             try
             {
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
-                StockIndex stockindex = (StockIndex)this.comboBoxStockIndex.SelectedItem;
+                System.Globalization.RegionInfo ri = System.Globalization.RegionInfo.CurrentRegion;
+                StockIndex stockindex = (StockIndex) this.comboBoxStockIndex.SelectedItem;
                 if (stockindex != null)
                 {
-                    this.labelAverage.Text = stockindex.PriceAverage.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                    this.labelAverage.Text = stockindex.PriceAverage.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                     if (this.listViewStocks.Items.Count > 0)
                     {
                         this.listViewStocks.BeginUpdate();
@@ -426,10 +490,10 @@ namespace OSDevGrp.WallStreetGame
                             switch (lvi.Name)
                             {
                                 case "Price":
-                                    lvi.Text = stock.Price.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                                    lvi.Text = stock.Price.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                                     break;
                                 case "PriceDifference":
-                                    lvi.Text = stock.PriceDifference.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                                    lvi.Text = stock.PriceDifference.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                                     break;
                                 case "PriceDifferenceProcent":
                                     lvi.Text = stock.PriceDifferenceProcent.ToString("n", nfi) + " " + nfi.PercentSymbol;
@@ -451,13 +515,13 @@ namespace OSDevGrp.WallStreetGame
                                     switch (lvsi.Name)
                                     {
                                         case "Price":
-                                            lvsi.Text = stock.Price.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                                            lvsi.Text = stock.Price.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                                             break;
                                         case "PriceDifference":
-                                            lvsi.Text = stock.PriceDifference.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                                            lvsi.Text = stock.PriceDifference.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                                             break;
                                         case "PriceDifferenceProcent":
-                                            lvsi.Text = stock.PriceDifferenceProcent.ToString("n", nfi) + " " + System.Globalization.NumberFormatInfo.CurrentInfo.PercentSymbol;
+                                            lvsi.Text = stock.PriceDifferenceProcent.ToString("n", nfi) + " " + nfi.PercentSymbol;
                                             break;
                                         case "Available":
                                             lvsi.Text = stock.Available.ToString("#,##0", nfi);
@@ -493,15 +557,15 @@ namespace OSDevGrp.WallStreetGame
                                             lvi.Name = ch.Name;
                                             break;
                                         case "Price":
-                                            lvi = new System.Windows.Forms.ListViewItem(stock.Price.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol, 0);
+                                            lvi = new System.Windows.Forms.ListViewItem(stock.Price.ToString("n", nfi) + " " + ri.ISOCurrencySymbol, 0);
                                             lvi.Name = ch.Name;
                                             break;
                                         case "PriceDifference":
-                                            lvi = new System.Windows.Forms.ListViewItem(stock.PriceDifference.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol, 0);
+                                            lvi = new System.Windows.Forms.ListViewItem(stock.PriceDifference.ToString("n", nfi) + " " + ri.ISOCurrencySymbol, 0);
                                             lvi.Name = ch.Name;
                                             break;
                                         case "PriceDifferenceProcent":
-                                            lvi = new System.Windows.Forms.ListViewItem(stock.PriceDifferenceProcent.ToString("n", nfi) + " " + System.Globalization.NumberFormatInfo.CurrentInfo.PercentSymbol, 0);
+                                            lvi = new System.Windows.Forms.ListViewItem(stock.PriceDifferenceProcent.ToString("n", nfi) + " " + nfi.PercentSymbol, 0);
                                             lvi.Name = ch.Name;
                                             break;
                                         case "Available":
@@ -527,15 +591,15 @@ namespace OSDevGrp.WallStreetGame
                                             lvsi.Name = ch.Name;
                                             break;
                                         case "Price":
-                                            lvsi.Text = stock.Price.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                                            lvsi.Text = stock.Price.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                                             lvsi.Name = ch.Name;
                                             break;
                                         case "PriceDifference":
-                                            lvsi.Text = stock.PriceDifference.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                                            lvsi.Text = stock.PriceDifference.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                                             lvsi.Name = ch.Name;
                                             break;
                                         case "PriceDifferenceProcent":
-                                            lvsi.Text = stock.PriceDifferenceProcent.ToString("n", System.Globalization.NumberFormatInfo.CurrentInfo) + " " + System.Globalization.NumberFormatInfo.CurrentInfo.PercentSymbol;
+                                            lvsi.Text = stock.PriceDifferenceProcent.ToString("n", nfi) + " " + nfi.PercentSymbol;
                                             lvsi.Name = ch.Name;
                                             break;
                                         case "Available":
@@ -589,7 +653,7 @@ namespace OSDevGrp.WallStreetGame
                         this.labelMarketState.Text = "Høj";
                         break;
                 }
-                this.labelBrokerage.Text = Game.MarketState.Brokerage.ToString("n", nfi) + " " + System.Globalization.NumberFormatInfo.CurrentInfo.PercentSymbol;
+                this.labelBrokerage.Text = Game.MarketState.Brokerage.ToString("n", nfi) + " " + nfi.PercentSymbol;
                 if (this.StockForms.Count > 0)
                 {
                     foreach (StockForm stockform in this.StockForms)
@@ -617,6 +681,7 @@ namespace OSDevGrp.WallStreetGame
                 {
                     Player player = null;
                     System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
+                    System.Globalization.RegionInfo ri = System.Globalization.RegionInfo.CurrentRegion;
                     if (panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Company"] != null)
                     {
                         player = Game.CurrentPlayer;
@@ -657,25 +722,25 @@ namespace OSDevGrp.WallStreetGame
                     }
                     if (panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Capital"] != null)
                     {
-                        System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox)panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Capital"];
+                        System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox) panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Capital"];
                         if (player != null)
-                            textbox.Text = player.Capital.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                            textbox.Text = player.Capital.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                         else
                             textbox.Text = String.Empty;
                     }
                     if (panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "DepositValue"] != null)
                     {
-                        System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox)panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "DepositValue"];
+                        System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox) panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "DepositValue"];
                         if (player != null)
-                            textbox.Text = player.Deposit.Value.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                            textbox.Text = player.Deposit.Value.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                         else
                             textbox.Text = String.Empty;
                     }
                     if (panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Value"] != null)
                     {
-                        System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox)panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Value"];
+                        System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox) panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["textBoxPlayer" + panelno.ToString() + "Value"];
                         if (player != null)
-                            textbox.Text = player.Value.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol;
+                            textbox.Text = player.Value.ToString("n", nfi) + " " + ri.ISOCurrencySymbol;
                         else
                             textbox.Text = String.Empty;
                     }
@@ -687,7 +752,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private void UpdatePlayerInformations()
+        public void UpdatePlayerInformations()
         {
             try
             {
@@ -751,6 +816,74 @@ namespace OSDevGrp.WallStreetGame
             }
             catch (System.Exception ex)
             {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemOpen_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Windows.Forms.OpenFileDialog fd = new System.Windows.Forms.OpenFileDialog();
+                fd.Filter = "Gemte spil (*.wsg)|*.wsg|Alle filer (*.*)|*.*";
+                fd.FilterIndex = 0;
+                fd.Multiselect = false;
+                if (fd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    Game.Load(fd.FileName);
+                }
+                fd.Dispose();
+            }
+            catch (System.NotSupportedException)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                System.Windows.Forms.MessageBox.Show(this, "Versionen af det gemte spil er ikke supporteret.", ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                this.Close();
+            }
+        }
+
+        private void toolStripMenuItemSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Game.FileName != String.Empty)
+                    Game.Save();
+                else
+                    toolStripMenuItemSaveAs_Click(sender, e);
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void toolStripMenuItemSaveAs_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Windows.Forms.SaveFileDialog fd = new System.Windows.Forms.SaveFileDialog();
+                fd.Filter = "Gemte spil (*.wsg)|*.wsg|Alle filer (*.*)|*.*";
+                fd.FilterIndex = 0;
+                if (fd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    Game.Save(fd.FileName);
+                }
+                fd.Dispose();
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
                 System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
@@ -820,7 +953,7 @@ namespace OSDevGrp.WallStreetGame
                 {
                     foreach (System.Windows.Forms.ListViewItem lvi in this.listViewStocks.SelectedItems)
                     {
-                        StockForm stockform = new StockForm(this, (Stock) lvi.Tag, Game.CurrentPlayer);
+                        StockForm stockform = new StockForm(this, (Stock) lvi.Tag, Game.CurrentPlayer, Game.MarketState);
                         this.StockForms.Add(stockform);
                         stockform.Show(this);
                     }

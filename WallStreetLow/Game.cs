@@ -4,12 +4,16 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Game : System.Object, IDisposable, IResetable, IPlayable
+    public class Game : System.Object, IDisposable, IResetable, IPlayable, IStoreable
     {
         private const string SETUP_FILENAME = "WallStreetGame.xml";
+        private const byte FILEVERSION_MAJOR = 1;
+        private const byte FILEVERSION_MINOR = 0;
         private const int PLAY_TIMER_INTERVAL = 30000;
 
         private System.Random _Random = null;
+        private Version _FileVersion = null;
+        private string _FileName = null;
         private StockIndexes _StockIndexes = null;
         private Stocks _Stocks = null;
         private Players _Players = null;
@@ -24,11 +28,19 @@ namespace OSDevGrp.WallStreetGame
 
         public delegate bool BeforeReset();
         public delegate void AfterReset();
+        public delegate void BeforeSave();
+        public delegate void AfterSave();
+        public delegate void BeforeLoad();
+        public delegate void AfterLoad();
         public delegate void UpdateStockInformations();
         public delegate void UpdatePlayerInformations();
 
         private event BeforeReset _BeforeResetEvent = null;
         private event AfterReset _AfterResetEvent = null;
+        private event BeforeSave _BeforeSaveEvent = null;
+        private event AfterSave _AfterSaveEvent = null;
+        private event BeforeLoad _BeforeLoadEvent = null;
+        private event AfterLoad _AfterLoadEvent = null;
         private event UpdateStockInformations _UpdateStockInformationsEvent = null;
         private event UpdatePlayerInformations _UpdatePlayerInformationsEvent = null;
 
@@ -41,6 +53,7 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 Random = new System.Random();
+                FileVersion = new Version(FILEVERSION_MAJOR, FILEVERSION_MINOR);
                 StockIndexes = new StockIndexes();
                 Stocks = new Stocks();
                 Players = new Players();
@@ -89,6 +102,32 @@ namespace OSDevGrp.WallStreetGame
             private set
             {
                 _Random = value;
+            }
+        }
+
+        private Version FileVersion
+        {
+            get
+            {
+                return _FileVersion;
+            }
+            set
+            {
+                _FileVersion = value;
+            }
+        }
+
+        public string FileName
+        {
+            get
+            {
+                if (_FileName != null)
+                    return _FileName;
+                return string.Empty;
+            }
+            private set
+            {
+                _FileName = value;
             }
         }
 
@@ -200,6 +239,54 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public BeforeSave BeforeSaveEvent
+        {
+            get
+            {
+                return _BeforeSaveEvent;
+            }
+            set
+            {
+                _BeforeSaveEvent = value;
+            }
+        }
+
+        public AfterSave AfterSaveEvent
+        {
+            get
+            {
+                return _AfterSaveEvent;
+            }
+            set
+            {
+                _AfterSaveEvent = value;
+            }
+        }
+
+        public BeforeLoad BeforeLoadEvent
+        {
+            get
+            {
+                return _BeforeLoadEvent;
+            }
+            set
+            {
+                _BeforeLoadEvent = value;
+            }
+        }
+
+        public AfterLoad AfterLoadEvent
+        {
+            get
+            {
+                return _AfterLoadEvent;
+            }
+            set
+            {
+                _AfterLoadEvent = value;
+            }
+        }
+
         public UpdateStockInformations UpdateStockInformationsEvent
         {
             get
@@ -295,6 +382,14 @@ namespace OSDevGrp.WallStreetGame
                             BeforeResetEvent = null;
                         if (AfterResetEvent != null)
                             AfterResetEvent = null;
+                        if (BeforeLoadEvent != null)
+                            BeforeLoadEvent = null;
+                        if (AfterLoadEvent != null)
+                            AfterLoadEvent = null;
+                        if (BeforeSaveEvent != null)
+                            BeforeSaveEvent = null;
+                        if (AfterSaveEvent != null)
+                            AfterSaveEvent = null;
                         if (UpdateStockInformationsEvent != null)
                             UpdateStockInformationsEvent = null;
                         if (UpdatePlayerInformationsEvent != null)
@@ -348,10 +443,10 @@ namespace OSDevGrp.WallStreetGame
                     Stocks.Reset(random);
                     Players.Reset(random);
                     MarketState.Reset(random);
-                    if (AfterResetEvent != null)
-                        AfterResetEvent();
                     while (!PlayTimer.Enabled)
                         PlayTimer.Start();
+                    if (AfterResetEvent != null)
+                        AfterResetEvent();
                     if (UpdateStockInformationsEvent != null)
                         UpdateStockInformationsEvent();
                     if (UpdatePlayerInformationsEvent != null)
@@ -390,6 +485,157 @@ namespace OSDevGrp.WallStreetGame
             }
             catch (System.Exception ex)
             {
+                throw ex;
+            }
+        }
+
+        public void Save()
+        {
+            try
+            {
+                if (FileName == String.Empty)
+                    throw new System.NotSupportedException();
+                Save(FileName);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Save(string filename)
+        {
+            try
+            {
+                WsgFileStream fs = null;
+                try
+                {
+                    fs = new WsgFileStream(filename, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None);
+                    Save(FileVersion, fs);
+                    fs.Close();
+                }
+                catch (System.Exception ex)
+                {
+                    if (fs != null)
+                        fs.Close();
+                    throw ex;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Save(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (BeforeSaveEvent != null)
+                    BeforeSaveEvent();
+                if (fv.Major > 0)
+                {
+                    while (PlayTimer.Enabled)
+                        PlayTimer.Stop();
+                    fs.Seek(0, System.IO.SeekOrigin.Begin);
+                    FileVersion.Save(fv, fs);
+                    StockIndexes.Save(fv, fs);
+                    fs.Flush();
+                    FileName = fs.Name;
+                    while (!PlayTimer.Enabled)
+                        PlayTimer.Start();
+                }
+                if (AfterSaveEvent != null)
+                    AfterSaveEvent();
+                if (UpdateStockInformationsEvent != null)
+                    UpdateStockInformationsEvent();
+                if (UpdatePlayerInformationsEvent != null)
+                    UpdatePlayerInformationsEvent();
+            }
+            catch (System.Exception ex)
+            {
+                while (!PlayTimer.Enabled)
+                    PlayTimer.Start();
+                throw ex;
+            }
+        }
+
+        public void Load(string filename)
+        {
+            try
+            {
+                WsgFileStream fs = null;
+                try
+                {
+                    fs = new WsgFileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None);
+                    Load(FileVersion, fs);
+                    fs.Close();
+                }
+                catch (System.NotSupportedException ex)
+                {
+                    if (fs != null)
+                        fs.Close();
+                    throw ex;
+                }
+                catch (System.Exception ex)
+                {
+                    if (fs != null)
+                        fs.Close();
+                    throw ex;
+                }
+            }
+            catch (System.NotSupportedException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Load(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (BeforeLoadEvent != null)
+                    BeforeLoadEvent();
+                if (fv.Major > 0)
+                {
+                    while (PlayTimer.Enabled)
+                        PlayTimer.Stop();
+                    fs.Seek(0, System.IO.SeekOrigin.Begin);
+                    FileVersion.Load(fv, fs);
+                    while (StockIndexes.Count > 0)
+                        StockIndexes.Clear();
+                    while (Stocks.Count > 0)
+                        Stocks.Clear();
+                    while (Players.Count > 0)
+                        Players.Clear();
+                    MarketState.Reset(Random);
+                    CurrentPlayer = null;
+                    StockIndexes.Load(FileVersion.LoadedVersion, fs);
+                    FileName = fs.Name;
+                    while (!PlayTimer.Enabled)
+                        PlayTimer.Start();
+                }
+                if (AfterLoadEvent != null)
+                    AfterLoadEvent();
+                if (UpdateStockInformationsEvent != null)
+                    UpdateStockInformationsEvent();
+                if (UpdatePlayerInformationsEvent != null)
+                    UpdatePlayerInformationsEvent();
+            }
+            catch (System.NotSupportedException ex)
+            {
+                while (!PlayTimer.Enabled)
+                    PlayTimer.Start();
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                while (!PlayTimer.Enabled)
+                    PlayTimer.Start();
                 throw ex;
             }
         }

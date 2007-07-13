@@ -52,17 +52,31 @@
             this.panelTrade = new System.Windows.Forms.Panel();
             this.panelTradeInformations = new System.Windows.Forms.Panel();
             this.groupBoxTradeInformations = new System.Windows.Forms.GroupBox();
+            this.textBoxTradeCountValue = new System.Windows.Forms.TextBox();
+            this.numericUpDownTradeCount = new System.Windows.Forms.NumericUpDown();
+            this.labelTradeCount = new System.Windows.Forms.Label();
+            this.radioButtonTradeSell = new System.Windows.Forms.RadioButton();
+            this.radioButtonTradeBuy = new System.Windows.Forms.RadioButton();
             this.textBoxPlayerDepositContent = new System.Windows.Forms.TextBox();
             this.labelPlayerDepositContent = new System.Windows.Forms.Label();
             this.textBoxPlayerCapital = new System.Windows.Forms.TextBox();
             this.labelPlayerCapital = new System.Windows.Forms.Label();
             this.panelTradeButtons = new System.Windows.Forms.Panel();
+            this.labelTradeBrokerage = new System.Windows.Forms.Label();
+            this.textBoxTradeBrokerage = new System.Windows.Forms.TextBox();
+            this.textBoxTradeBrokeragePrice = new System.Windows.Forms.TextBox();
+            this.labelTradeTotal = new System.Windows.Forms.Label();
+            this.textBoxTradeTotal = new System.Windows.Forms.TextBox();
+            this.buttonTradeOK = new System.Windows.Forms.Button();
+            this.buttonTradeCancel = new System.Windows.Forms.Button();
             this.panelStockInformations.SuspendLayout();
             this.groupBoxStockInformations.SuspendLayout();
             this.panelStockTexts.SuspendLayout();
             this.panelTrade.SuspendLayout();
             this.panelTradeInformations.SuspendLayout();
             this.groupBoxTradeInformations.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTradeCount)).BeginInit();
+            this.panelTradeButtons.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelStockInformations
@@ -71,7 +85,7 @@
             this.panelStockInformations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelStockInformations.Location = new System.Drawing.Point(0, 0);
             this.panelStockInformations.Name = "panelStockInformations";
-            this.panelStockInformations.Size = new System.Drawing.Size(390, 338);
+            this.panelStockInformations.Size = new System.Drawing.Size(390, 339);
             this.panelStockInformations.TabIndex = 0;
             // 
             // groupBoxStockInformations
@@ -81,7 +95,7 @@
             this.groupBoxStockInformations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxStockInformations.Location = new System.Drawing.Point(0, 0);
             this.groupBoxStockInformations.Name = "groupBoxStockInformations";
-            this.groupBoxStockInformations.Size = new System.Drawing.Size(390, 338);
+            this.groupBoxStockInformations.Size = new System.Drawing.Size(390, 339);
             this.groupBoxStockInformations.TabIndex = 0;
             this.groupBoxStockInformations.TabStop = false;
             // 
@@ -90,7 +104,7 @@
             this.panelStockGraph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelStockGraph.Location = new System.Drawing.Point(3, 16);
             this.panelStockGraph.Name = "panelStockGraph";
-            this.panelStockGraph.Size = new System.Drawing.Size(384, 183);
+            this.panelStockGraph.Size = new System.Drawing.Size(384, 184);
             this.panelStockGraph.TabIndex = 0;
             this.panelStockGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.panelStockGraph_Paint);
             // 
@@ -108,7 +122,7 @@
             this.panelStockTexts.Controls.Add(this.textBoxStockName);
             this.panelStockTexts.Controls.Add(this.labelStockName);
             this.panelStockTexts.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelStockTexts.Location = new System.Drawing.Point(3, 199);
+            this.panelStockTexts.Location = new System.Drawing.Point(3, 200);
             this.panelStockTexts.Name = "panelStockTexts";
             this.panelStockTexts.Size = new System.Drawing.Size(384, 136);
             this.panelStockTexts.TabIndex = 1;
@@ -206,9 +220,9 @@
             this.panelTrade.Controls.Add(this.panelTradeInformations);
             this.panelTrade.Controls.Add(this.panelTradeButtons);
             this.panelTrade.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelTrade.Location = new System.Drawing.Point(0, 338);
+            this.panelTrade.Location = new System.Drawing.Point(0, 339);
             this.panelTrade.Name = "panelTrade";
-            this.panelTrade.Size = new System.Drawing.Size(390, 126);
+            this.panelTrade.Size = new System.Drawing.Size(390, 205);
             this.panelTrade.TabIndex = 1;
             // 
             // panelTradeInformations
@@ -217,11 +231,21 @@
             this.panelTradeInformations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelTradeInformations.Location = new System.Drawing.Point(0, 0);
             this.panelTradeInformations.Name = "panelTradeInformations";
-            this.panelTradeInformations.Size = new System.Drawing.Size(390, 70);
+            this.panelTradeInformations.Size = new System.Drawing.Size(390, 168);
             this.panelTradeInformations.TabIndex = 0;
             // 
             // groupBoxTradeInformations
             // 
+            this.groupBoxTradeInformations.Controls.Add(this.textBoxTradeTotal);
+            this.groupBoxTradeInformations.Controls.Add(this.labelTradeTotal);
+            this.groupBoxTradeInformations.Controls.Add(this.textBoxTradeBrokeragePrice);
+            this.groupBoxTradeInformations.Controls.Add(this.textBoxTradeBrokerage);
+            this.groupBoxTradeInformations.Controls.Add(this.labelTradeBrokerage);
+            this.groupBoxTradeInformations.Controls.Add(this.textBoxTradeCountValue);
+            this.groupBoxTradeInformations.Controls.Add(this.numericUpDownTradeCount);
+            this.groupBoxTradeInformations.Controls.Add(this.labelTradeCount);
+            this.groupBoxTradeInformations.Controls.Add(this.radioButtonTradeSell);
+            this.groupBoxTradeInformations.Controls.Add(this.radioButtonTradeBuy);
             this.groupBoxTradeInformations.Controls.Add(this.textBoxPlayerDepositContent);
             this.groupBoxTradeInformations.Controls.Add(this.labelPlayerDepositContent);
             this.groupBoxTradeInformations.Controls.Add(this.textBoxPlayerCapital);
@@ -229,9 +253,59 @@
             this.groupBoxTradeInformations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxTradeInformations.Location = new System.Drawing.Point(0, 0);
             this.groupBoxTradeInformations.Name = "groupBoxTradeInformations";
-            this.groupBoxTradeInformations.Size = new System.Drawing.Size(390, 70);
+            this.groupBoxTradeInformations.Size = new System.Drawing.Size(390, 168);
             this.groupBoxTradeInformations.TabIndex = 0;
             this.groupBoxTradeInformations.TabStop = false;
+            // 
+            // textBoxTradeCountValue
+            // 
+            this.textBoxTradeCountValue.Location = new System.Drawing.Point(228, 90);
+            this.textBoxTradeCountValue.Name = "textBoxTradeCountValue";
+            this.textBoxTradeCountValue.Size = new System.Drawing.Size(150, 20);
+            this.textBoxTradeCountValue.TabIndex = 8;
+            // 
+            // numericUpDownTradeCount
+            // 
+            this.numericUpDownTradeCount.Location = new System.Drawing.Point(134, 91);
+            this.numericUpDownTradeCount.Name = "numericUpDownTradeCount";
+            this.numericUpDownTradeCount.Size = new System.Drawing.Size(88, 20);
+            this.numericUpDownTradeCount.TabIndex = 7;
+            this.numericUpDownTradeCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericUpDownTradeCount.ThousandsSeparator = true;
+            this.numericUpDownTradeCount.ValueChanged += new System.EventHandler(this.numericUpDownTradeCount_ValueChanged);
+            // 
+            // labelTradeCount
+            // 
+            this.labelTradeCount.AutoSize = true;
+            this.labelTradeCount.Location = new System.Drawing.Point(84, 93);
+            this.labelTradeCount.Name = "labelTradeCount";
+            this.labelTradeCount.Size = new System.Drawing.Size(31, 13);
+            this.labelTradeCount.TabIndex = 6;
+            this.labelTradeCount.Text = "Antal";
+            // 
+            // radioButtonTradeSell
+            // 
+            this.radioButtonTradeSell.AutoSize = true;
+            this.radioButtonTradeSell.Location = new System.Drawing.Point(172, 66);
+            this.radioButtonTradeSell.Name = "radioButtonTradeSell";
+            this.radioButtonTradeSell.Size = new System.Drawing.Size(85, 17);
+            this.radioButtonTradeSell.TabIndex = 5;
+            this.radioButtonTradeSell.TabStop = true;
+            this.radioButtonTradeSell.Text = "&Sælge aktier";
+            this.radioButtonTradeSell.UseVisualStyleBackColor = true;
+            this.radioButtonTradeSell.CheckedChanged += new System.EventHandler(this.radioButtonTradeSell_CheckedChanged);
+            // 
+            // radioButtonTradeBuy
+            // 
+            this.radioButtonTradeBuy.AutoSize = true;
+            this.radioButtonTradeBuy.Location = new System.Drawing.Point(87, 66);
+            this.radioButtonTradeBuy.Name = "radioButtonTradeBuy";
+            this.radioButtonTradeBuy.Size = new System.Drawing.Size(79, 17);
+            this.radioButtonTradeBuy.TabIndex = 4;
+            this.radioButtonTradeBuy.TabStop = true;
+            this.radioButtonTradeBuy.Text = "&Købe aktier";
+            this.radioButtonTradeBuy.UseVisualStyleBackColor = true;
+            this.radioButtonTradeBuy.CheckedChanged += new System.EventHandler(this.radioButtonTradeBuy_CheckedChanged);
             // 
             // textBoxPlayerDepositContent
             // 
@@ -267,17 +341,81 @@
             // 
             // panelTradeButtons
             // 
+            this.panelTradeButtons.Controls.Add(this.buttonTradeCancel);
+            this.panelTradeButtons.Controls.Add(this.buttonTradeOK);
             this.panelTradeButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelTradeButtons.Location = new System.Drawing.Point(0, 70);
+            this.panelTradeButtons.Location = new System.Drawing.Point(0, 168);
             this.panelTradeButtons.Name = "panelTradeButtons";
-            this.panelTradeButtons.Size = new System.Drawing.Size(390, 56);
+            this.panelTradeButtons.Size = new System.Drawing.Size(390, 37);
             this.panelTradeButtons.TabIndex = 1;
+            // 
+            // labelTradeBrokerage
+            // 
+            this.labelTradeBrokerage.AutoSize = true;
+            this.labelTradeBrokerage.Location = new System.Drawing.Point(84, 119);
+            this.labelTradeBrokerage.Name = "labelTradeBrokerage";
+            this.labelTradeBrokerage.Size = new System.Drawing.Size(44, 13);
+            this.labelTradeBrokerage.TabIndex = 9;
+            this.labelTradeBrokerage.Text = "Kurtage";
+            // 
+            // textBoxTradeBrokerage
+            // 
+            this.textBoxTradeBrokerage.Location = new System.Drawing.Point(134, 116);
+            this.textBoxTradeBrokerage.Name = "textBoxTradeBrokerage";
+            this.textBoxTradeBrokerage.Size = new System.Drawing.Size(88, 20);
+            this.textBoxTradeBrokerage.TabIndex = 10;
+            // 
+            // textBoxTradeBrokeragePrice
+            // 
+            this.textBoxTradeBrokeragePrice.Location = new System.Drawing.Point(228, 116);
+            this.textBoxTradeBrokeragePrice.Name = "textBoxTradeBrokeragePrice";
+            this.textBoxTradeBrokeragePrice.Size = new System.Drawing.Size(150, 20);
+            this.textBoxTradeBrokeragePrice.TabIndex = 11;
+            // 
+            // labelTradeTotal
+            // 
+            this.labelTradeTotal.AutoSize = true;
+            this.labelTradeTotal.Location = new System.Drawing.Point(84, 144);
+            this.labelTradeTotal.Name = "labelTradeTotal";
+            this.labelTradeTotal.Size = new System.Drawing.Size(31, 13);
+            this.labelTradeTotal.TabIndex = 12;
+            this.labelTradeTotal.Text = "Total";
+            // 
+            // textBoxTradeTotal
+            // 
+            this.textBoxTradeTotal.Location = new System.Drawing.Point(228, 141);
+            this.textBoxTradeTotal.Name = "textBoxTradeTotal";
+            this.textBoxTradeTotal.Size = new System.Drawing.Size(150, 20);
+            this.textBoxTradeTotal.TabIndex = 13;
+            // 
+            // buttonTradeOK
+            // 
+            this.buttonTradeOK.Location = new System.Drawing.Point(222, 6);
+            this.buttonTradeOK.Name = "buttonTradeOK";
+            this.buttonTradeOK.Size = new System.Drawing.Size(75, 23);
+            this.buttonTradeOK.TabIndex = 0;
+            this.buttonTradeOK.Text = "&OK";
+            this.buttonTradeOK.UseVisualStyleBackColor = true;
+            this.buttonTradeOK.Click += new System.EventHandler(this.buttonTradeOK_Click);
+            // 
+            // buttonTradeCancel
+            // 
+            this.buttonTradeCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonTradeCancel.Location = new System.Drawing.Point(303, 6);
+            this.buttonTradeCancel.Name = "buttonTradeCancel";
+            this.buttonTradeCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonTradeCancel.TabIndex = 1;
+            this.buttonTradeCancel.Text = "&Annullér";
+            this.buttonTradeCancel.UseVisualStyleBackColor = true;
+            this.buttonTradeCancel.Click += new System.EventHandler(this.buttonTradeCancel_Click);
             // 
             // StockForm
             // 
+            this.AcceptButton = this.buttonTradeOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(390, 464);
+            this.CancelButton = this.buttonTradeCancel;
+            this.ClientSize = new System.Drawing.Size(390, 544);
             this.Controls.Add(this.panelStockInformations);
             this.Controls.Add(this.panelTrade);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -294,6 +432,8 @@
             this.panelTradeInformations.ResumeLayout(false);
             this.groupBoxTradeInformations.ResumeLayout(false);
             this.groupBoxTradeInformations.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTradeCount)).EndInit();
+            this.panelTradeButtons.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -323,5 +463,17 @@
         private System.Windows.Forms.TextBox textBoxPlayerCapital;
         private System.Windows.Forms.Label labelPlayerCapital;
         private System.Windows.Forms.Panel panelTradeButtons;
+        private System.Windows.Forms.RadioButton radioButtonTradeSell;
+        private System.Windows.Forms.RadioButton radioButtonTradeBuy;
+        private System.Windows.Forms.TextBox textBoxTradeCountValue;
+        private System.Windows.Forms.NumericUpDown numericUpDownTradeCount;
+        private System.Windows.Forms.Label labelTradeCount;
+        private System.Windows.Forms.TextBox textBoxTradeBrokerage;
+        private System.Windows.Forms.Label labelTradeBrokerage;
+        private System.Windows.Forms.TextBox textBoxTradeBrokeragePrice;
+        private System.Windows.Forms.TextBox textBoxTradeTotal;
+        private System.Windows.Forms.Label labelTradeTotal;
+        private System.Windows.Forms.Button buttonTradeCancel;
+        private System.Windows.Forms.Button buttonTradeOK;
     }
 }

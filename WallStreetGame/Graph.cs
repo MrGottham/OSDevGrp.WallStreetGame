@@ -333,7 +333,8 @@ namespace OSDevGrp.WallStreetGame
                 if (ShowMinMax)
                 {
                     bool fontcreated = false;
-                    System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;             
+                    System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
+                    System.Globalization.RegionInfo ri = System.Globalization.RegionInfo.CurrentRegion;
                     if (TextFont == null)
                     {
                         TextFont = new System.Drawing.Font(System.Drawing.FontFamily.GenericSansSerif.Name, 7, System.Drawing.FontStyle.Bold);
@@ -341,8 +342,8 @@ namespace OSDevGrp.WallStreetGame
                     }
                     if (IsCurrency)
                     {
-                        e.Graphics.DrawString(YMax.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol, TextFont, TextBrush, XPos, YPos);
-                        e.Graphics.DrawString(YMin.ToString("n", nfi) + " " + System.Globalization.RegionInfo.CurrentRegion.ISOCurrencySymbol, TextFont, TextBrush, XPos, YPos + Height - TextFont.Height);
+                        e.Graphics.DrawString(YMax.ToString("n", nfi) + " " + ri.ISOCurrencySymbol, TextFont, TextBrush, XPos, YPos);
+                        e.Graphics.DrawString(YMin.ToString("n", nfi) + " " + ri.ISOCurrencySymbol, TextFont, TextBrush, XPos, YPos + Height - TextFont.Height);
                     }
                     else
                     {
@@ -371,7 +372,9 @@ namespace OSDevGrp.WallStreetGame
         private bool _ShowGridLines = true;
         private double _GrdiLineStepX = 0;
         private double _GridLineStepY = 0;
+        private float _GraphWidth = 0.50F;
         private float _GridLineWidth = 0.25F;
+        private System.Drawing.Color _GraphColor = System.Drawing.Color.Blue;
         private System.Drawing.Color _GridLineColor = System.Drawing.Color.LightGray;
 
         public LineGraph(float x, float y, float width, float height, System.Drawing.Color backcolor) : base(x, y, width, height, backcolor)
@@ -384,8 +387,10 @@ namespace OSDevGrp.WallStreetGame
                 ShowGridLines = true;
                 GridLineStepX = (XMax - XMin) / 10;
                 GridLineStepY = (YMax - YMin) / 10;
-                GridLineColor = System.Drawing.Color.LightGray;
+                GraphWidth = 0.50F;
                 GridLineWidth = 0.25F;
+                GraphColor = System.Drawing.Color.Blue;
+                GridLineColor = System.Drawing.Color.LightGray;
             }
             catch (System.Exception ex)
             {
@@ -473,6 +478,18 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public float GraphWidth
+        {
+            get
+            {
+                return _GraphWidth;
+            }
+            set
+            {
+                _GraphWidth = value;
+            }
+        }
+
         public float GridLineWidth
         {
             get
@@ -484,6 +501,18 @@ namespace OSDevGrp.WallStreetGame
                 _GridLineWidth = value;
             }
 
+        }
+
+        public System.Drawing.Color GraphColor
+        {
+            get
+            {
+                return _GraphColor;
+            }
+            set
+            {
+                _GraphColor = value;
+            }
         }
 
         public System.Drawing.Color GridLineColor
@@ -526,7 +555,7 @@ namespace OSDevGrp.WallStreetGame
                     float x = CalcXPos(d);
                     Pen.Color = GridLineColor;
                     Pen.Width = GridLineWidth;
-                    while (x < XPos + Width)
+                    while (x < XPos + Width - XMargin)
                     {
                         e.Graphics.DrawLine(Pen, x, YPos, x, YPos + Height);
                         d += GridLineStepX;
@@ -553,26 +582,24 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        /*
-        public void Graph(System.Windows.Forms.PaintEventArgs e, System.Drawing.Color color, float width, System.Collections.Generic.List<double> values)
+        public void Graph(System.Windows.Forms.PaintEventArgs e, System.Collections.Generic.List<double> values)
         {
             try
             {
-                float x = XPos + 10;
-                float incx = (Width - ((x - XPos) * 2)) / (values.Capacity > 0 ? values.Capacity : values.Count > 0 ? values.Count : 1);
-                Pen.Color = color;
-                Pen.Width = width;
+                float x = CalcXPos(XMin);
+                Pen.Color = GraphColor;
+                Pen.Width = GraphWidth;
                 if (values.Count > 1)
                 {
                     for (int i = 1; i < values.Count; i++)
                     {
-                        e.Graphics.DrawLine(Pen, x, CalcY(values[i - 1]), x + incx, CalcY(values[i]));
-                        x += incx;
+                        e.Graphics.DrawLine(Pen, x, CalcYPos(values[i - 1]), x + XStep, CalcYPos(values[i]));
+                        x += XStep;
                     }
                 }
                 else if (values.Count > 0)
                 {
-                    e.Graphics.DrawLine(Pen, x, CalcY(values[0]), x + incx, CalcY(values[0]));
+                    e.Graphics.DrawLine(Pen, x, CalcYPos(values[0]), x + XStep, CalcYPos(values[0]));
                 }
             }
             catch (System.Exception ex)
@@ -580,6 +607,5 @@ namespace OSDevGrp.WallStreetGame
                 throw ex;
             }
         }
-         */
     }
 }

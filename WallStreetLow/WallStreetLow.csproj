@@ -40,6 +40,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Deposit.cs" />
     <Compile Include="DepositContent.cs" />
+    <Compile Include="WsgFileStream.cs" />
     <Compile Include="History.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="MarketState.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="StockIndex.cs" />
     <Compile Include="StockIndexes.cs" />
     <Compile Include="Stocks.cs" />
+    <Compile Include="Version.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="WallStreetGame.xml">

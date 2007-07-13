@@ -13,4 +13,10 @@ namespace OSDevGrp.WallStreetGame
     {
         void Play(MarketState marketstate, System.Random random);
     }
+
+    public interface IStoreable
+    {
+        void Save(Version fv, WsgFileStream fs);
+        void Load(Version fv, WsgFileStream fs);
+    }
 }

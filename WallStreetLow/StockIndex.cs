@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class StockIndex : System.Object
+    public class StockIndex : System.Object, IStoreable
     {
         private string _Id = null;
         private string _Name = null;
@@ -17,6 +17,19 @@ namespace OSDevGrp.WallStreetGame
                 Id = id;
                 Name = name;
                 Stocks = new Stocks();
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public StockIndex(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                Stocks = new Stocks();
+                Load(fv, fs);
             }
             catch (System.Exception ex)
             {
@@ -79,6 +92,38 @@ namespace OSDevGrp.WallStreetGame
             private set
             {
                 _Stocks = value;
+            }
+        }
+
+        public void Save(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    fs.WriteString(Id);
+                    fs.WriteString(Name);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Load(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    Id = fs.ReadString();
+                    Name = fs.ReadString();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
             }
         }
     }
