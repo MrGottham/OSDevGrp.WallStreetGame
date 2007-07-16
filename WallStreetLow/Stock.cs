@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Stock : System.Object, IResetable, IPlayable
+    public class Stock : System.Object, IResetable, IPlayable, IStoreable
     {
         private const double MIN_PRICE = 2.50D;
         private const double MAX_PRICE = 250000.00D;
@@ -308,6 +308,36 @@ namespace OSDevGrp.WallStreetGame
                     i_up_down = MAX_AVAILABLE / 1000;
                 Price += random.Next(d_up > int.MaxValue ? int.MaxValue : (int) d_up) - random.Next(d_down > int.MaxValue ? int.MaxValue : (int) d_down);
                 Available += random.Next(i_up_down) - random.Next(i_up_down);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Save(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                }
+                throw new System.NotImplementedException();
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Load(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                }
+                throw new System.NotImplementedException();
             }
             catch (System.Exception ex)
             {

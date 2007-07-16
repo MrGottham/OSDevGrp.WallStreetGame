@@ -540,6 +540,7 @@ namespace OSDevGrp.WallStreetGame
                     fs.Seek(0, System.IO.SeekOrigin.Begin);
                     FileVersion.Save(fv, fs);
                     StockIndexes.Save(fv, fs);
+                    Stocks.Save(fv, fs);
                     fs.Flush();
                     FileName = fs.Name;
                     while (!PlayTimer.Enabled)
@@ -615,6 +616,7 @@ namespace OSDevGrp.WallStreetGame
                     MarketState.Reset(Random);
                     CurrentPlayer = null;
                     StockIndexes.Load(FileVersion.LoadedVersion, fs);
+                    Stocks.Load(FileVersion.LoadedVersion, fs);
                     FileName = fs.Name;
                     while (!PlayTimer.Enabled)
                         PlayTimer.Start();
