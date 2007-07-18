@@ -89,7 +89,7 @@ namespace OSDevGrp.WallStreetGame
         }
     }
 
-    public class DoubleHistory : History<double>
+    public class DoubleHistory : History<double>, IStoreable
     {
         public DoubleHistory() : base()
         {
@@ -140,6 +140,47 @@ namespace OSDevGrp.WallStreetGame
                         return m.Value;
                 }
                 return 0D;
+            }
+        }
+
+        public void Save(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    fs.WriteInt(this.Count);
+                    if (this.Count > 0)
+                    {
+                        foreach (double d in this)
+                            fs.WriteDouble(d);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object Load(Version fv, WsgFileStream fs, System.Object obj)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    int c = fs.ReadInt();
+                    if (c > 0)
+                    {
+                        for (int i = 0; i < c; i++)
+                            this.Add(fs.ReadDouble());
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
             }
         }
     }

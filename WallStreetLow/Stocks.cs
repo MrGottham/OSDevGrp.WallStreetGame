@@ -66,7 +66,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Load(Version fv, WsgFileStream fs)
+        public System.Object Load(Version fv, WsgFileStream fs, System.Object obj)
         {
             try
             {
@@ -75,8 +75,11 @@ namespace OSDevGrp.WallStreetGame
                     int c = fs.ReadInt();
                     for (int i = 0; i < c; i++)
                     {
+                        Stock stock = new Stock(fv, fs, obj);
+                        this.Add(stock.Id, stock);
                     }
                 }
+                return this;
             }
             catch (System.Exception ex)
             {

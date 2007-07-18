@@ -164,6 +164,18 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public bool ReadBool()
+        {
+            try
+            {
+                return System.Convert.ToBoolean(ReadByte());
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public int ReadInt()
         {
             try
@@ -172,6 +184,21 @@ namespace OSDevGrp.WallStreetGame
                 if (Read(buffer, 0, sizeof(Int32)) < sizeof(Int32))
                     throw new System.IO.EndOfStreamException();
                 return System.BitConverter.ToInt32(buffer, 0);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public double ReadDouble()
+        {
+            try
+            {
+                byte[] buffer = new byte[sizeof(double)];
+                if (Read(buffer, 0, sizeof(double)) < sizeof(double))
+                    throw new System.IO.EndOfStreamException();
+                return System.BitConverter.ToDouble(buffer, 0);
             }
             catch (System.Exception ex)
             {
@@ -189,7 +216,7 @@ namespace OSDevGrp.WallStreetGame
                     byte[] buffer = new byte[i];
                     if (Read(buffer, 0, i) < i)
                         throw new System.IO.EndOfStreamException();
-                    return System.Text.Encoding.ASCII.GetString(buffer);
+                    return System.Text.Encoding.Unicode.GetString(buffer);
                 }
                 return string.Empty;
             }
@@ -241,6 +268,18 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public void WriteBool(bool b)
+        {
+            try
+            {
+                WriteByte(System.Convert.ToByte(b));
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void WriteInt(int i)
         {
             try
@@ -253,15 +292,27 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public void WriteDouble(double d)
+        {
+            try
+            {
+                Write(System.BitConverter.GetBytes(d), 0, sizeof(double));
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void WriteString(string s)
         {
             try
             {
-                int i = System.Text.Encoding.ASCII.GetByteCount(s);
+                int i = System.Text.Encoding.Unicode.GetByteCount(s);
                 WriteInt(i);
                 if (i > 0)
                 {
-                    Write(System.Text.Encoding.ASCII.GetBytes(s), 0, i);
+                    Write(System.Text.Encoding.Unicode.GetBytes(s), 0, i);
                 }
             }
             catch (System.Exception ex)
@@ -283,6 +334,36 @@ namespace OSDevGrp.WallStreetGame
                     UseBaseStream = true;
                     CryptoWriteStream.Flush();
                     UseBaseStream = false;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public override void Close()
+        {
+            try
+            {
+                if (UseBaseStream)
+                {
+                    base.Close();
+                }
+                else
+                {
+                    if (CryptoReadStream != null)
+                    {
+                        UseBaseStream = true;
+                        CryptoReadStream.Close();
+                        UseBaseStream = false;
+                    }
+                    if (CryptoWriteStream != null)
+                    {
+                        UseBaseStream = true;
+                        CryptoWriteStream.Close();
+                        UseBaseStream = false;
+                    }
                 }
             }
             catch (System.Exception ex)

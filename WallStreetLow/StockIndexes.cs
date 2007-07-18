@@ -30,7 +30,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Load(Version fv, WsgFileStream fs)
+        public System.Object Load(Version fv, WsgFileStream fs, System.Object obj)
         {
             try
             {
@@ -39,10 +39,11 @@ namespace OSDevGrp.WallStreetGame
                     int c = fs.ReadInt();
                     for (int i = 0; i < c; i++)
                     {
-                        StockIndex stockindex = new StockIndex(fv, fs);
+                        StockIndex stockindex = new StockIndex(fv, fs, obj);
                         this.Add(stockindex.Id, stockindex);
                     }
                 }
+                return this;
             }
             catch (System.Exception ex)
             {

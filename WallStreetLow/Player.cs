@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Player : System.Object, IResetable, IPlayable
+    public class Player : System.Object, IResetable, IPlayable, IStoreable
     {
         private const double CAPITAL_INITIALIZE = 100000D;
         private const int MAX_STOCKS_TO_BUY = 1000;
@@ -34,6 +34,20 @@ namespace OSDevGrp.WallStreetGame
                 Deposit = new Deposit(this, stocks);
                 ValueHistory = new DoubleHistory();
                 Reset(null);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Player(Version fv, WsgFileStream fs, System.Object obj)
+        {
+            try
+            {
+                Deposit = new Deposit(this, (Stocks) obj);
+                ValueHistory = new DoubleHistory();
+                Load(fv, fs, obj);
             }
             catch (System.Exception ex)
             {
@@ -420,6 +434,43 @@ namespace OSDevGrp.WallStreetGame
                     }
                 }
                 ValueHistory.AddHistory(Value);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Save(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    fs.WriteString(Company);
+                    fs.WriteString(Name);
+                    fs.WriteBool(IsComputer);
+                    fs.WriteBool(IsYou);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object Load(Version fv, WsgFileStream fs, System.Object obj)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    Company = fs.ReadString();
+                    Name = fs.ReadString();
+                    IsComputer = fs.ReadBool();
+                    IsYou = fs.ReadBool();
+                }
+                return this;
             }
             catch (System.Exception ex)
             {

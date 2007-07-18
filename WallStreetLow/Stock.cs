@@ -37,6 +37,20 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public Stock(Version fv, WsgFileStream fs, System.Object obj)
+        {
+            try
+            {
+                StockIndexes = new StockIndexes();
+                PriceHistory = new DoubleHistory();
+                Load(fv, fs, obj);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public string Id
         {
             get
@@ -321,8 +335,19 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (fv.Major > 0)
                 {
+                    fs.WriteString(Id);
+                    fs.WriteString(Name);
+                    fs.WriteInt(StockIndexes.Count);
+                    if (StockIndexes.Count > 0)
+                    {
+                        foreach (StockIndex stockindex in StockIndexes.Values)
+                            fs.WriteString(stockindex.Id);
+                    }
+                    PriceHistory.Save(fv, fs);
+                    fs.WriteDouble(Price);
+                    fs.WriteInt(Available);
+                    fs.WriteInt(OwnedByPlayers);
                 }
-                throw new System.NotImplementedException();
             }
             catch (System.Exception ex)
             {
@@ -330,14 +355,35 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Load(Version fv, WsgFileStream fs)
+        public System.Object Load(Version fv, WsgFileStream fs, System.Object obj)
         {
             try
             {
                 if (fv.Major > 0)
                 {
+                    Id = fs.ReadString();
+                    Name = fs.ReadString();
+                    int c = fs.ReadInt();
+                    if (c > 0)
+                    {
+                        StockIndexes stockindexes = (StockIndexes) obj;
+                        for (int i = 0; i < c; i++)
+                        {
+                            string id = fs.ReadString();
+                            StockIndex stockindex = null;
+                            if (stockindexes.TryGetValue(id, out stockindex))
+                            {
+                                stockindex.Stocks.Add(Id, this);
+                                StockIndexes.Add(stockindex.Id, stockindex);
+                            }
+                        }
+                    }
+                    PriceHistory.Load(fv, fs, obj);
+                    Price = fs.ReadDouble();
+                    Available = fs.ReadInt();
+                    OwnedByPlayers = fs.ReadInt();
                 }
-                throw new System.NotImplementedException();
+                return this;
             }
             catch (System.Exception ex)
             {

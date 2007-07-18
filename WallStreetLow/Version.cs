@@ -8,7 +8,6 @@ namespace OSDevGrp.WallStreetGame
     {
         byte _Major = 0;
         byte _Minor = 0;
-        Version _LoadedVersion = null;
 
         public Version(byte major, byte minor) : base()
         {
@@ -47,18 +46,6 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public Version LoadedVersion
-        {
-            get
-            {
-                return _LoadedVersion;
-            }
-            private set
-            {
-                _LoadedVersion = value;
-            }
-        }
-
         public void Save(Version fv, WsgFileStream fs)
         {
             try
@@ -75,7 +62,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Load(Version fv, WsgFileStream fs)
+        public System.Object Load(Version fv, WsgFileStream fs, System.Object obj)
         {
             try
             {
@@ -85,10 +72,9 @@ namespace OSDevGrp.WallStreetGame
                     byte minor = (byte) fs.ReadByte();
                     if (major > fv.Major || (major == fv.Major && minor > fv.Minor))
                         throw new System.NotSupportedException();
-                    if (LoadedVersion != null)
-                        LoadedVersion = null;
-                    LoadedVersion = new Version(major, minor);
+                    return new Version(major, minor);
                 }
+                return new Version(0, 0);
             }
             catch (System.Exception ex)
             {

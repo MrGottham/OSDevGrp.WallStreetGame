@@ -17,6 +17,6 @@ namespace OSDevGrp.WallStreetGame
     public interface IStoreable
     {
         void Save(Version fv, WsgFileStream fs);
-        void Load(Version fv, WsgFileStream fs);
+        System.Object Load(Version fv, WsgFileStream fs, System.Object obj);
     }
 }

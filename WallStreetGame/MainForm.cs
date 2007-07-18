@@ -209,8 +209,8 @@ namespace OSDevGrp.WallStreetGame
                 this.comboBoxStockIndex.DisplayMember = "Name";
                 if (Game.StockIndexes.Count > 0)
                 {
-                    foreach (StockIndex stockindex in Game.StockIndexes.Values)
-                        this.comboBoxStockIndex.Items.Add(stockindex);
+                    foreach (StockIndex si in Game.StockIndexes.Values)
+                        this.comboBoxStockIndex.Items.Add(si);
                 }
                 this.listViewStocks.FullRowSelect = true;
                 this.listViewStocks.GridLines = true;
@@ -460,6 +460,16 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                while (this.comboBoxStockIndex.Items.Count > 0)
+                    this.comboBoxStockIndex.Items.Clear();
+                while (this.listViewStocks.Items.Count > 0)
+                    this.listViewStocks.Items.Clear();
+                while (this.comboBoxPlayer2Company.Items.Count > 0)
+                    this.comboBoxPlayer2Company.Items.Clear();
+                while (this.comboBoxPlayer3Company.Items.Count > 0)
+                    this.comboBoxPlayer3Company.Items.Clear();
+                while (this.comboBoxPlayer4Company.Items.Count > 0)
+                    this.comboBoxPlayer4Company.Items.Clear();
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
             }
@@ -476,6 +486,16 @@ namespace OSDevGrp.WallStreetGame
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
                 System.Globalization.RegionInfo ri = System.Globalization.RegionInfo.CurrentRegion;
+                if (this.comboBoxStockIndex.Items.Count == 0)
+                {
+                    if (Game.StockIndexes.Count > 0)
+                    {
+                        foreach (StockIndex si in Game.StockIndexes.Values)
+                            this.comboBoxStockIndex.Items.Add(si);
+                    }
+                    if (this.comboBoxStockIndex.Items.Count > 0)
+                        this.comboBoxStockIndex.SelectedItem = this.comboBoxStockIndex.Items[0];
+                }
                 StockIndex stockindex = (StockIndex) this.comboBoxStockIndex.SelectedItem;
                 if (stockindex != null)
                 {

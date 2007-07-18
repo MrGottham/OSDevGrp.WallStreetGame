@@ -541,6 +541,7 @@ namespace OSDevGrp.WallStreetGame
                     FileVersion.Save(fv, fs);
                     StockIndexes.Save(fv, fs);
                     Stocks.Save(fv, fs);
+                    Players.Save(fv, fs);
                     fs.Flush();
                     FileName = fs.Name;
                     while (!PlayTimer.Enabled)
@@ -569,7 +570,7 @@ namespace OSDevGrp.WallStreetGame
                 try
                 {
                     fs = new WsgFileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None);
-                    Load(FileVersion, fs);
+                    Load(FileVersion, fs, null);
                     fs.Close();
                 }
                 catch (System.NotSupportedException ex)
@@ -595,7 +596,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void Load(Version fv, WsgFileStream fs)
+        public System.Object Load(Version fv, WsgFileStream fs, System.Object obj)
         {
             try
             {
@@ -606,7 +607,7 @@ namespace OSDevGrp.WallStreetGame
                     while (PlayTimer.Enabled)
                         PlayTimer.Stop();
                     fs.Seek(0, System.IO.SeekOrigin.Begin);
-                    FileVersion.Load(fv, fs);
+                    Version loadedfv = (Version) FileVersion.Load(fv, fs, null);
                     while (StockIndexes.Count > 0)
                         StockIndexes.Clear();
                     while (Stocks.Count > 0)
@@ -615,8 +616,9 @@ namespace OSDevGrp.WallStreetGame
                         Players.Clear();
                     MarketState.Reset(Random);
                     CurrentPlayer = null;
-                    StockIndexes.Load(FileVersion.LoadedVersion, fs);
-                    Stocks.Load(FileVersion.LoadedVersion, fs);
+                    StockIndexes.Load(loadedfv, fs, null);
+                    Stocks.Load(loadedfv, fs, StockIndexes);
+                    Players.Load(loadedfv, fs, Stocks);
                     FileName = fs.Name;
                     while (!PlayTimer.Enabled)
                         PlayTimer.Start();
@@ -627,6 +629,7 @@ namespace OSDevGrp.WallStreetGame
                     UpdateStockInformationsEvent();
                 if (UpdatePlayerInformationsEvent != null)
                     UpdatePlayerInformationsEvent();
+                return this;
             }
             catch (System.NotSupportedException ex)
             {
