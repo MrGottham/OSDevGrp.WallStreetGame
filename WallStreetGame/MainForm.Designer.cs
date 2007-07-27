@@ -28,6 +28,17 @@
                 }
                 StockForms = null;
             }
+            if (disposing && (StatisticsForms != null))
+            {
+                while (StatisticsForms.Count > 0)
+                {
+                    StatisticsForm statisticsform = StatisticsForms[0];
+                    StatisticsForms.Remove(statisticsform);
+                    statisticsform.Dispose();
+                    statisticsform = null;
+                }
+                StatisticsForms = null;
+            }
             if (disposing && (Game != null))
             {
                 Game.Dispose();

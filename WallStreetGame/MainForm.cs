@@ -194,6 +194,7 @@ namespace OSDevGrp.WallStreetGame
 
         private Game _Game = null;
         private StockForms _StockForms = null;
+        private StatisticsForms _StatisticsForms = null;
         private string _OldFileName = null;
 
         public MainForm() : base()
@@ -211,6 +212,7 @@ namespace OSDevGrp.WallStreetGame
                 Game.UpdateStockInformationsEvent = this.UpdateStockInformations;
                 Game.UpdatePlayerInformationsEvent = this.UpdatePlayerInformations;
                 StockForms = new StockForms();
+                StatisticsForms = new StatisticsForms();
                 System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
                 this.Text = ProductName;
                 this.toolStripMenuItemAbout.Text = this.toolStripMenuItemAbout.Text + " " + ProductName;
@@ -388,6 +390,19 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public StatisticsForms StatisticsForms
+        {
+            get
+            {
+                return _StatisticsForms;
+            }
+            private set
+            {
+                _StatisticsForms = value;
+            }
+
+        }
+
         private string OldFileName
         {
             get
@@ -494,6 +509,14 @@ namespace OSDevGrp.WallStreetGame
                     if (stockform.Visible)
                         stockform.Close();
                     stockform.Dispose();
+                }
+                while (StatisticsForms.Count > 0)
+                {
+                    StatisticsForm statisticsform = StatisticsForms[0];
+                    StatisticsForms.Remove(statisticsform);
+                    if (statisticsform.Visible)
+                        statisticsform.Close();
+                    statisticsform.Dispose();
                 }
                 OldFileName = Game.FileName;
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
