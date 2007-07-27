@@ -45,11 +45,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItemFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemNewGame = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorOpen = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorExit = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFunctions = new System.Windows.Forms.ToolStripMenuItem();
@@ -122,10 +126,9 @@
             this.labelPlayer1Name = new System.Windows.Forms.Label();
             this.textBoxPlayer1Company = new System.Windows.Forms.TextBox();
             this.labelPlayer1Company = new System.Windows.Forms.Label();
-            this.toolStripSeparatorOpen = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemSaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemDeposit = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.panelStockInformations.SuspendLayout();
             this.groupBoxStockInformations.SuspendLayout();
@@ -144,10 +147,19 @@
             this.groupBoxPlayer1.SuspendLayout();
             this.SuspendLayout();
             // 
+            // toolStripMenuItemOpen
+            // 
+            toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
+            toolStripMenuItemOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            toolStripMenuItemOpen.Size = new System.Drawing.Size(162, 22);
+            toolStripMenuItemOpen.Text = "&Åbn spil";
+            toolStripMenuItemOpen.Click += new System.EventHandler(this.toolStripMenuItemOpen_Click);
+            // 
             // menuStrip
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemFiles,
+            toolStripMenuItemView,
             this.toolStripMenuItemFunctions,
             this.toolStripMenuItemHelp});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
@@ -176,6 +188,27 @@
             this.toolStripMenuItemNewGame.Size = new System.Drawing.Size(162, 22);
             this.toolStripMenuItemNewGame.Text = "&Nyt spil";
             this.toolStripMenuItemNewGame.Click += new System.EventHandler(this.toolStripMenuItemNewGame_Click);
+            // 
+            // toolStripSeparatorOpen
+            // 
+            this.toolStripSeparatorOpen.Name = "toolStripSeparatorOpen";
+            this.toolStripSeparatorOpen.Size = new System.Drawing.Size(159, 6);
+            // 
+            // toolStripMenuItemSave
+            // 
+            this.toolStripMenuItemSave.Name = "toolStripMenuItemSave";
+            this.toolStripMenuItemSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.toolStripMenuItemSave.Size = new System.Drawing.Size(162, 22);
+            this.toolStripMenuItemSave.Text = "&Gem spil";
+            this.toolStripMenuItemSave.Click += new System.EventHandler(this.toolStripMenuItemSave_Click);
+            // 
+            // toolStripMenuItemSaveAs
+            // 
+            this.toolStripMenuItemSaveAs.Name = "toolStripMenuItemSaveAs";
+            this.toolStripMenuItemSaveAs.Size = new System.Drawing.Size(162, 22);
+            this.toolStripMenuItemSaveAs.Text = "Gem spil som";
+            this.toolStripMenuItemSaveAs.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolStripMenuItemSaveAs.Click += new System.EventHandler(this.toolStripMenuItemSaveAs_Click);
             // 
             // toolStripSeparatorExit
             // 
@@ -836,34 +869,19 @@
             this.labelPlayer1Company.TabIndex = 0;
             this.labelPlayer1Company.Text = "Firma";
             // 
-            // toolStripMenuItemOpen
+            // toolStripMenuItemView
             // 
-            toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
-            toolStripMenuItemOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            toolStripMenuItemOpen.Size = new System.Drawing.Size(162, 22);
-            toolStripMenuItemOpen.Text = "&Åbn spil";
-            toolStripMenuItemOpen.Click += new System.EventHandler(this.toolStripMenuItemOpen_Click);
+            toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemDeposit});
+            toolStripMenuItemView.Name = "toolStripMenuItemView";
+            toolStripMenuItemView.Size = new System.Drawing.Size(32, 20);
+            toolStripMenuItemView.Text = "&Vis";
             // 
-            // toolStripSeparatorOpen
+            // toolStripMenuItemDeposit
             // 
-            this.toolStripSeparatorOpen.Name = "toolStripSeparatorOpen";
-            this.toolStripSeparatorOpen.Size = new System.Drawing.Size(159, 6);
-            // 
-            // toolStripMenuItemSave
-            // 
-            this.toolStripMenuItemSave.Name = "toolStripMenuItemSave";
-            this.toolStripMenuItemSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.toolStripMenuItemSave.Size = new System.Drawing.Size(162, 22);
-            this.toolStripMenuItemSave.Text = "&Gem spil";
-            this.toolStripMenuItemSave.Click += new System.EventHandler(this.toolStripMenuItemSave_Click);
-            // 
-            // toolStripMenuItemSaveAs
-            // 
-            this.toolStripMenuItemSaveAs.Name = "toolStripMenuItemSaveAs";
-            this.toolStripMenuItemSaveAs.Size = new System.Drawing.Size(162, 22);
-            this.toolStripMenuItemSaveAs.Text = "Gem spil som";
-            this.toolStripMenuItemSaveAs.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolStripMenuItemSaveAs.Click += new System.EventHandler(this.toolStripMenuItemSaveAs_Click);
+            this.toolStripMenuItemDeposit.Name = "toolStripMenuItemDeposit";
+            this.toolStripMenuItemDeposit.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemDeposit.Text = "&Aktier i depot";
             // 
             // MainForm
             // 
@@ -878,6 +896,7 @@
             this.Name = "MainForm";
             this.Text = "Aktiespillet";
             this.Resize += new System.EventHandler(this.MainForm_Resize);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.panelStockInformations.ResumeLayout(false);
@@ -985,6 +1004,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorOpen;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSave;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveAs;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeposit;
     }
 }
 

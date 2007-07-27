@@ -70,7 +70,7 @@ namespace OSDevGrp.WallStreetGame
                 {
                     byte major = (byte) fs.ReadByte();
                     byte minor = (byte) fs.ReadByte();
-                    if (major > fv.Major || (major == fv.Major && minor > fv.Minor))
+                    if (major <= 0 || major > fv.Major || (major == fv.Major && minor > fv.Minor))
                         throw new System.NotSupportedException();
                     return new Version(major, minor);
                 }

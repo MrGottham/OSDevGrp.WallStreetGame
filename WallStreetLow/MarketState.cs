@@ -11,7 +11,7 @@ namespace OSDevGrp.WallStreetGame
         Boom = 2
     }
 
-    public class MarketState : System.Object, IResetable, IPlayable
+    public class MarketState : System.Object, IResetable, IPlayable, IStoreable
     {
         private const double BROKERAGE_INITIALIZE = 2.5D;
         private const double MIN_BROKERAGE = 1.0D;
@@ -147,6 +147,41 @@ namespace OSDevGrp.WallStreetGame
                             Brokerage += 0.25;
                         break;
                 }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Save(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    fs.WriteInt((int) State);
+                    fs.WriteInt(Epochs);
+                    fs.WriteDouble(Brokerage);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object Load(Version fv, WsgFileStream fs, System.Object obj)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    State = (MarketStateType) fs.ReadInt();
+                    Epochs = fs.ReadInt();
+                    Brokerage = fs.ReadDouble();
+                }
+                return this;
             }
             catch (System.Exception ex)
             {

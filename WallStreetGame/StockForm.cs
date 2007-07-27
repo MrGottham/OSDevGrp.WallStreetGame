@@ -230,10 +230,12 @@ namespace OSDevGrp.WallStreetGame
                 int max = 0;
                 if (this.radioButtonTradeBuy.Checked)
                 {
-                    if (Player.Capital / (Stock.CalculatePrice(1) + Stock.CalculateBrokerage(MarketState, 1)) > int.MaxValue)
+                    if (Player.Capital / Stock.CalculatePrice(1) > int.MaxValue)
                         max = int.MaxValue;
                     else
-                        max = (int) System.Math.Floor((Player.Capital / (Stock.CalculatePrice(1) + Stock.CalculateBrokerage(MarketState, 1))));
+                        max = (int) System.Math.Floor(Player.Capital / Stock.CalculatePrice(1));
+                    while (Player.Capital < Stock.CalculatePrice(max) + Stock.CalculateBrokerage(MarketState, max))
+                        max--;
                     if (max > Stock.Available)
                         max = Stock.Available;
                 }
@@ -297,6 +299,8 @@ namespace OSDevGrp.WallStreetGame
                 LineGraph.YMax = (float) Stock.PriceHistory.Max;
                 LineGraph.YMax += System.Math.Round((LineGraph.YMax / 100) * 5, 0);
                 LineGraph.YMax += 100 - (LineGraph.YMax % 100);
+                LineGraph.XMin = 0;
+                LineGraph.XMax = Stock.PriceHistory.Count - 1 > LineGraph.XMin + 1 ? Stock.PriceHistory.Count - 1: LineGraph.XMin + 1;
                 LineGraph.GridLineStepY = (LineGraph.YMax - LineGraph.YMin) / 4;
                 LineGraph.Clear(e);
                 LineGraph.Grid(e);

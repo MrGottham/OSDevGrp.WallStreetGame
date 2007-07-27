@@ -103,6 +103,22 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public double MinPrice
+        {
+            get
+            {
+                return MIN_PRICE;
+            }
+        }
+
+        public double MaxPrice
+        {
+            get
+            {
+                return MAX_PRICE;
+            }
+        }
+
         public double Price
         {
             get
@@ -129,10 +145,10 @@ namespace OSDevGrp.WallStreetGame
                 {
                     _Price = (_Price - d + (d >= 88 ? 100 : 75)) / 100;
                 }
-                if (_Price < MIN_PRICE)
-                    _Price = MIN_PRICE;
-                if (_Price > MAX_PRICE)
-                    _Price = MAX_PRICE;
+                if (_Price < MinPrice)
+                    _Price = MinPrice;
+                if (_Price > MaxPrice)
+                    _Price = MaxPrice;
                 PriceHistory.AddHistory(_Price);
             }
         }
@@ -302,22 +318,30 @@ namespace OSDevGrp.WallStreetGame
                         d_up = (Price / 100) * 5;
                         d_down = (Price / 100) * 5;
                         i_up_down = (Available / 100) * 10;
+                        if (d_up <= MinPrice)
+                            d_up = MinPrice;
+                        if (d_down <= MinPrice)
+                            d_down = MinPrice;
                         break;
                     case MarketStateType.Depression:
                         d_up = (Price / 100) * 2.5;
                         d_down = (Price / 100) * 5;
                         i_up_down = (Available / 100) * 5;
+                        if (d_up <= MinPrice)
+                            d_up = MinPrice;
+                        if (d_down <= MinPrice * 2)
+                            d_down = MinPrice * 2;
                         break;
                     case MarketStateType.Boom:
                         d_up = (Price / 100) * 5;
                         d_down = (Price / 100) * 2.5;
                         i_up_down = (Available / 100) * 15;
+                        if (d_up <= MinPrice * 2)
+                            d_up = MinPrice * 2;
+                        if (d_down <= MinPrice)
+                            d_down = MinPrice;
                         break;
                 }
-                if (d_up <= MIN_PRICE)
-                    d_up = MIN_PRICE;
-                if (d_down <= MIN_PRICE)
-                    d_down = MIN_PRICE;
                 if (i_up_down <= 0)
                     i_up_down = MAX_AVAILABLE / 1000;
                 Price += random.Next(d_up > int.MaxValue ? int.MaxValue : (int) d_up) - random.Next(d_down > int.MaxValue ? int.MaxValue : (int) d_down);
@@ -380,6 +404,8 @@ namespace OSDevGrp.WallStreetGame
                     }
                     PriceHistory.Load(fv, fs, obj);
                     Price = fs.ReadDouble();
+                    if (PriceHistory.Count > 0)
+                        PriceHistory.RemoveAt(PriceHistory.Count - 1);
                     Available = fs.ReadInt();
                     OwnedByPlayers = fs.ReadInt();
                 }

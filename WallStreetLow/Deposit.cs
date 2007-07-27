@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Deposit : System.Collections.Generic.Dictionary<string, DepositContent>, IResetable
+    public class Deposit : System.Collections.Generic.Dictionary<string, DepositContent>, IResetable, IStoreable
     {
         private Player _Player = null;
 
@@ -129,6 +129,54 @@ namespace OSDevGrp.WallStreetGame
                         r.Reset(random);
                     }
                 }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Save(Version fv, WsgFileStream fs)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    fs.WriteInt(this.Count);
+                    if (this.Count > 0)
+                    {
+                        foreach (string s in this.Keys)
+                        {
+                            fs.WriteString(s);
+                            DepositContent content = null;
+                            if (this.TryGetValue(s, out content))
+                                content.Save(fv, fs);
+                        }
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object Load(Version fv, WsgFileStream fs, System.Object obj)
+        {
+            try
+            {
+                if (fv.Major > 0)
+                {
+                    int c = fs.ReadInt();
+                    for (int i = 0; i < c; i++)
+                    {
+                        string s = fs.ReadString();
+                        DepositContent content = null;
+                        if (this.TryGetValue(s, out content))
+                            content.Load(fv, fs, obj);
+                    }
+                }
+                return this;
             }
             catch (System.Exception ex)
             {

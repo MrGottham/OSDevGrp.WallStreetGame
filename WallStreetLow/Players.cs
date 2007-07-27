@@ -70,16 +70,19 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                Player currentplayer = null;
                 if (fv.Major > 0)
                 {
                     int c = fs.ReadInt();
                     for (int i = 0; i < c; i++)
                     {
                         Player player = new Player(fv, fs, obj);
+                        if (player.IsYou)
+                            currentplayer = player;
                         this.Add(player);
                     }
                 }
-                return this;
+                return currentplayer;
             }
             catch (System.Exception ex)
             {

@@ -440,6 +440,7 @@ namespace OSDevGrp.WallStreetGame
                 {
                     while (PlayTimer.Enabled)
                         PlayTimer.Stop();
+                    FileName = null;
                     Stocks.Reset(random);
                     Players.Reset(random);
                     MarketState.Reset(random);
@@ -542,6 +543,7 @@ namespace OSDevGrp.WallStreetGame
                     StockIndexes.Save(fv, fs);
                     Stocks.Save(fv, fs);
                     Players.Save(fv, fs);
+                    MarketState.Save(fv, fs);
                     fs.Flush();
                     FileName = fs.Name;
                     while (!PlayTimer.Enabled)
@@ -618,7 +620,8 @@ namespace OSDevGrp.WallStreetGame
                     CurrentPlayer = null;
                     StockIndexes.Load(loadedfv, fs, null);
                     Stocks.Load(loadedfv, fs, StockIndexes);
-                    Players.Load(loadedfv, fs, Stocks);
+                    CurrentPlayer = (Player) Players.Load(loadedfv, fs, Stocks);
+                    MarketState.Load(loadedfv, fs, null);
                     FileName = fs.Name;
                     while (!PlayTimer.Enabled)
                         PlayTimer.Start();

@@ -117,14 +117,18 @@ namespace OSDevGrp.WallStreetGame
                                 {
                                     x_s = x_s.Substring(0, x_p);
                                 }
-                                int x_i = int.Parse(x_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands, nfi);
+                                int x_i = 0;
+                                if (x_s.Length > 0)
+                                    x_i = int.Parse(x_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands, nfi);
                                 string y_s = y_lvi.SubItems[ColumnToSort].Text;
                                 int y_p = y_s.IndexOf(' ');
                                 if (y_p >= 0)
                                 {
                                     y_s = y_s.Substring(0, y_p);
                                 }
-                                int y_i = int.Parse(y_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands, nfi);
+                                int y_i = 0;
+                                if (y_s.Length > 0)
+                                    y_i = int.Parse(y_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands, nfi);
                                 switch (SortOrder)
                                 {
                                     case System.Windows.Forms.SortOrder.Ascending:
@@ -145,14 +149,18 @@ namespace OSDevGrp.WallStreetGame
                                 {
                                     x_s = x_s.Substring(0, x_p);
                                 }
-                                double x_d = double.Parse(x_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowDecimalPoint, nfi);
+                                double x_d = 0D;
+                                if (x_s.Length > 0)
+                                    x_d = double.Parse(x_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowDecimalPoint, nfi);
                                 string y_s = y_lvi.SubItems[ColumnToSort].Text;
                                 int y_p = y_s.IndexOf(' ');
                                 if (y_p >= 0)
                                 {
                                     y_s = y_s.Substring(0, y_p);
                                 }
-                                double y_d = double.Parse(y_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowDecimalPoint, nfi);
+                                double y_d = 0D;
+                                if (y_s.Length > 0)
+                                    y_d = double.Parse(y_s, System.Globalization.NumberStyles.AllowLeadingSign | System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowDecimalPoint, nfi);
                                 switch (SortOrder)
                                 {
                                     case System.Windows.Forms.SortOrder.Ascending:
@@ -186,6 +194,7 @@ namespace OSDevGrp.WallStreetGame
 
         private Game _Game = null;
         private StockForms _StockForms = null;
+        private string _OldFileName = null;
 
         public MainForm() : base()
         {
@@ -379,6 +388,20 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private string OldFileName
+        {
+            get
+            {
+                if (_OldFileName != null)
+                    return _OldFileName;
+                return String.Empty;
+            }
+            set
+            {
+                _OldFileName = value;
+            }
+        }
+
         private bool BeforeReset()
         {
             try
@@ -386,6 +409,7 @@ namespace OSDevGrp.WallStreetGame
                 if (System.Windows.Forms.MessageBox.Show(this, "Nyt spil?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                 {
                     this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+                    OldFileName = Game.FileName;
                     return true;
                 }
             }
@@ -402,6 +426,14 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                if (OldFileName.Length > 0)
+                {
+                    string s = this.toolStripMenuItemSave.Text;
+                    if (s.IndexOf(" (" + System.IO.Path.GetFileName(OldFileName) + ')') >= 0)
+                        s = s.Substring(0, s.IndexOf(" (" + System.IO.Path.GetFileName(OldFileName) + ')'));
+                    this.toolStripMenuItemSave.Text = s;
+                    OldFileName = null;
+                }
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
             }
@@ -427,6 +459,11 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                string s = this.toolStripMenuItemSave.Text;
+                if (s.IndexOf(" (" + System.IO.Path.GetFileName(Game.FileName) + ')') >= 0)
+                    s = s.Substring(0, s.IndexOf(" (" + System.IO.Path.GetFileName(Game.FileName) + ')'));
+                s = s + " (" + System.IO.Path.GetFileName(Game.FileName) + ')';
+                this.toolStripMenuItemSave.Text = s;
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
             }
@@ -448,6 +485,7 @@ namespace OSDevGrp.WallStreetGame
                         stockform.Close();
                     stockform.Dispose();
                 }
+                OldFileName = Game.FileName;
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             }
             catch (System.Exception ex)
@@ -460,10 +498,39 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                string s = null;
+                if (OldFileName.Length > 0)
+                {
+                    s = this.toolStripMenuItemSave.Text;
+                    if (s.IndexOf(" (" + System.IO.Path.GetFileName(OldFileName) + ')') >= 0)
+                        s = s.Substring(0, s.IndexOf(" (" + System.IO.Path.GetFileName(OldFileName) + ')'));
+                    this.toolStripMenuItemSave.Text = s;
+                    OldFileName = null;
+                }
+                s = this.toolStripMenuItemSave.Text;
+                if (s.IndexOf(" (" + System.IO.Path.GetFileName(Game.FileName) + ')') >= 0)
+                    s = s.Substring(0, s.IndexOf(" (" + System.IO.Path.GetFileName(Game.FileName) + ')'));
+                s = s + " (" + System.IO.Path.GetFileName(Game.FileName) + ')';
+                this.toolStripMenuItemSave.Text = s;
+                while (this.toolStripMenuItemDeposit.DropDownItems.Count > 0)
+                    this.toolStripMenuItemDeposit.DropDownItems.Clear();
                 while (this.comboBoxStockIndex.Items.Count > 0)
                     this.comboBoxStockIndex.Items.Clear();
+                if (this.listViewStocks.Columns.Count > 0)
+                {
+                    int i = 0;
+                    while (i < this.listViewStocks.Columns.Count)
+                    {
+                        if (this.listViewStocks.Columns[i].Tag is Player)
+                            this.listViewStocks.Columns.RemoveAt(i);
+                        else
+                            i++;
+                    }
+                }
                 while (this.listViewStocks.Items.Count > 0)
                     this.listViewStocks.Items.Clear();
+                this.textBoxPlayer1Company.Text = Game.CurrentPlayer.Company;
+                this.textBoxPlayer1Name.Text = Game.CurrentPlayer.Name;
                 while (this.comboBoxPlayer2Company.Items.Count > 0)
                     this.comboBoxPlayer2Company.Items.Clear();
                 while (this.comboBoxPlayer3Company.Items.Count > 0)
@@ -507,6 +574,7 @@ namespace OSDevGrp.WallStreetGame
                         {
                             Stock stock = (Stock) lvi.Tag;
                             DepositContent depositcontent = null;
+                            Player player = null;
                             switch (lvi.Name)
                             {
                                 case "Price":
@@ -523,6 +591,13 @@ namespace OSDevGrp.WallStreetGame
                                     break;
                                 case "Deposit":
                                     if (Game.CurrentPlayer.Deposit.TryGetValue(stock.Id, out depositcontent))
+                                        lvi.Text = depositcontent.Count.ToString("#,##0", nfi);
+                                    else
+                                        lvi.Text = String.Empty;
+                                    break;
+                                case "OtherDeposit":
+                                    player = (Player) lvi.Tag;
+                                    if (player.Deposit.TryGetValue(stock.Id, out depositcontent))
                                         lvi.Text = depositcontent.Count.ToString("#,##0", nfi);
                                     else
                                         lvi.Text = String.Empty;
@@ -552,6 +627,13 @@ namespace OSDevGrp.WallStreetGame
                                             else
                                                 lvsi.Text = String.Empty;
                                             break;
+                                        case "OtherDeposit":
+                                            player = (Player) lvsi.Tag;
+                                            if (player.Deposit.TryGetValue(stock.Id, out depositcontent))
+                                                lvsi.Text = depositcontent.Count.ToString("#,##0", nfi);
+                                            else
+                                                lvsi.Text = String.Empty;
+                                            break;
                                     }
                                 }
                             }
@@ -566,6 +648,7 @@ namespace OSDevGrp.WallStreetGame
                         {
                             System.Windows.Forms.ListViewItem lvi = null;
                             DepositContent depositcontent = null;
+                            Player player = null;
                             foreach (System.Windows.Forms.ColumnHeader ch in this.listViewStocks.Columns)
                             {
                                 if (lvi == null)
@@ -598,6 +681,15 @@ namespace OSDevGrp.WallStreetGame
                                             else
                                                 lvi.Text = String.Empty;
                                             lvi.Name = ch.Name;
+                                            break;
+                                        case "OtherDeposit":
+                                            player = (Player) ch.Tag;
+                                            if (player.Deposit.TryGetValue(stock.Id, out depositcontent))
+                                                lvi.Text = depositcontent.Count.ToString("#,##0", nfi);
+                                            else
+                                                lvi.Text = string.Empty;
+                                            lvi.Name = ch.Name;
+                                            lvi.Tag = ch.Tag;
                                             break;
                                     }
                                 }
@@ -632,6 +724,15 @@ namespace OSDevGrp.WallStreetGame
                                             else
                                                 lvsi.Text = String.Empty;
                                             lvsi.Name = ch.Name;
+                                            break;
+                                        case "OtherDeposit":
+                                            player = (Player) ch.Tag;
+                                            if (player.Deposit.TryGetValue(stock.Id, out depositcontent))
+                                                lvsi.Text = depositcontent.Count.ToString("#,##0", nfi);
+                                            else
+                                                lvsi.Text = string.Empty;
+                                            lvsi.Name = ch.Name;
+                                            lvsi.Tag = ch.Tag;
                                             break;
                                     }
                                     if (lvsi != null)
@@ -777,6 +878,34 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+                foreach (Player player in Game.Players)
+                {
+                    if (this.toolStripMenuItemDeposit.DropDownItems.Count > 0)
+                    {
+                        if (player.Company.Length > 0 && !player.IsYou)
+                        {
+                            bool found = false;
+                            for (int i = 0; i < this.toolStripMenuItemDeposit.DropDownItems.Count && !found; i++)
+                                found = ((Player) this.toolStripMenuItemDeposit.DropDownItems[i].Tag == player);
+                            if (!found)
+                            {
+                                System.Windows.Forms.ToolStripMenuItem tsmi = new System.Windows.Forms.ToolStripMenuItem("&" + player.Company);
+                                tsmi.CheckOnClick = true;
+                                tsmi.Tag = player;
+                                tsmi.Click += new System.EventHandler(this.toolStripMenuItemDeposit_Click);
+                                this.toolStripMenuItemDeposit.DropDownItems.Add(tsmi);
+                            }
+                        }
+                    }
+                    else if (player.Company.Length > 0 && !player.IsYou)
+                    {
+                        System.Windows.Forms.ToolStripMenuItem tsmi = new System.Windows.Forms.ToolStripMenuItem("&" + player.Company);
+                        tsmi.CheckOnClick = true;
+                        tsmi.Tag = player;
+                        tsmi.Click += new System.EventHandler(this.toolStripMenuItemDeposit_Click);
+                        this.toolStripMenuItemDeposit.DropDownItems.Add(tsmi);
+                    }
+                }
                 this.UpdatePlayerInformations(this.panelPlayer1);
                 this.UpdatePlayerInformations(this.panelPlayer2);
                 this.UpdatePlayerInformations(this.panelPlayer3);
@@ -812,6 +941,28 @@ namespace OSDevGrp.WallStreetGame
             catch (System.Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                switch (System.Windows.Forms.MessageBox.Show(this, "Gem spillet?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question))
+                {
+                    case System.Windows.Forms.DialogResult.Yes:
+                        toolStripMenuItemSave_Click(sender, new System.EventArgs());
+                        break;
+                    case System.Windows.Forms.DialogResult.No:
+                        break;
+                    case System.Windows.Forms.DialogResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
@@ -920,6 +1071,66 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private void toolStripMenuItemDeposit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is System.Windows.Forms.ToolStripMenuItem)
+                {
+                    System.Windows.Forms.ToolStripMenuItem tsmi = (System.Windows.Forms.ToolStripMenuItem) sender;
+                    Player player = (Player) tsmi.Tag;
+                    bool found = false;
+                    int column = 0;
+                    for (column = 0; column < this.listViewStocks.Columns.Count && !found; column++)
+                    {
+                        if (this.listViewStocks.Columns[column].Tag is Player)
+                            found = ((Player) this.listViewStocks.Columns[column].Tag == player);
+                    }
+                    switch (tsmi.CheckState)
+                    {
+                        case System.Windows.Forms.CheckState.Checked:
+                            if (!found)
+                            {
+                                System.Windows.Forms.ColumnHeader ch = new System.Windows.Forms.ColumnHeader();
+                                ch.Name = "OtherDeposit";
+                                ch.Text = player.Company;
+                                ch.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+                                ch.Tag = player;
+                                this.listViewStocks.Columns.Insert(this.listViewStocks.Columns.Count - 1, ch);
+                                if (this.listViewStocks.Items.Count > 0)
+                                {
+                                    foreach (System.Windows.Forms.ListViewItem lvi in this.listViewStocks.Items)
+                                    {
+                                        System.Windows.Forms.ListViewItem.ListViewSubItem lvsi = new ListViewItem.ListViewSubItem();
+                                        lvsi.Name = ch.Name;
+                                        lvsi.Tag = ch.Tag;
+                                        lvi.SubItems.Insert(lvi.SubItems.Count - 1, lvsi);
+                                    }
+                                }
+                                UpdateStockInformations();
+                            }
+                            break;
+                        default:
+                            if (found)
+                            {
+                                this.listViewStocks.Columns.RemoveAt(column - 1);
+                                if (this.listViewStocks.Items.Count > 0)
+                                {
+                                    foreach (System.Windows.Forms.ListViewItem lvi in this.listViewStocks.Items)
+                                        lvi.SubItems.RemoveAt(column - 1);
+                                }
+                                UpdateStockInformations();
+                            }
+                            break;
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
         private void toolStripMenuItemAbout_Click(object sender, EventArgs e)
         {
             try
@@ -991,7 +1202,11 @@ namespace OSDevGrp.WallStreetGame
             {
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 this.listViewStocks.BeginUpdate();
-                ListViewItemComparerMethod method = (ListViewItemComparerMethod) this.listViewStocks.Columns[e.Column].Tag;
+                ListViewItemComparerMethod method = ListViewItemComparerMethod.Unknown;
+                if (this.listViewStocks.Columns[e.Column].Tag is Player)
+                    method = ListViewItemComparerMethod.Integer;
+                else
+                    method = (ListViewItemComparerMethod) this.listViewStocks.Columns[e.Column].Tag;
                 System.Windows.Forms.SortOrder sortorder = System.Windows.Forms.SortOrder.None;
                 switch (method)
                 {
