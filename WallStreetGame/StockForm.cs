@@ -301,6 +301,7 @@ namespace OSDevGrp.WallStreetGame
                 LineGraph.YMax += 100 - (LineGraph.YMax % 100);
                 LineGraph.XMin = 0;
                 LineGraph.XMax = Stock.PriceHistory.Count - 1 > LineGraph.XMin + 1 ? Stock.PriceHistory.Count - 1: LineGraph.XMin + 1;
+                LineGraph.GridLineStepX = System.Math.Floor((LineGraph.XMax - LineGraph.XMin) / 5);
                 LineGraph.GridLineStepY = (LineGraph.YMax - LineGraph.YMin) / 4;
                 LineGraph.Clear(e);
                 LineGraph.Grid(e);

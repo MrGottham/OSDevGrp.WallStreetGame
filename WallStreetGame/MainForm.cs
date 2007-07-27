@@ -447,6 +447,7 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                OldFileName = Game.FileName;
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             }
             catch (System.Exception ex)
@@ -459,7 +460,16 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                string s = this.toolStripMenuItemSave.Text;
+                string s = null;
+                if (OldFileName.Length > 0)
+                {
+                    s = this.toolStripMenuItemSave.Text;
+                    if (s.IndexOf(" (" + System.IO.Path.GetFileName(OldFileName) + ')') >= 0)
+                        s = s.Substring(0, s.IndexOf(" (" + System.IO.Path.GetFileName(OldFileName) + ')'));
+                    this.toolStripMenuItemSave.Text = s;
+                    OldFileName = null;
+                }
+                s = this.toolStripMenuItemSave.Text;
                 if (s.IndexOf(" (" + System.IO.Path.GetFileName(Game.FileName) + ')') >= 0)
                     s = s.Substring(0, s.IndexOf(" (" + System.IO.Path.GetFileName(Game.FileName) + ')'));
                 s = s + " (" + System.IO.Path.GetFileName(Game.FileName) + ')';
