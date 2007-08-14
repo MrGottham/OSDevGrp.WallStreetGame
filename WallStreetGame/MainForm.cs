@@ -951,6 +951,14 @@ namespace OSDevGrp.WallStreetGame
                             stockform.UpdatePlayerInformations();
                     }
                 }
+                if (this.StatisticsForms.Count > 0)
+                {
+                    foreach (StatisticsForm statisticsform in this.StatisticsForms)
+                    {
+                        if (statisticsform.Visible)
+                            statisticsform.UpdatePlayerInformations();
+                    }
+                }
                 this.Cursor = System.Windows.Forms.Cursors.Default;
             }
             catch (System.Exception ex)
@@ -985,8 +993,10 @@ namespace OSDevGrp.WallStreetGame
                 {
                     case System.Windows.Forms.DialogResult.Yes:
                         toolStripMenuItemSave_Click(sender, new System.EventArgs());
+                        e.Cancel = false;
                         break;
                     case System.Windows.Forms.DialogResult.No:
+                        e.Cancel = false;
                         break;
                     case System.Windows.Forms.DialogResult.Cancel:
                         e.Cancel = true;
@@ -995,6 +1005,7 @@ namespace OSDevGrp.WallStreetGame
             }
             catch (System.Exception ex)
             {
+                e.Cancel = true;
                 System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
@@ -1157,6 +1168,34 @@ namespace OSDevGrp.WallStreetGame
                             break;
                     }
                 }
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+        
+        private void toolStripMenuItemValueLineGraph_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                StatisticsForm statisticsform = new StatisticsForm(this, GraphType.Line, ((System.Windows.Forms.ToolStripMenuItem) sender).Text.Replace("&", null), Game.Players, Game.CurrentPlayer, (Player) this.comboBoxPlayer2Company.SelectedItem, (Player) this.comboBoxPlayer3Company.SelectedItem, (Player) this.comboBoxPlayer4Company.SelectedItem);
+                this.StatisticsForms.Add(statisticsform);
+                statisticsform.Show(this);
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemValueBarGraph_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                StatisticsForm statisticsform = new StatisticsForm(this, GraphType.Bar, ((System.Windows.Forms.ToolStripMenuItem)sender).Text.Replace("&", null), Game.Players, Game.CurrentPlayer, (Player)this.comboBoxPlayer2Company.SelectedItem, (Player)this.comboBoxPlayer3Company.SelectedItem, (Player)this.comboBoxPlayer4Company.SelectedItem);
+                this.StatisticsForms.Add(statisticsform);
+                statisticsform.Show(this);
             }
             catch (System.Exception ex)
             {

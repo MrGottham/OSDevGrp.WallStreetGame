@@ -16,6 +16,7 @@ namespace OSDevGrp.WallStreetGame
         private bool _IsCurrency = false;
         private System.Drawing.Color _BackColor = System.Drawing.Color.Empty;
         private System.Drawing.Color _GridColor = System.Drawing.Color.White;
+        private System.Drawing.Brush _Brush = System.Drawing.Brushes.Black;
         private System.Drawing.Brush _TextBrush = System.Drawing.Brushes.Black;
         private System.Drawing.Pen _Pen = null;
         private System.Drawing.SolidBrush _SolidBrush = null;
@@ -39,6 +40,7 @@ namespace OSDevGrp.WallStreetGame
                 IsCurrency = false;
                 BackColor = backcolor;
                 GridColor = System.Drawing.Color.White;
+                Brush = System.Drawing.Brushes.Black;
                 TextBrush = System.Drawing.Brushes.Black;
                 Pen = new System.Drawing.Pen(System.Drawing.Brushes.Black);
                 SolidBrush = new System.Drawing.SolidBrush(System.Drawing.Color.White);
@@ -187,6 +189,18 @@ namespace OSDevGrp.WallStreetGame
             set
             {
                 _GridColor = value;
+            }
+        }
+
+        public System.Drawing.Brush Brush
+        {
+            get
+            {
+                return _Brush;
+            }
+            set
+            {
+                _Brush = value;
             }
         }
 
@@ -364,6 +378,12 @@ namespace OSDevGrp.WallStreetGame
         }
     }
 
+    public enum GraphType
+    {
+        Line = 1,
+        Bar = 2
+    }
+
     public class LineGraph : Graph
     {
         private double _XMin = 0D;
@@ -374,6 +394,7 @@ namespace OSDevGrp.WallStreetGame
         private double _GridLineStepY = 0;
         private float _GraphWidth = 0.50F;
         private float _GridLineWidth = 0.25F;
+        private bool _AdjustToRight = false;
         private System.Drawing.Color _GraphColor = System.Drawing.Color.Blue;
         private System.Drawing.Color _GridLineColor = System.Drawing.Color.LightGray;
 
@@ -391,6 +412,7 @@ namespace OSDevGrp.WallStreetGame
                 GridLineWidth = 0.25F;
                 GraphColor = System.Drawing.Color.Blue;
                 GridLineColor = System.Drawing.Color.LightGray;
+                AdjustToRight = false;
             }
             catch (System.Exception ex)
             {
@@ -438,7 +460,10 @@ namespace OSDevGrp.WallStreetGame
         {
             get
             {
-                return (Width - (XMargin * 2)) / ((float) (XMax - XMin));
+                if (XMin + 1 == XMax)
+                    return (Width - (XMargin * 2)) / ((float) (XMax - XMin));
+                else
+                    return (Width - (XMargin * 2)) / ((float) (XMax - XMin - 1));
             }
         }
 
@@ -501,6 +526,18 @@ namespace OSDevGrp.WallStreetGame
                 _GridLineWidth = value;
             }
 
+        }
+
+        public bool AdjustToRight
+        {
+            get
+            {
+                return _AdjustToRight;
+            }
+            set
+            {
+                _AdjustToRight = value;
+            }
         }
 
         public System.Drawing.Color GraphColor
@@ -587,6 +624,8 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 float x = CalcXPos(XMin);
+                if (AdjustToRight)
+                    x = CalcXPos(XMax - values.Count);
                 Pen.Color = GraphColor;
                 Pen.Width = GraphWidth;
                 if (values.Count > 1)
@@ -601,6 +640,171 @@ namespace OSDevGrp.WallStreetGame
                 {
                     e.Graphics.DrawLine(Pen, x, CalcYPos(values[0]), x + XStep, CalcYPos(values[0]));
                 }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+    }
+
+    public class BarGraph : Graph
+    {
+        private int _NoOfBars = 4;
+        private float _XMargin = 10F;
+        private bool _ShowGridLines = true;
+        private double _GridLineStepY = 0;
+        private float _GridLineWidth = 0.25F;
+        private float _BarSpace = 10F;
+        private System.Drawing.Color _GridLineColor = System.Drawing.Color.LightGray;
+
+        public BarGraph(float x, float y, float width, float height, System.Drawing.Color backcolor) : base(x, y, width, height, backcolor)
+        {
+            try
+            {
+                NoOfBars = 4;
+                XMargin = 10F;
+                ShowGridLines = true;
+                GridLineStepY = (YMax - YMin) / 10;
+                GridLineWidth = 0.25F;
+                BarSpace = 10F;
+                BarBrush = System.Drawing.Brushes.Blue;
+                GridLineColor = System.Drawing.Color.LightGray;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public int NoOfBars
+        {
+            get
+            {
+                return _NoOfBars;
+            }
+            set
+            {
+                _NoOfBars = value;
+            }
+        }
+
+        public float XMargin
+        {
+            get
+            {
+                return _XMargin;
+            }
+            set
+            {
+                _XMargin = value;
+            }
+        }
+
+        public bool ShowGridLines
+        {
+            get
+            {
+                return _ShowGridLines;
+            }
+            set
+            {
+                _ShowGridLines = value;
+            }
+        }
+
+        public double GridLineStepY
+        {
+            get
+            {
+                return _GridLineStepY;
+            }
+            set
+            {
+                _GridLineStepY = value;
+            }
+        }
+
+        public float GridLineWidth
+        {
+            get
+            {
+                return _GridLineWidth;
+            }
+            set
+            {
+                _GridLineWidth = value;
+            }
+        }
+
+        public float BarSpace
+        {
+            get
+            {
+                return _BarSpace;
+            }
+            set
+            {
+                _BarSpace = value;
+            }
+        }
+
+        public System.Drawing.Brush BarBrush
+        {
+            get
+            {
+                return base.Brush;
+            }
+            set
+            {
+                base.Brush = value;
+            }
+        }
+
+        public System.Drawing.Color GridLineColor
+        {
+            get
+            {
+                return _GridLineColor;
+            }
+            set
+            {
+                _GridLineColor = value;
+            }
+        }
+
+        public override void Grid(System.Windows.Forms.PaintEventArgs e)
+        {
+            try
+            {
+                base.Grid(e);
+                if (ShowGridLines && GridLineStepY > 0)
+                {
+                    double d = YMax - GridLineStepY;
+                    float y = CalcYPos(d);
+                    Pen.Color = GridLineColor;
+                    Pen.Width = GridLineWidth;
+                    while (y < YPos + Height)
+                    {
+                        e.Graphics.DrawLine(Pen, XPos, y, XPos + Width, y);
+                        d -= GridLineStepY;
+                        y = CalcYPos(d);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Bar(System.Windows.Forms.PaintEventArgs e, int barno, double value)
+        {
+            try
+            {
+                float width = (Width - (XMargin * 2) - (BarSpace * (NoOfBars - 1))) / NoOfBars;
+                float x = XPos + XMargin + ((width + BarSpace) * barno);
+                e.Graphics.FillRectangle(BarBrush, x, CalcYPos(value), width, YPos + Height - CalcYPos(value));
             }
             catch (System.Exception ex)
             {

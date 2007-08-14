@@ -11,6 +11,7 @@ namespace OSDevGrp.WallStreetGame
         private Stocks _Stocks = null;
         private Players _Players = null;
         private System.Xml.XmlDocument _XmlDocument = null;
+        private System.Xml.XmlNode _AllStocksXmlNode = null;
 
         public Configuration(string setupfilename, System.Random random) : this(setupfilename, random, null, null, null)
         {
@@ -98,6 +99,44 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private System.Xml.XmlNode AllStocksXmlNode
+        {
+            get
+            {
+                return _AllStocksXmlNode;
+            }
+            set
+            {
+                _AllStocksXmlNode = value;
+            }
+        }
+
+        private string AllStocksIndexId
+        {
+            get
+            {
+                if (AllStocksXmlNode != null)
+                {
+                    if (AllStocksXmlNode.Attributes["indexid"] != null)
+                        return AllStocksXmlNode.Attributes["indexid"].Value;
+                }
+                return string.Empty;
+            }
+        }
+
+        private string AllStocksIndexName
+        {
+            get
+            {
+                if (AllStocksXmlNode != null)
+                {
+                    if (AllStocksXmlNode.HasChildNodes)
+                        return AllStocksXmlNode.FirstChild.Value;
+                }
+                return string.Empty;
+            }
+        }
+
         public void Load(System.Random random)
         {
             try
@@ -109,6 +148,11 @@ namespace OSDevGrp.WallStreetGame
                 if (XmlDocument == null)
                     XmlDocument = new System.Xml.XmlDocument();
                 XmlDocument.Load(SetupFileName);
+                AllStocksXmlNode = XmlDocument.DocumentElement.SelectSingleNode("AllStocks");
+                if (AllStocksXmlNode == null)
+                    throw new System.Exception("No node named 'AllStocks' in the file named '" + SetupFileName + "'.");
+                else if (AllStocksXmlNode.Attributes["indexid"] == null)
+                    throw new System.Exception("No attribute named 'indexid' on a node named '" + AllStocksXmlNode.LocalName + "' in the file named '" + SetupFileName + "'.");
                 System.Xml.XmlNodeList xmlnodes = XmlDocument.DocumentElement.SelectNodes("StockIndex");
                 if (xmlnodes == null)
                     throw new System.Exception("No nodes named 'StockIndex' in the file named '" + SetupFileName + "'.");
@@ -151,6 +195,19 @@ namespace OSDevGrp.WallStreetGame
                         {
                             stock.AddStockIndex(stockindex);
                         }
+                    }
+                }
+                if (AllStocksIndexId.Length > 0 && AllStocksIndexName.Length > 0)
+                {
+                    if (!StockIndexes.ContainsKey(AllStocksIndexId))
+                    {
+                        StockIndex stockindex = new StockIndex(AllStocksIndexId, AllStocksIndexName);
+                        foreach (Stock stock in Stocks.Values)
+                        {
+                            stock.StockIndexes.Add(stockindex.Id, stockindex);
+                            stockindex.Stocks.Add(stock.Id, stock);
+                        }
+                        StockIndexes.Add(stockindex.Id, stockindex);
                     }
                 }
                 xmlnodes = XmlDocument.DocumentElement.SelectNodes("Player");

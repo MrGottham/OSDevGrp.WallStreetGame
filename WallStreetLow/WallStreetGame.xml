@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <WallStreetGame>
+  <AllStocks indexid="All">&lt;Alle aktier&gt;</AllStocks>
   <StockIndex indexid="OMXC20" name="OMXC20">
     <Stock stockid="MAERSK-A">A.P. Møller - Mærsk A</Stock>
     <Stock stockid="MAERSK-B">A.P. Møller - Mærsk B</Stock>

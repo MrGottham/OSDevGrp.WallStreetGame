@@ -57,8 +57,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.toolStripMenuItemDeposit = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemStatistics = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemValueLineGraph = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemValueBarGraph = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItemFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemNewGame = new System.Windows.Forms.ToolStripMenuItem();
@@ -137,7 +141,6 @@
             this.labelPlayer1Name = new System.Windows.Forms.Label();
             this.textBoxPlayer1Company = new System.Windows.Forms.TextBox();
             this.labelPlayer1Company = new System.Windows.Forms.Label();
-            this.toolStripMenuItemDeposit = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
@@ -165,6 +168,44 @@
             toolStripMenuItemOpen.Size = new System.Drawing.Size(162, 22);
             toolStripMenuItemOpen.Text = "&Åbn spil";
             toolStripMenuItemOpen.Click += new System.EventHandler(this.toolStripMenuItemOpen_Click);
+            // 
+            // toolStripMenuItemView
+            // 
+            toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemDeposit,
+            this.toolStripMenuItemStatistics});
+            toolStripMenuItemView.Name = "toolStripMenuItemView";
+            toolStripMenuItemView.Size = new System.Drawing.Size(32, 20);
+            toolStripMenuItemView.Text = "&Vis";
+            // 
+            // toolStripMenuItemDeposit
+            // 
+            this.toolStripMenuItemDeposit.Name = "toolStripMenuItemDeposit";
+            this.toolStripMenuItemDeposit.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemDeposit.Text = "&Aktier i depot";
+            // 
+            // toolStripMenuItemStatistics
+            // 
+            this.toolStripMenuItemStatistics.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemValueLineGraph,
+            this.toolStripMenuItemValueBarGraph});
+            this.toolStripMenuItemStatistics.Name = "toolStripMenuItemStatistics";
+            this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemStatistics.Text = "&Statistikker";
+            // 
+            // toolStripMenuItemValueLineGraph
+            // 
+            this.toolStripMenuItemValueLineGraph.Name = "toolStripMenuItemValueLineGraph";
+            this.toolStripMenuItemValueLineGraph.Size = new System.Drawing.Size(206, 22);
+            this.toolStripMenuItemValueLineGraph.Text = "Aktiver i alt, &liniediagram";
+            this.toolStripMenuItemValueLineGraph.Click += new System.EventHandler(this.toolStripMenuItemValueLineGraph_Click);
+            // 
+            // toolStripMenuItemValueBarGraph
+            // 
+            this.toolStripMenuItemValueBarGraph.Name = "toolStripMenuItemValueBarGraph";
+            this.toolStripMenuItemValueBarGraph.Size = new System.Drawing.Size(206, 22);
+            this.toolStripMenuItemValueBarGraph.Text = "Aktiver i alt, &søjlediagram";
+            this.toolStripMenuItemValueBarGraph.Click += new System.EventHandler(this.toolStripMenuItemValueBarGraph_Click);
             // 
             // menuStrip
             // 
@@ -880,20 +921,6 @@
             this.labelPlayer1Company.TabIndex = 0;
             this.labelPlayer1Company.Text = "Firma";
             // 
-            // toolStripMenuItemView
-            // 
-            toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemDeposit});
-            toolStripMenuItemView.Name = "toolStripMenuItemView";
-            toolStripMenuItemView.Size = new System.Drawing.Size(32, 20);
-            toolStripMenuItemView.Text = "&Vis";
-            // 
-            // toolStripMenuItemDeposit
-            // 
-            this.toolStripMenuItemDeposit.Name = "toolStripMenuItemDeposit";
-            this.toolStripMenuItemDeposit.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemDeposit.Text = "&Aktier i depot";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1016,6 +1043,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSave;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveAs;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeposit;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStatistics;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemValueLineGraph;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemValueBarGraph;
     }
 }
 

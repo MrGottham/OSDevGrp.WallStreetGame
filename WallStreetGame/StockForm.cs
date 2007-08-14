@@ -30,7 +30,7 @@ namespace OSDevGrp.WallStreetGame
                 LineGraph.IsCurrency = true;
                 LineGraph.XMin = 0;
                 LineGraph.XMax = Stock.PriceHistory.Capacity;
-                LineGraph.GridLineStepX = (LineGraph.XMax - LineGraph.XMin) / 5;
+                LineGraph.GridLineStepX = System.Math.Floor((LineGraph.XMax - LineGraph.XMin) / 5);
                 System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
                 this.Text = this.Text + ": " + Stock.Name;
                 this.textBoxStockName.ReadOnly = true;
@@ -300,9 +300,9 @@ namespace OSDevGrp.WallStreetGame
                 LineGraph.YMax += System.Math.Round((LineGraph.YMax / 100) * 5, 0);
                 LineGraph.YMax += 100 - (LineGraph.YMax % 100);
                 LineGraph.XMin = 0;
-                LineGraph.XMax = Stock.PriceHistory.Count - 1 > LineGraph.XMin + 1 ? Stock.PriceHistory.Count - 1: LineGraph.XMin + 1;
+                LineGraph.XMax = Stock.PriceHistory.Count;
                 LineGraph.GridLineStepX = System.Math.Floor((LineGraph.XMax - LineGraph.XMin) / 5);
-                LineGraph.GridLineStepY = (LineGraph.YMax - LineGraph.YMin) / 4;
+                LineGraph.GridLineStepY = System.Math.Floor((LineGraph.YMax - LineGraph.YMin) / 5);
                 LineGraph.Clear(e);
                 LineGraph.Grid(e);
                 LineGraph.Graph(e, Stock.PriceHistory);
