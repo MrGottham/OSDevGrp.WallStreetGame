@@ -102,8 +102,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Statistics.ico" />
-    <Content Include="Stock.ico" />
+    <None Include="Resources\NewDocumentHS.png" />
+    <None Include="Resources\OpenHS.png" />
+    <None Include="Resources\SaveHS.png" />
+    <None Include="Resources\PauseHS.png" />
+    <None Include="Resources\PlayHS.png" />
+    <Content Include="Resources\Statistics.ico" />
+    <None Include="Resources\StatisticsHS.png" />
+    <Content Include="Resources\Stock.ico" />
+    <None Include="Resources\StockHS.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

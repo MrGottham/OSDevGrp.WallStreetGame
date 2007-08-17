@@ -141,6 +141,9 @@
             this.labelPlayer1Name = new System.Windows.Forms.Label();
             this.textBoxPlayer1Company = new System.Windows.Forms.TextBox();
             this.labelPlayer1Company = new System.Windows.Forms.Label();
+            this.toolStripSeparatorPause = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemPause = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemContinue = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
@@ -277,7 +280,10 @@
             // toolStripMenuItemFunctions
             // 
             this.toolStripMenuItemFunctions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemTrade});
+            this.toolStripMenuItemTrade,
+            this.toolStripSeparatorPause,
+            this.toolStripMenuItemPause,
+            this.toolStripMenuItemContinue});
             this.toolStripMenuItemFunctions.Name = "toolStripMenuItemFunctions";
             this.toolStripMenuItemFunctions.Size = new System.Drawing.Size(70, 20);
             this.toolStripMenuItemFunctions.Text = "F&unktioner";
@@ -921,6 +927,25 @@
             this.labelPlayer1Company.TabIndex = 0;
             this.labelPlayer1Company.Text = "Firma";
             // 
+            // toolStripSeparatorPause
+            // 
+            this.toolStripSeparatorPause.Name = "toolStripSeparatorPause";
+            this.toolStripSeparatorPause.Size = new System.Drawing.Size(175, 6);
+            // 
+            // toolStripMenuItemPause
+            // 
+            this.toolStripMenuItemPause.Name = "toolStripMenuItemPause";
+            this.toolStripMenuItemPause.Size = new System.Drawing.Size(178, 22);
+            this.toolStripMenuItemPause.Text = "&Pause";
+            this.toolStripMenuItemPause.Click += new System.EventHandler(this.toolStripMenuItemPause_Click);
+            // 
+            // toolStripMenuItemContinue
+            // 
+            this.toolStripMenuItemContinue.Name = "toolStripMenuItemContinue";
+            this.toolStripMenuItemContinue.Size = new System.Drawing.Size(178, 22);
+            this.toolStripMenuItemContinue.Text = "&Fortsæt";
+            this.toolStripMenuItemContinue.Click += new System.EventHandler(this.toolStripMenuItemContinue_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1046,6 +1071,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStatistics;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemValueLineGraph;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemValueBarGraph;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorPause;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPause;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemContinue;
     }
 }
 

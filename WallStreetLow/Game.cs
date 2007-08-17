@@ -32,6 +32,8 @@ namespace OSDevGrp.WallStreetGame
         public delegate void AfterSave();
         public delegate void BeforeLoad();
         public delegate void AfterLoad();
+        public delegate void OnPause();
+        public delegate void OnContinue();
         public delegate void UpdateStockInformations();
         public delegate void UpdatePlayerInformations();
 
@@ -41,6 +43,8 @@ namespace OSDevGrp.WallStreetGame
         private event AfterSave _AfterSaveEvent = null;
         private event BeforeLoad _BeforeLoadEvent = null;
         private event AfterLoad _AfterLoadEvent = null;
+        private event OnPause _OnPauseEvent = null;
+        private event OnContinue _OnContinueEvent = null;
         private event UpdateStockInformations _UpdateStockInformationsEvent = null;
         private event UpdatePlayerInformations _UpdatePlayerInformationsEvent = null;
 
@@ -215,6 +219,14 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public bool IsPaused
+        {
+            get
+            {
+                return PlayTimer.Enabled == false;
+            }
+        }
+
         public BeforeReset BeforeResetEvent
         {
             get
@@ -284,6 +296,30 @@ namespace OSDevGrp.WallStreetGame
             set
             {
                 _AfterLoadEvent = value;
+            }
+        }
+
+        public OnPause OnPauseEvent
+        {
+            get
+            {
+                return _OnPauseEvent;
+            }
+            set
+            {
+                _OnPauseEvent = value;
+            }
+        }
+
+        public OnContinue OnContinueEvent
+        {
+            get
+            {
+                return _OnContinueEvent;
+            }
+            set
+            {
+                _OnContinueEvent = value;
             }
         }
 
@@ -644,6 +680,42 @@ namespace OSDevGrp.WallStreetGame
             {
                 while (!PlayTimer.Enabled)
                     PlayTimer.Start();
+                throw ex;
+            }
+        }
+
+        public void Pause()
+        {
+            try
+            {
+                if (!IsPaused)
+                {
+                    while (PlayTimer.Enabled)
+                        PlayTimer.Stop();
+                    if (OnPauseEvent != null)
+                        OnPauseEvent();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Continue()
+        {
+            try
+            {
+                if (IsPaused)
+                {
+                    while (!PlayTimer.Enabled)
+                        PlayTimer.Start();
+                    if (OnContinueEvent != null)
+                        OnContinueEvent();
+                }
+            }
+            catch (System.Exception ex)
+            {
                 throw ex;
             }
         }

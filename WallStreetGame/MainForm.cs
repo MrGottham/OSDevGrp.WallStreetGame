@@ -209,6 +209,8 @@ namespace OSDevGrp.WallStreetGame
                 Game.AfterLoadEvent = this.AfterLoad;
                 Game.BeforeSaveEvent = this.BeforeSave;
                 Game.AfterSaveEvent = this.AfterSave;
+                Game.OnPauseEvent = this.OnPause;
+                Game.OnContinueEvent = this.OnContinue;
                 Game.UpdateStockInformationsEvent = this.UpdateStockInformations;
                 Game.UpdatePlayerInformationsEvent = this.UpdatePlayerInformations;
                 StockForms = new StockForms();
@@ -572,6 +574,30 @@ namespace OSDevGrp.WallStreetGame
                     this.comboBoxPlayer4Company.Items.Clear();
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void OnPause()
+        {
+            try
+            {
+                GrayItems();
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void OnContinue()
+        {
+            try
+            {
+                GrayItems();
             }
             catch (System.Exception ex)
             {
@@ -974,6 +1000,8 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 this.toolStripMenuItemTrade.Enabled = false;
+                this.toolStripMenuItemPause.Visible = !Game.IsPaused;
+                this.toolStripMenuItemContinue.Visible = Game.IsPaused;
                 if (this.listViewStocks.Items.Count > 0)
                 {
                     this.toolStripMenuItemTrade.Enabled = (this.listViewStocks.SelectedItems.Count > 0);
@@ -1196,6 +1224,30 @@ namespace OSDevGrp.WallStreetGame
                 StatisticsForm statisticsform = new StatisticsForm(this, GraphType.Bar, ((System.Windows.Forms.ToolStripMenuItem)sender).Text.Replace("&", null), Game.Players, Game.CurrentPlayer, (Player)this.comboBoxPlayer2Company.SelectedItem, (Player)this.comboBoxPlayer3Company.SelectedItem, (Player)this.comboBoxPlayer4Company.SelectedItem);
                 this.StatisticsForms.Add(statisticsform);
                 statisticsform.Show(this);
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemPause_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Game.Pause();
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemContinue_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Game.Continue();
             }
             catch (System.Exception ex)
             {
