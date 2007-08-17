@@ -73,6 +73,9 @@
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFunctions = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTrade = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorPause = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemPause = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemContinue = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.panelStockInformations = new System.Windows.Forms.Panel();
@@ -141,9 +144,6 @@
             this.labelPlayer1Name = new System.Windows.Forms.Label();
             this.textBoxPlayer1Company = new System.Windows.Forms.TextBox();
             this.labelPlayer1Company = new System.Windows.Forms.Label();
-            this.toolStripSeparatorPause = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemPause = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemContinue = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
@@ -186,7 +186,7 @@
             // 
             this.toolStripMenuItemDeposit.Image = global::OSDevGrp.Properties.Resources.StockHS;
             this.toolStripMenuItemDeposit.Name = "toolStripMenuItemDeposit";
-            this.toolStripMenuItemDeposit.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemDeposit.Size = new System.Drawing.Size(149, 22);
             this.toolStripMenuItemDeposit.Text = "&Aktier i depot";
             // 
             // toolStripMenuItemStatistics
@@ -196,7 +196,7 @@
             this.toolStripMenuItemValueBarGraph});
             this.toolStripMenuItemStatistics.Image = global::OSDevGrp.Properties.Resources.StatisticsHS;
             this.toolStripMenuItemStatistics.Name = "toolStripMenuItemStatistics";
-            this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(149, 22);
             this.toolStripMenuItemStatistics.Text = "&Statistikker";
             // 
             // toolStripMenuItemValueLineGraph
@@ -295,10 +295,32 @@
             // 
             // toolStripMenuItemTrade
             // 
+            this.toolStripMenuItemTrade.Image = global::OSDevGrp.Properties.Resources.StockHS;
             this.toolStripMenuItemTrade.Name = "toolStripMenuItemTrade";
             this.toolStripMenuItemTrade.Size = new System.Drawing.Size(178, 22);
             this.toolStripMenuItemTrade.Text = "&Købe / sælge aktier";
             this.toolStripMenuItemTrade.Click += new System.EventHandler(this.listViewStocks_DoubleClick);
+            // 
+            // toolStripSeparatorPause
+            // 
+            this.toolStripSeparatorPause.Name = "toolStripSeparatorPause";
+            this.toolStripSeparatorPause.Size = new System.Drawing.Size(175, 6);
+            // 
+            // toolStripMenuItemPause
+            // 
+            this.toolStripMenuItemPause.Image = global::OSDevGrp.Properties.Resources.PauseHS;
+            this.toolStripMenuItemPause.Name = "toolStripMenuItemPause";
+            this.toolStripMenuItemPause.Size = new System.Drawing.Size(178, 22);
+            this.toolStripMenuItemPause.Text = "&Pause";
+            this.toolStripMenuItemPause.Click += new System.EventHandler(this.toolStripMenuItemPause_Click);
+            // 
+            // toolStripMenuItemContinue
+            // 
+            this.toolStripMenuItemContinue.Image = global::OSDevGrp.Properties.Resources.PlayHS;
+            this.toolStripMenuItemContinue.Name = "toolStripMenuItemContinue";
+            this.toolStripMenuItemContinue.Size = new System.Drawing.Size(178, 22);
+            this.toolStripMenuItemContinue.Text = "&Fortsæt";
+            this.toolStripMenuItemContinue.Click += new System.EventHandler(this.toolStripMenuItemContinue_Click);
             // 
             // toolStripMenuItemHelp
             // 
@@ -931,27 +953,6 @@
             this.labelPlayer1Company.Size = new System.Drawing.Size(32, 13);
             this.labelPlayer1Company.TabIndex = 0;
             this.labelPlayer1Company.Text = "Firma";
-            // 
-            // toolStripSeparatorPause
-            // 
-            this.toolStripSeparatorPause.Name = "toolStripSeparatorPause";
-            this.toolStripSeparatorPause.Size = new System.Drawing.Size(175, 6);
-            // 
-            // toolStripMenuItemPause
-            // 
-            this.toolStripMenuItemPause.Image = global::OSDevGrp.Properties.Resources.PauseHS;
-            this.toolStripMenuItemPause.Name = "toolStripMenuItemPause";
-            this.toolStripMenuItemPause.Size = new System.Drawing.Size(178, 22);
-            this.toolStripMenuItemPause.Text = "&Pause";
-            this.toolStripMenuItemPause.Click += new System.EventHandler(this.toolStripMenuItemPause_Click);
-            // 
-            // toolStripMenuItemContinue
-            // 
-            this.toolStripMenuItemContinue.Image = global::OSDevGrp.Properties.Resources.PlayHS;
-            this.toolStripMenuItemContinue.Name = "toolStripMenuItemContinue";
-            this.toolStripMenuItemContinue.Size = new System.Drawing.Size(178, 22);
-            this.toolStripMenuItemContinue.Text = "&Fortsæt";
-            this.toolStripMenuItemContinue.Click += new System.EventHandler(this.toolStripMenuItemContinue_Click);
             // 
             // MainForm
             // 
