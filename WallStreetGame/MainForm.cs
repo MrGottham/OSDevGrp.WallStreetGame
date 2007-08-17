@@ -197,7 +197,11 @@ namespace OSDevGrp.WallStreetGame
         private StatisticsForms _StatisticsForms = null;
         private string _OldFileName = null;
 
-        public MainForm() : base()
+        public MainForm() : this(null)
+        {
+        }
+
+        public MainForm(string[] args) : base()
         {
             InitializeComponent();
             try
@@ -215,6 +219,11 @@ namespace OSDevGrp.WallStreetGame
                 Game.UpdatePlayerInformationsEvent = this.UpdatePlayerInformations;
                 StockForms = new StockForms();
                 StatisticsForms = new StatisticsForms();
+                if (args != null)
+                {
+                    if (args.Length > 0)
+                        Game.Load(args[0]);
+                }
                 System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
                 this.Text = ProductName;
                 this.toolStripMenuItemAbout.Text = this.toolStripMenuItemAbout.Text + " " + ProductName;
