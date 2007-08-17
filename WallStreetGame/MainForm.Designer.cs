@@ -166,6 +166,7 @@
             // 
             // toolStripMenuItemOpen
             // 
+            toolStripMenuItemOpen.Image = global::OSDevGrp.Properties.Resources.OpenHS;
             toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
             toolStripMenuItemOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             toolStripMenuItemOpen.Size = new System.Drawing.Size(162, 22);
@@ -183,6 +184,7 @@
             // 
             // toolStripMenuItemDeposit
             // 
+            this.toolStripMenuItemDeposit.Image = global::OSDevGrp.Properties.Resources.StockHS;
             this.toolStripMenuItemDeposit.Name = "toolStripMenuItemDeposit";
             this.toolStripMenuItemDeposit.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItemDeposit.Text = "&Aktier i depot";
@@ -192,6 +194,7 @@
             this.toolStripMenuItemStatistics.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemValueLineGraph,
             this.toolStripMenuItemValueBarGraph});
+            this.toolStripMenuItemStatistics.Image = global::OSDevGrp.Properties.Resources.StatisticsHS;
             this.toolStripMenuItemStatistics.Name = "toolStripMenuItemStatistics";
             this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItemStatistics.Text = "&Statistikker";
@@ -239,6 +242,7 @@
             // 
             // toolStripMenuItemNewGame
             // 
+            this.toolStripMenuItemNewGame.Image = global::OSDevGrp.Properties.Resources.NewDocumentHS;
             this.toolStripMenuItemNewGame.Name = "toolStripMenuItemNewGame";
             this.toolStripMenuItemNewGame.Size = new System.Drawing.Size(162, 22);
             this.toolStripMenuItemNewGame.Text = "&Nyt spil";
@@ -251,6 +255,7 @@
             // 
             // toolStripMenuItemSave
             // 
+            this.toolStripMenuItemSave.Image = global::OSDevGrp.Properties.Resources.SaveHS;
             this.toolStripMenuItemSave.Name = "toolStripMenuItemSave";
             this.toolStripMenuItemSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.toolStripMenuItemSave.Size = new System.Drawing.Size(162, 22);
@@ -934,6 +939,7 @@
             // 
             // toolStripMenuItemPause
             // 
+            this.toolStripMenuItemPause.Image = global::OSDevGrp.Properties.Resources.PauseHS;
             this.toolStripMenuItemPause.Name = "toolStripMenuItemPause";
             this.toolStripMenuItemPause.Size = new System.Drawing.Size(178, 22);
             this.toolStripMenuItemPause.Text = "&Pause";
@@ -941,6 +947,7 @@
             // 
             // toolStripMenuItemContinue
             // 
+            this.toolStripMenuItemContinue.Image = global::OSDevGrp.Properties.Resources.PlayHS;
             this.toolStripMenuItemContinue.Name = "toolStripMenuItemContinue";
             this.toolStripMenuItemContinue.Size = new System.Drawing.Size(178, 22);
             this.toolStripMenuItemContinue.Text = "&Fortsæt";
