@@ -11,6 +11,7 @@ namespace OSDevGrp.WallStreetGame
     public partial class MainForm : Form
     {
         private const string PRODUCT_NAME = "Aktiespillet";
+        private const string WSG_FILE_INFORMATION = "Aktiespillet, gemt spil";
 
         private enum ListViewItemComparerMethod
         {
@@ -369,11 +370,19 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public string ProductName
+        static public string ProductName
         {
             get
             {
                 return PRODUCT_NAME;
+            }
+        }
+
+        static public string WsgFileInformation
+        {
+            get
+            {
+                return WSG_FILE_INFORMATION;
             }
         }
 
