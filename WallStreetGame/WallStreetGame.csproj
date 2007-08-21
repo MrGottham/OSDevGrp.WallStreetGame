@@ -13,6 +13,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <ApplicationIcon>Resources\WallStreetGame.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -110,6 +111,7 @@
     <Content Include="Resources\Statistics.ico" />
     <None Include="Resources\StatisticsHS.png" />
     <Content Include="Resources\Stock.ico" />
+    <None Include="Resources\WallStreetGame.ico" />
     <None Include="Resources\StockHS.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

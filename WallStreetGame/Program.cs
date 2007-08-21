@@ -67,9 +67,9 @@ namespace OSDevGrp.WallStreetGame
                                 {
                                     rks.Add(rk);
                                     if (Application.ExecutablePath.IndexOf(' ') >= 0)
-                                        rk.SetValue(null, '"' + Application.ExecutablePath + "\" %1", Microsoft.Win32.RegistryValueKind.String);
+                                        rk.SetValue(null, '"' + Application.ExecutablePath + "\" /open=\"%1\"", Microsoft.Win32.RegistryValueKind.String);
                                     else
-                                        rk.SetValue(null, Application.ExecutablePath + " %1", Microsoft.Win32.RegistryValueKind.String);
+                                        rk.SetValue(null, Application.ExecutablePath + " /open=\"%1\"", Microsoft.Win32.RegistryValueKind.String);
                                     rk.Close();
                                     rks.Remove(rk);
                                 }

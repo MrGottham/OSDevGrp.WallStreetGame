@@ -223,7 +223,15 @@ namespace OSDevGrp.WallStreetGame
                 if (args != null)
                 {
                     if (args.Length > 0)
-                        Game.Load(args[0]);
+                    {
+                        foreach (string s in args)
+                        {
+                            if (s.ToLower().IndexOf("/open=") == 0)
+                            {
+                                Game.Load(s.Substring(6));
+                            }
+                        }
+                    }
                 }
                 System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
                 this.Text = ProductName;

@@ -108,5 +108,12 @@ namespace OSDevGrp.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Icon WallStreetGame {
+            get {
+                object obj = ResourceManager.GetObject("WallStreetGame", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }
