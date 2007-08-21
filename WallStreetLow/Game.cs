@@ -48,7 +48,7 @@ namespace OSDevGrp.WallStreetGame
         private event UpdateStockInformations _UpdateStockInformationsEvent = null;
         private event UpdatePlayerInformations _UpdatePlayerInformationsEvent = null;
 
-        public Game(System.ComponentModel.ISynchronizeInvoke si) : this(si, SETUP_FILENAME)
+        public Game(System.ComponentModel.ISynchronizeInvoke si) : this(si, AssemblyPath + SETUP_FILENAME)
         {
         }
 
@@ -94,6 +94,20 @@ namespace OSDevGrp.WallStreetGame
             catch (System.Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        private static string AssemblyPath
+        {
+            get
+            {
+                string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                if (path.LastIndexOf('\\') >= 0)
+                {
+                    path = path.Substring(0, path.LastIndexOf('\\') + 1);
+                    return path;
+                }
+                return string.Empty;
             }
         }
 
