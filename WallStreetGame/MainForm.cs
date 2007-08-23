@@ -196,6 +196,7 @@ namespace OSDevGrp.WallStreetGame
         private Game _Game = null;
         private StockForms _StockForms = null;
         private StatisticsForms _StatisticsForms = null;
+        private bool _AskToSaveOnClose = true;
         private string _OldFileName = null;
 
         public MainForm() : this(null)
@@ -233,6 +234,7 @@ namespace OSDevGrp.WallStreetGame
                         }
                     }
                 }
+                AskToSaveOnClose = true;
                 System.Globalization.NumberFormatInfo nfi = System.Globalization.NumberFormatInfo.CurrentInfo;
                 this.Text = ProductName;
                 this.toolStripMenuItemAbout.Text = this.toolStripMenuItemAbout.Text + " " + ProductName;
@@ -429,6 +431,18 @@ namespace OSDevGrp.WallStreetGame
                 _StatisticsForms = value;
             }
 
+        }
+
+        private bool AskToSaveOnClose
+        {
+            get
+            {
+                return _AskToSaveOnClose;
+            }
+            set
+            {
+                _AskToSaveOnClose = value;
+            }
         }
 
         private string OldFileName
@@ -1043,18 +1057,21 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                switch (System.Windows.Forms.MessageBox.Show(this, "Gem spillet?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question))
+                if (AskToSaveOnClose)
                 {
-                    case System.Windows.Forms.DialogResult.Yes:
-                        toolStripMenuItemSave_Click(sender, new System.EventArgs());
-                        e.Cancel = false;
-                        break;
-                    case System.Windows.Forms.DialogResult.No:
-                        e.Cancel = false;
-                        break;
-                    case System.Windows.Forms.DialogResult.Cancel:
-                        e.Cancel = true;
-                        break;
+                    switch (System.Windows.Forms.MessageBox.Show(this, "Gem spillet?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question))
+                    {
+                        case System.Windows.Forms.DialogResult.Yes:
+                            toolStripMenuItemSave_Click(sender, new System.EventArgs());
+                            e.Cancel = false;
+                            break;
+                        case System.Windows.Forms.DialogResult.No:
+                            e.Cancel = false;
+                            break;
+                        case System.Windows.Forms.DialogResult.Cancel:
+                            e.Cancel = true;
+                            break;
+                    }
                 }
             }
             catch (System.Exception ex)
@@ -1103,7 +1120,7 @@ namespace OSDevGrp.WallStreetGame
                 }
                 fd.Dispose();
             }
-            catch (System.NotSupportedException)
+            catch (VersionNotSupportedException)
             {
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -1114,6 +1131,7 @@ namespace OSDevGrp.WallStreetGame
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
                 System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                AskToSaveOnClose = false;
                 this.Close();
             }
         }

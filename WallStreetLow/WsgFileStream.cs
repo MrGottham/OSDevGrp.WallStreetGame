@@ -355,13 +355,35 @@ namespace OSDevGrp.WallStreetGame
                     if (CryptoReadStream != null)
                     {
                         UseBaseStream = true;
-                        CryptoReadStream.Close();
+                        try
+                        {
+                            CryptoReadStream.Close();
+                        }
+                        catch (System.Security.Cryptography.CryptographicException)
+                        {
+                            // Nothing to do.
+                        }
+                        catch (System.Exception ex)
+                        {
+                            throw ex;
+                        }
                         UseBaseStream = false;
                     }
                     if (CryptoWriteStream != null)
                     {
                         UseBaseStream = true;
-                        CryptoWriteStream.Close();
+                        try
+                        {
+                            CryptoWriteStream.Close();
+                        }
+                        catch (System.Security.Cryptography.CryptographicException)
+                        {
+                            // Nothing to do.
+                        }
+                        catch (System.Exception ex)
+                        {
+                            throw ex;
+                        }
                         UseBaseStream = false;
                     }
                 }

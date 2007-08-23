@@ -625,7 +625,7 @@ namespace OSDevGrp.WallStreetGame
                     Load(FileVersion, fs, null);
                     fs.Close();
                 }
-                catch (System.NotSupportedException ex)
+                catch (VersionNotSupportedException ex)
                 {
                     if (fs != null)
                         fs.Close();
@@ -684,7 +684,7 @@ namespace OSDevGrp.WallStreetGame
                     UpdatePlayerInformationsEvent();
                 return this;
             }
-            catch (System.NotSupportedException ex)
+            catch (VersionNotSupportedException ex)
             {
                 while (!PlayTimer.Enabled)
                     PlayTimer.Start();

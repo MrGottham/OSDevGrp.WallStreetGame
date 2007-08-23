@@ -71,7 +71,7 @@ namespace OSDevGrp.WallStreetGame
                     byte major = (byte) fs.ReadByte();
                     byte minor = (byte) fs.ReadByte();
                     if (major <= 0 || major > fv.Major || (major == fv.Major && minor > fv.Minor))
-                        throw new System.NotSupportedException();
+                        throw new VersionNotSupportedException(new Version(major, minor), fv);
                     return new Version(major, minor);
                 }
                 return new Version(0, 0);
@@ -79,6 +79,57 @@ namespace OSDevGrp.WallStreetGame
             catch (System.Exception ex)
             {
                 throw ex;
+            }
+        }
+    }
+
+    public class VersionNotSupportedException : System.NotSupportedException
+    {
+        private Version _Version = null;
+        private Version _Required = null;
+
+        public VersionNotSupportedException(Version version, Version required) : this(version, required, "The version " + version.Major.ToString() + "." + version.Minor.ToString() + " is not suppored. The required version is " + required.Major.ToString() + "." + required.Minor.ToString())
+        {
+        }
+
+        public VersionNotSupportedException(Version version, Version required, string message) : this(version, required, message, null)
+        {
+        }
+
+        public VersionNotSupportedException(Version version, Version required, string message, System.Exception innerException) : base(message, innerException)
+        {
+            try
+            {
+                Version = version;
+                Required = required;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Version Version
+        {
+            get
+            {
+                return _Version;
+            }
+            private set
+            {
+                _Version = value;
+            }
+        }
+
+        public Version Required
+        {
+            get
+            {
+                return _Required;
+            }
+            private set
+            {
+                _Required = value;
             }
         }
     }
