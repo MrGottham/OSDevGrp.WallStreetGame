@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Wall Street Game Low Classes")]
-[assembly: AssemblyDescription("Wall Street Game Low Classes")]
+[assembly: AssemblyTitle("Wall Street Game Network Classes")]
+[assembly: AssemblyDescription("Wall Street Game Network Classes")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("OS Development Group")]
 [assembly: AssemblyProduct("Wall Street Game")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("84dd4d6b-3f42-46c7-b556-e5b6a33ff859")]
+[assembly: Guid("76657372-3b39-4427-9c02-fb2d696fe824")]
 
 // Version information for an assembly consists of the following four values:
 //

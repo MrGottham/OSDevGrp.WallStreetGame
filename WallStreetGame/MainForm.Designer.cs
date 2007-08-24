@@ -39,6 +39,11 @@
                 }
                 StatisticsForms = null;
             }
+            if (disposing && (Server != null))
+            {
+                Server.Dispose();
+                Server = null;
+            }
             if (disposing && (Game != null))
             {
                 Game.Dispose();
@@ -56,8 +61,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
-            System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.toolStripMenuItemDeposit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStatistics = new System.Windows.Forms.ToolStripMenuItem();
@@ -144,8 +147,11 @@
             this.labelPlayer1Name = new System.Windows.Forms.Label();
             this.textBoxPlayer1Company = new System.Windows.Forms.TextBox();
             this.labelPlayer1Company = new System.Windows.Forms.Label();
-            toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
-            toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemNetwork = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemServer = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemClient = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.panelStockInformations.SuspendLayout();
             this.groupBoxStockInformations.SuspendLayout();
@@ -219,6 +225,7 @@
             this.toolStripMenuItemFiles,
             toolStripMenuItemView,
             this.toolStripMenuItemFunctions,
+            this.toolStripMenuItemNetwork,
             this.toolStripMenuItemHelp});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
@@ -231,7 +238,7 @@
             this.toolStripMenuItemFiles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemNewGame,
             this.toolStripSeparatorOpen,
-            toolStripMenuItemOpen,
+            this.toolStripMenuItemOpen,
             this.toolStripMenuItemSave,
             this.toolStripMenuItemSaveAs,
             this.toolStripSeparatorExit,
@@ -954,6 +961,29 @@
             this.labelPlayer1Company.TabIndex = 0;
             this.labelPlayer1Company.Text = "Firma";
             // 
+            // toolStripMenuItemNetwork
+            // 
+            this.toolStripMenuItemNetwork.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemServer,
+            this.toolStripMenuItemClient});
+            this.toolStripMenuItemNetwork.Name = "toolStripMenuItemNetwork";
+            this.toolStripMenuItemNetwork.Size = new System.Drawing.Size(81, 20);
+            this.toolStripMenuItemNetwork.Text = "&Netværksspil";
+            // 
+            // toolStripMenuItemServer
+            // 
+            this.toolStripMenuItemServer.Name = "toolStripMenuItemServer";
+            this.toolStripMenuItemServer.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemServer.Text = "&Server";
+            this.toolStripMenuItemServer.Click += new System.EventHandler(this.toolStripMenuItemServer_Click);
+            // 
+            // toolStripMenuItemClient
+            // 
+            this.toolStripMenuItemClient.Name = "toolStripMenuItemClient";
+            this.toolStripMenuItemClient.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemClient.Text = "&Klient";
+            this.toolStripMenuItemClient.Click += new System.EventHandler(this.toolStripMenuItemClient_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1073,8 +1103,10 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFunctions;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTrade;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorOpen;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSave;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveAs;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeposit;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStatistics;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemValueLineGraph;
@@ -1082,6 +1114,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorPause;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPause;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemContinue;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNetwork;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemServer;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClient;
     }
 }
 

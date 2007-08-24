@@ -101,6 +101,10 @@
       <Project>{3AF5CEDF-7292-42B2-9B40-2D2CB135CA79}</Project>
       <Name>WallStreetLow</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WallStreetNetwork\WallStreetNetwork.csproj">
+      <Project>{B6F93CD7-0878-4557-BFF5-3C17E6ABB6C7}</Project>
+      <Name>WallStreetNetwork</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\NewDocumentHS.png" />

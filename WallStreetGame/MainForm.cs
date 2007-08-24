@@ -194,6 +194,7 @@ namespace OSDevGrp.WallStreetGame
         }
 
         private Game _Game = null;
+        private Server _Server = null;
         private StockForms _StockForms = null;
         private StatisticsForms _StatisticsForms = null;
         private bool _AskToSaveOnClose = true;
@@ -405,6 +406,28 @@ namespace OSDevGrp.WallStreetGame
             private set
             {
                 _Game = value;
+            }
+        }
+
+        public Server Server
+        {
+            get
+            {
+                return _Server;
+            }
+            private set
+            {
+                _Server = value;
+            }
+        }
+
+        private bool ServerRunning
+        {
+            get
+            {
+                if (Server != null)
+                    return Server.Running;
+                return false;
             }
         }
 
@@ -1035,10 +1058,133 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private void ResetInformations()
+        {
+            try
+            {
+                while (StockForms.Count > 0)
+                {
+                    StockForm stockform = StockForms[0];
+                    StockForms.Remove(stockform);
+                    if (stockform.Visible)
+                        stockform.Close();
+                    stockform.Dispose();
+                }
+                while (StatisticsForms.Count > 0)
+                {
+                    StatisticsForm statisticsform = StatisticsForms[0];
+                    StatisticsForms.Remove(statisticsform);
+                    if (statisticsform.Visible)
+                        statisticsform.Close();
+                    statisticsform.Dispose();
+                }
+                if (OldFileName.Length > 0)
+                {
+                    string s = this.toolStripMenuItemSave.Text;
+                    if (s.IndexOf(" (" + System.IO.Path.GetFileName(OldFileName) + ')') >= 0)
+                        s = s.Substring(0, s.IndexOf(" (" + System.IO.Path.GetFileName(OldFileName) + ')'));
+                    this.toolStripMenuItemSave.Text = s;
+                    OldFileName = null;
+                }
+                if (Game.FileName.Length > 0)
+                {
+                    string s = this.toolStripMenuItemSave.Text;
+                    if (s.IndexOf(" (" + System.IO.Path.GetFileName(Game.FileName) + ')') >= 0)
+                        s = s.Substring(0, s.IndexOf(" (" + System.IO.Path.GetFileName(Game.FileName) + ')'));
+                    this.toolStripMenuItemSave.Text = s;
+                }
+                for (int i = this.listViewStocks.Columns.Count - 1; i >= 0; i--)
+                {
+                    if (this.listViewStocks.Columns[i].Tag is Player)
+                    {
+                        this.listViewStocks.Columns.Remove(this.listViewStocks.Columns[i]);
+                        foreach (System.Windows.Forms.ListViewItem lvi in this.listViewStocks.Items)
+                            lvi.SubItems.Remove(lvi.SubItems[i]);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private bool BeforeSeverStart()
+        {
+            try
+            {
+                if (System.Windows.Forms.MessageBox.Show(this, "Nyt netværksspil?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+                    ResetInformations();
+                    return true;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                throw ex;
+            }
+            return false;
+        }
+
+        private void AfterServerStart()
+        {
+            try
+            {
+                GrayItems();
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private bool BeforeServerStop()
+        {
+            try
+            {
+                if (System.Windows.Forms.MessageBox.Show(this, "Afslut netværksspil?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+                    ResetInformations();
+                    return true;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                throw ex;
+            }
+            return false;
+        }
+
+        private void AfterServerStop()
+        {
+            try
+            {
+                GrayItems();
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private void GrayItems()
         {
             try
             {
+                this.toolStripMenuItemNewGame.Enabled = !ServerRunning;
+                this.toolStripMenuItemOpen.Enabled = !ServerRunning;
+                this.toolStripMenuItemSave.Enabled = !ServerRunning;
+                this.toolStripMenuItemSaveAs.Enabled = !ServerRunning;
                 this.toolStripMenuItemTrade.Enabled = false;
                 this.toolStripMenuItemPause.Visible = !Game.IsPaused;
                 this.toolStripMenuItemContinue.Visible = Game.IsPaused;
@@ -1059,18 +1205,33 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (AskToSaveOnClose)
                 {
-                    switch (System.Windows.Forms.MessageBox.Show(this, "Gem spillet?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question))
+                    if (ServerRunning)
                     {
-                        case System.Windows.Forms.DialogResult.Yes:
-                            toolStripMenuItemSave_Click(sender, new System.EventArgs());
-                            e.Cancel = false;
-                            break;
-                        case System.Windows.Forms.DialogResult.No:
-                            e.Cancel = false;
-                            break;
-                        case System.Windows.Forms.DialogResult.Cancel:
-                            e.Cancel = true;
-                            break;
+                        switch (System.Windows.Forms.MessageBox.Show(this, "Afslut netværksspil?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question))
+                        {
+                            case System.Windows.Forms.DialogResult.Yes:
+                                e.Cancel = false;
+                                break;
+                            default:
+                                e.Cancel = true;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (System.Windows.Forms.MessageBox.Show(this, "Gem spillet?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question))
+                        {
+                            case System.Windows.Forms.DialogResult.Yes:
+                                toolStripMenuItemSave_Click(sender, new System.EventArgs());
+                                e.Cancel = false;
+                                break;
+                            case System.Windows.Forms.DialogResult.No:
+                                e.Cancel = false;
+                                break;
+                            case System.Windows.Forms.DialogResult.Cancel:
+                                e.Cancel = true;
+                                break;
+                        }
                     }
                 }
             }
@@ -1295,6 +1456,50 @@ namespace OSDevGrp.WallStreetGame
             }
             catch (System.Exception ex)
             {
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemServer_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Server == null)
+                {
+                    Server = new Server(Game);
+                    Server.BeforeStartEvent = this.BeforeSeverStart;
+                    Server.AfterStartEvent = this.AfterServerStart;
+                    Server.BeforeStopEvent = this.BeforeServerStop;
+                    Server.AfterStopEvent = this.AfterServerStop;
+                }
+                if (this.toolStripMenuItemServer.Checked)
+                {
+                    Server.Stop();
+                }
+                else
+                {
+                    Server.Start();
+                }
+                this.toolStripMenuItemServer.Checked = Server.Running;
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemClient_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                throw new System.NotImplementedException();
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
                 System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }

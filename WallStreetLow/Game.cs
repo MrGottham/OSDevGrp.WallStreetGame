@@ -483,8 +483,20 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                Reset(random, false);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void Reset(System.Random random, bool startingserver)
+        {
+            try
+            {
                 bool b = true;
-                if (BeforeResetEvent != null)
+                if (BeforeResetEvent != null && !startingserver)
                     b = BeforeResetEvent();
                 if (b)
                 {
@@ -496,7 +508,7 @@ namespace OSDevGrp.WallStreetGame
                     MarketState.Reset(random);
                     while (!PlayTimer.Enabled)
                         PlayTimer.Start();
-                    if (AfterResetEvent != null)
+                    if (AfterResetEvent != null && !startingserver)
                         AfterResetEvent();
                     if (UpdateStockInformationsEvent != null)
                         UpdateStockInformationsEvent();

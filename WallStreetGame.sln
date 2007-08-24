@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WallStreetGame", "WallStree
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{3AE7B086-CE3A-48EA-A7DE-C6941BC6E235}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WallStreetNetwork", "WallStreetNetwork\WallStreetNetwork.csproj", "{B6F93CD7-0878-4557-BFF5-3C17E6ABB6C7}"
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = WallStreetGame\\WallStreetGame.csproj
 		SccLocalPath1 = .
@@ -20,6 +22,9 @@ Global
 		SccProjectUniqueName3 = Setup\\Setup.vdproj
 		SccLocalPath3 = .
 		SccProjectFilePathRelativizedFromConnection3 = Setup\\
+		SccProjectUniqueName4 = WallStreetNetwork\\WallStreetNetwork.csproj
+		SccLocalPath4 = .
+		SccProjectFilePathRelativizedFromConnection4 = WallStreetNetwork\\
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +41,10 @@ Global
 		{B1198814-4C0D-48FD-B382-A5873FA2266C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3AE7B086-CE3A-48EA-A7DE-C6941BC6E235}.Debug|Any CPU.ActiveCfg = Debug
 		{3AE7B086-CE3A-48EA-A7DE-C6941BC6E235}.Release|Any CPU.ActiveCfg = Release
+		{B6F93CD7-0878-4557-BFF5-3C17E6ABB6C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6F93CD7-0878-4557-BFF5-3C17E6ABB6C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6F93CD7-0878-4557-BFF5-3C17E6ABB6C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6F93CD7-0878-4557-BFF5-3C17E6ABB6C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
