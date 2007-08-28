@@ -107,6 +107,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="Resources\NewDocumentHS.png" />
     <None Include="Resources\OpenHS.png" />
     <None Include="Resources\SaveHS.png" />

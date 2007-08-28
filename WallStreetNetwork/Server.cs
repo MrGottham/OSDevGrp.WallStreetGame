@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Text;
 using OSDevGrp.WallStreetGame;
 
@@ -9,7 +10,11 @@ namespace OSDevGrp.WallStreetGame
     {
         private Game _Game = null;
         private bool _Running = false;
-        private System.Threading.Thread _UPDListener = null;
+        private int _Port = 0;
+        private int _MaxConnections = 0;
+        private System.Threading.Thread _UDPListener = null;
+        private System.Net.Sockets.Socket _UDPSocket = null;
+        private System.Threading.Thread _TCPListener = null;
 
         #region IDisposable variables
         private bool _Disposed = false;
@@ -30,7 +35,14 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 Game = game;
-                UPDListener = new System.Threading.Thread(new System.Threading.ThreadStart(this.UPDListenerThread));
+                string s = System.Configuration.ConfigurationManager.AppSettings["Network.Port"];
+                if (s == null)
+                    throw new System.Configuration.ConfigurationErrorsException("No key named 'Network.Port' in the application configuration.");
+                Port = int.Parse(s);
+                s = System.Configuration.ConfigurationManager.AppSettings["Network.MaxConnections"];
+                if (s == null)
+                    throw new System.Configuration.ConfigurationErrorsException("No key named 'Network.MaxConnections' in the application configuration.");
+                MaxConnections = int.Parse(s);
             }
             catch (System.Exception ex)
             {
@@ -74,15 +86,63 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private System.Threading.Thread UPDListener
+        private int Port
         {
             get
             {
-                return _UPDListener;
+                return _Port;
             }
             set
             {
-                _UPDListener = value;
+                _Port = value;
+            }
+        }
+
+        private int MaxConnections
+        {
+            get
+            {
+                return _MaxConnections;
+            }
+            set
+            {
+                _MaxConnections = value;
+            }
+        }
+
+        private System.Threading.Thread UDPListener
+        {
+            get
+            {
+                return _UDPListener;
+            }
+            set
+            {
+                _UDPListener = value;
+            }
+        }
+
+        private System.Net.Sockets.Socket UDPSocket
+        {
+            get
+            {
+                return _UDPSocket;
+            }
+            set
+            {
+                _UDPSocket = value;
+            }
+        }
+
+        private System.Threading.Thread TCPListener
+        {
+            get
+            {
+                return _TCPListener;
+            }
+            set
+            {
+                _TCPListener = value;
             }
         }
 
@@ -180,8 +240,10 @@ namespace OSDevGrp.WallStreetGame
                     {
                         if (Game != null)
                             Game = null;
-                        if (UPDListener != null)
-                            UPDListener = null;
+                        if (UDPListener != null)
+                            UDPListener = null;
+                        if (TCPListener != null)
+                            TCPListener = null;
                         if (BeforeStartEvent != null)
                             BeforeStartEvent = null;
                         if (AfterStartEvent != null)
@@ -213,7 +275,16 @@ namespace OSDevGrp.WallStreetGame
                     if (b)
                     {
                         Game.Reset(Game.Random, true);
-                        UPDListener.Start();
+                        if (UDPListener == null)
+                        {
+                            UDPListener = new System.Threading.Thread(new System.Threading.ThreadStart(this.UDPListenerThread));
+                            UDPListener.Start();
+                        }
+                        if (TCPListener == null)
+                        {
+                            TCPListener = new System.Threading.Thread(new System.Threading.ThreadStart(this.TCPListenerThread));
+                            TCPListener.Start();
+                        }
                         Running = true;
                         if (AfterStartEvent != null)
                             AfterStartEvent();
@@ -237,12 +308,27 @@ namespace OSDevGrp.WallStreetGame
                         b = BeforeStopEvent();
                     if (b)
                     {
-                        if (UPDListener.IsAlive)
+                        if (UDPListener != null)
                         {
-                            UPDListener.Suspend();
-                            while (UPDListener.IsAlive)
+                            if (UDPListener.IsAlive)
                             {
-                                // Nothing to do.
+                                UDPListener.Abort();
+                                while (UDPListener.IsAlive)
+                                {
+                                    System.Threading.Thread.Sleep(250);
+                                }
+                            }
+                            UDPListener = null;
+                        }
+                        if (TCPListener != null)
+                        {
+                            if (TCPListener.IsAlive)
+                            {
+                                TCPListener.Abort();
+                                while (TCPListener.IsAlive)
+                                {
+                                    System.Threading.Thread.Sleep(250);
+                                }
                             }
                         }
                         Running = false;
@@ -257,7 +343,47 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private void UPDListenerThread()
+        private void UDPListenerThread()
+        {
+            try
+            {
+                UDPSocket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
+                UDPSocket.Blocking = false;
+                UDPSocket.DontFragment = true;
+                UDPSocket.EnableBroadcast = true;
+                UDPSocket.MulticastLoopback = false;
+                UDPSocket.Bind(new System.Net.IPEndPoint(System.Net.IPAddress.Any, Port));
+                while (true)
+                {
+                    if (UDPSocket.Available > 0)
+                    {
+                        byte[] buffer = new byte[UDPSocket.Available];
+                        System.Net.EndPoint client = (System.Net.EndPoint) new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
+                        int i = UDPSocket.ReceiveFrom(buffer, ref client);
+
+                    }
+                }
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+                if (UDPSocket != null)
+                {
+                    UDPSocket.Close();
+                    UDPSocket = null;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                if (UDPSocket != null)
+                {
+                    UDPSocket.Close();
+                    UDPSocket = null;
+                }
+                throw ex;
+            }
+        }
+
+        private void TCPListenerThread()
         {
             try
             {
