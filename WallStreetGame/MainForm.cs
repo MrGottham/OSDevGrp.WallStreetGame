@@ -195,6 +195,7 @@ namespace OSDevGrp.WallStreetGame
 
         private Game _Game = null;
         private Server _Server = null;
+        private Client _Client = null;
         private StockForms _StockForms = null;
         private StatisticsForms _StatisticsForms = null;
         private bool _AskToSaveOnClose = true;
@@ -421,12 +422,34 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public Client Client
+        {
+            get
+            {
+                return _Client;
+            }
+            private set
+            {
+                _Client = value;
+            }
+        }
+
         private bool ServerRunning
         {
             get
             {
                 if (Server != null)
                     return Server.Running;
+                return false;
+            }
+        }
+
+        private bool ClientConnected
+        {
+            get
+            {
+                if (Client != null)
+                    return Client.Connected;
                 return false;
             }
         }
@@ -1188,6 +1211,8 @@ namespace OSDevGrp.WallStreetGame
                 this.toolStripMenuItemTrade.Enabled = false;
                 this.toolStripMenuItemPause.Visible = !Game.IsPaused;
                 this.toolStripMenuItemContinue.Visible = Game.IsPaused;
+                this.toolStripMenuItemServer.Enabled = !ClientConnected;
+                this.toolStripMenuItemClient.Enabled = !ServerRunning;
                 if (this.listViewStocks.Items.Count > 0)
                 {
                     this.toolStripMenuItemTrade.Enabled = (this.listViewStocks.SelectedItems.Count > 0);
@@ -1494,7 +1519,19 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                throw new System.NotImplementedException();
+                if (Client == null)
+                {
+                    Client = new Client(Game);
+                }
+                if (this.toolStripMenuItemClient.Checked)
+                {
+                    Client.Disconnect();
+                }
+                else
+                {
+                    Client.Connect();
+                }
+                this.toolStripMenuItemClient.Checked = Client.Connected;
             }
             catch (System.Exception ex)
             {

@@ -44,6 +44,11 @@
                 Server.Dispose();
                 Server = null;
             }
+            if (disposing && (Client != null))
+            {
+                Client.Dispose();
+                Client = null;
+            }
             if (disposing && (Game != null))
             {
                 Game.Dispose();
