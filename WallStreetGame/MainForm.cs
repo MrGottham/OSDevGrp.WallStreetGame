@@ -1200,6 +1200,74 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private bool BeforeClientConnect()
+        {
+            try
+            {
+                if (System.Windows.Forms.MessageBox.Show(this, "Tilslut netværksspil?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+                    ResetInformations();
+                    return true;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                throw ex;
+            }
+            return false;
+        }
+
+        private void AfterClientConnect()
+        {
+            try
+            {
+                GrayItems();
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private bool BeforeClientDisconnect()
+        {
+            try
+            {
+                if (System.Windows.Forms.MessageBox.Show(this, "Afbryd netværksspil?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+                    ResetInformations();
+                    return true;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                throw ex;
+            }
+            return false;
+        }
+
+        private void AfterClientDisconnect()
+        {
+            try
+            {
+                GrayItems();
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private void GrayItems()
         {
             try
@@ -1522,6 +1590,10 @@ namespace OSDevGrp.WallStreetGame
                 if (Client == null)
                 {
                     Client = new Client(Game);
+                    Client.BeforeConnectEvent = this.BeforeClientConnect;
+                    Client.AfterConnectEvent = this.AfterClientConnect;
+                    Client.BeforeDisconnectEvent = this.BeforeClientDisconnect;
+                    Client.AfterConnectEvent = this.AfterClientDisconnect;
                 }
                 if (this.toolStripMenuItemClient.Checked)
                 {
