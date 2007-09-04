@@ -8,7 +8,11 @@ namespace OSDevGrp.WallStreetGame
 {
     public class Server : System.Object, IDisposable
     {
+        private const byte SERVERVERSION_MAJOR = 1;
+        private const byte SERVERVERSION_MINOR = 0;
+
         private Game _Game = null;
+        private Version _Version = null;
         private bool _Running = false;
         private int _Port = 0;
         private int _MaxConnections = 0;
@@ -24,17 +28,20 @@ namespace OSDevGrp.WallStreetGame
         public delegate void AfterStart();
         public delegate bool BeforeStop();
         public delegate void AfterStop();
+        public delegate string GetServerInformation();
 
         private event BeforeStart _BeforeStartEvent = null;
         private event AfterStart _AfterStartEvent = null;
         private event BeforeStop _BeforeStopEvent = null;
         private event AfterStop _AfterStopEvent = null;
+        private event GetServerInformation _GetServerInformationEvent = null;
 
         public Server(Game game) : base()
         {
             try
             {
                 Game = game;
+                Version = new Version(SERVERVERSION_MAJOR, SERVERVERSION_MINOR);
                 string s = System.Configuration.ConfigurationManager.AppSettings["Network.Port"];
                 if (s == null)
                     throw new System.Configuration.ConfigurationErrorsException("No key named 'Network.Port' in the application configuration.");
@@ -71,6 +78,18 @@ namespace OSDevGrp.WallStreetGame
             private set
             {
                 _Game = value;
+            }
+        }
+
+        public Version Version
+        {
+            get
+            {
+                return _Version;
+            }
+            private set
+            {
+                _Version = value;
             }
         }
 
@@ -194,6 +213,18 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public GetServerInformation GetServerInformationEvent
+        {
+            get
+            {
+                return _GetServerInformationEvent;
+            }
+            set
+            {
+                _GetServerInformationEvent = value;
+            }
+        }
+
         #region IDisposable properties
         private bool Disposed
         {
@@ -240,6 +271,8 @@ namespace OSDevGrp.WallStreetGame
                     {
                         if (Game != null)
                             Game = null;
+                        if (Version != null)
+                            Version = null;
                         if (UDPListener != null)
                             UDPListener = null;
                         if (TCPListener != null)
@@ -252,6 +285,8 @@ namespace OSDevGrp.WallStreetGame
                             BeforeStopEvent = null;
                         if (AfterStopEvent != null)
                             AfterStopEvent = null;
+                        if (GetServerInformationEvent != null)
+                            GetServerInformationEvent = null;
                     }
                     Disposed = true;
                 }
@@ -353,21 +388,52 @@ namespace OSDevGrp.WallStreetGame
                 UDPSocket.EnableBroadcast = true;
                 UDPSocket.MulticastLoopback = false;
                 UDPSocket.Bind(new System.Net.IPEndPoint(System.Net.IPAddress.Any, Port));
-                while (true)
+                if (Version.Major > 0)
                 {
-                    if (UDPSocket.Available > 0)
+                    while (true)
                     {
-                        byte[] buffer = new byte[UDPSocket.Available];
-                        System.Net.EndPoint client = (System.Net.EndPoint) new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
-                        int i = UDPSocket.ReceiveFrom(buffer, ref client);
-
+                        if (UDPSocket.Available > 0)
+                        {
+                            byte[] buffer = new byte[UDPSocket.Available];
+                            System.Net.EndPoint client = (System.Net.EndPoint) new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
+                            if (UDPSocket.ReceiveFrom(buffer, ref client) > 0)
+                            {
+                                string[] s = System.Text.Encoding.Unicode.GetString(buffer).Split('|');
+                                if (s.Length >= 3)
+                                {
+                                    switch ((Commands) decimal.Parse(s[0]))
+                                    {
+                                        case Commands.GetServerInformations:
+                                            Version clientversion = new Version(byte.Parse(s[1]), byte.Parse(s[2]));
+                                            if (clientversion.Major < Version.Major || (clientversion.Major == Version.Major && clientversion.Minor <= Version.Minor))
+                                            {
+                                                string serverinformation = "Wall Street Game Server on " + System.Environment.MachineName;
+                                                if (GetServerInformationEvent != null)
+                                                {
+                                                    serverinformation = GetServerInformationEvent();
+                                                    if (serverinformation == null)
+                                                        serverinformation = String.Empty;
+                                                    serverinformation = serverinformation.Replace("|", null);
+                                                }
+                                                serverinformation += "|" + Version.Major.ToString() + "|" + Version.Minor.ToString();
+                                                UDPSocket.SendTo(System.Text.Encoding.Unicode.GetBytes(serverinformation), client);
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
+                UDPSocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                UDPSocket.Close();
+                UDPSocket = null;
             }
             catch (System.Threading.ThreadAbortException)
             {
                 if (UDPSocket != null)
                 {
+                    UDPSocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
                     UDPSocket.Close();
                     UDPSocket = null;
                 }
@@ -376,6 +442,7 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (UDPSocket != null)
                 {
+                    UDPSocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
                     UDPSocket.Close();
                     UDPSocket = null;
                 }

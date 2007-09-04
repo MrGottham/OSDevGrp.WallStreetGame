@@ -13,6 +13,7 @@ namespace OSDevGrp.WallStreetGame
         private Game _Game = null;
         private Version _Version = null;
         private int _Port = 0;
+        private ServerInformation _SelectedServer = null;
 
         #region IDisposable variables
         private bool _Disposed = false;
@@ -22,11 +23,13 @@ namespace OSDevGrp.WallStreetGame
         public delegate void AfterConnect();
         public delegate bool BeforeDisconnect();
         public delegate void AfterDisconnect();
+        public delegate ServerInformation SelectServer(ServerInformations serverinformations);
 
         private event BeforeConnect _BeforeConnectEvent = null;
         private event AfterConnect _AfterConnectEvent = null;
         private event BeforeDisconnect _BeforeDisconnectEvent = null;
         private event AfterDisconnect _AfterDisconnectEvent = null;
+        private event SelectServer _SelectServerEvent = null;
 
         public Client(Game game) : base()
         {
@@ -93,6 +96,18 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private ServerInformation SelectedServer
+        {
+            get
+            {
+                return _SelectedServer;
+            }
+            set
+            {
+                _SelectedServer = value;
+            }
+        }
+
         public bool Connected
         {
             get
@@ -146,6 +161,18 @@ namespace OSDevGrp.WallStreetGame
             set
             {
                 _AfterDisconnectEvent = value;
+            }
+        }
+
+        public SelectServer SelectServerEvent
+        {
+            get
+            {
+                return _SelectServerEvent;
+            }
+            set
+            {
+                _SelectServerEvent = value;
             }
         }
 
@@ -205,6 +232,8 @@ namespace OSDevGrp.WallStreetGame
                             BeforeDisconnectEvent = null;
                         if (AfterDisconnectEvent != null)
                             AfterDisconnectEvent = null;
+                        if (SelectServerEvent != null)
+                            SelectServerEvent = null;
                     }
                     Disposed = true;
                 }
@@ -225,18 +254,46 @@ namespace OSDevGrp.WallStreetGame
                 try
                 {
                     socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
-                    System.Net.IPHostEntry he = System.Net.Dns.GetHostEntry("255.255.255.255");
-                    System.Net.IPEndPoint ep = new System.Net.IPEndPoint(he.AddressList[0], Port);
-
-                    socket.SendTo(System.BitConverter.GetBytes(0), ep);
-
+                    socket.EnableBroadcast = true;
+                    System.Net.IPEndPoint ep = new System.Net.IPEndPoint(System.Net.IPAddress.Broadcast, Port);
+                    if (Version.Major > 0)
+                    {
+                        string message = Commands.GetServerInformations.ToString("d") + '|' + Version.Major.ToString() + '|' + Version.Minor.ToString();
+                        socket.SendTo(System.Text.Encoding.Unicode.GetBytes(message), ep);
+                        int counter = 2500 / 250;
+                        while (counter > 0)
+                        {
+                            System.Threading.Thread.Sleep(250);
+                            while (socket.Available > 0)
+                            {
+                                byte[] buffer = new byte[socket.Available];
+                                System.Net.EndPoint server = (System.Net.EndPoint) new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
+                                if (socket.ReceiveFrom(buffer, ref server) > 0)
+                                {
+                                    string[] s = System.Text.Encoding.Unicode.GetString(buffer).Split('|');
+                                    if (s.Length >= 3)
+                                    {
+                                        si.Add(new ServerInformation(s[0], new Version(byte.Parse(s[1]), byte.Parse(s[2])), server));
+                                    }
+                                }
+                            }
+                            counter--;
+                        }
+                    }
+                    socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                    socket.Close();
                 }
                 catch (System.Exception ex)
                 {
                     if (socket != null)
+                    {
+                        socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
                         socket.Close();
+                    }
                     throw ex;
                 }
+                if (si.Count == 0)
+                    throw new System.Net.Sockets.SocketException((int) System.Net.Sockets.SocketError.HostUnreachable);
                 return si;
             }
             catch (System.Exception ex)
@@ -257,6 +314,9 @@ namespace OSDevGrp.WallStreetGame
                     if (b)
                     {
                         ServerInformations si = GetServerInformations();
+                        SelectedServer = si[0];
+                        if (SelectServerEvent != null)
+                            SelectedServer = SelectServerEvent(si);
                         if (AfterConnectEvent != null)
                             AfterConnectEvent();
                         if (Game.UpdateStockInformationsEvent != null)
@@ -283,6 +343,8 @@ namespace OSDevGrp.WallStreetGame
                         b = BeforeDisconnectEvent();
                     if (b)
                     {
+                        if (SelectedServer != null)
+                            SelectedServer = null;
                         if (AfterDisconnectEvent != null)
                             AfterDisconnectEvent();
                         if (Game.UpdateStockInformationsEvent != null)

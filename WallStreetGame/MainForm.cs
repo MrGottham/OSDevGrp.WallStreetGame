@@ -1200,6 +1200,18 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private string GetServerInformation()
+        {
+            try
+            {
+                return "Server for " + ProductName + " på " + System.Environment.MachineName;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private bool BeforeClientConnect()
         {
             try
@@ -1261,6 +1273,18 @@ namespace OSDevGrp.WallStreetGame
                 GrayItems();
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private ServerInformation SelectServer(ServerInformations serverinformations)
+        {
+            try
+            {
+                throw new System.NotImplementedException();
             }
             catch (System.Exception ex)
             {
@@ -1564,6 +1588,7 @@ namespace OSDevGrp.WallStreetGame
                     Server.AfterStartEvent = this.AfterServerStart;
                     Server.BeforeStopEvent = this.BeforeServerStop;
                     Server.AfterStopEvent = this.AfterServerStop;
+                    Server.GetServerInformationEvent = this.GetServerInformation;
                 }
                 if (this.toolStripMenuItemServer.Checked)
                 {
@@ -1587,6 +1612,12 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                if (Server == null)
+                {
+                    Server = new Server(Game);
+                    Server.GetServerInformationEvent = this.GetServerInformation;
+                    Server.Start();
+                }
                 if (Client == null)
                 {
                     Client = new Client(Game);
@@ -1594,6 +1625,7 @@ namespace OSDevGrp.WallStreetGame
                     Client.AfterConnectEvent = this.AfterClientConnect;
                     Client.BeforeDisconnectEvent = this.BeforeClientDisconnect;
                     Client.AfterConnectEvent = this.AfterClientDisconnect;
+                    Client.SelectServerEvent = this.SelectServer;
                 }
                 if (this.toolStripMenuItemClient.Checked)
                 {
@@ -1604,6 +1636,20 @@ namespace OSDevGrp.WallStreetGame
                     Client.Connect();
                 }
                 this.toolStripMenuItemClient.Checked = Client.Connected;
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                switch (ex.ErrorCode)
+                {
+                    case (int) System.Net.Sockets.SocketError.HostUnreachable:
+                        System.Windows.Forms.MessageBox.Show(this, "Ingen servere tilgængelige på netværket.", ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                        break;
+                    default:
+                        System.Windows.Forms.MessageBox.Show(this, ex.Message, ProductName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                        break;
+                }
             }
             catch (System.Exception ex)
             {
