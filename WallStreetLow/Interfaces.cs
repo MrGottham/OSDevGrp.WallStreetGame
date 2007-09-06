@@ -27,6 +27,6 @@ namespace OSDevGrp.WallStreetGame
 
     public interface ISelectables
     {
-        ISelectables GetSelectables();
+        System.Collections.Generic.List<ISelectable> GetSelectables();
     }
 }
