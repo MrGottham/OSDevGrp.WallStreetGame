@@ -19,4 +19,14 @@ namespace OSDevGrp.WallStreetGame
         void Save(Version fv, WsgFileStream fs);
         System.Object Load(Version fv, WsgFileStream fs, System.Object obj);
     }
+
+    public interface ISelectable
+    {
+        string GetSelectText();
+    }
+
+    public interface ISelectables
+    {
+        ISelectables GetSelectables();
+    }
 }
