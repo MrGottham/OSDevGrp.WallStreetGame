@@ -1284,7 +1284,15 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                throw new System.NotImplementedException();
+                ServerInformation si = null;
+                SelectForm selectform = new SelectForm("Vælg server", "Servere", serverinformations, this.imageListLarge, this.imageListSmall, 0);
+                if (selectform.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    if (selectform.SelectedItems.Count > 0)
+                        si = (ServerInformation)selectform.SelectedItems[0];
+                }
+                selectform.Dispose();
+                return si;
             }
             catch (System.Exception ex)
             {

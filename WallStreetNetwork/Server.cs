@@ -6,7 +6,7 @@ using OSDevGrp.WallStreetGame;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Server : System.Object, IDisposable
+    public class Server : Communicator, IDisposable
     {
         private const byte SERVERVERSION_MAJOR = 1;
         private const byte SERVERVERSION_MINOR = 0;
@@ -16,9 +16,8 @@ namespace OSDevGrp.WallStreetGame
         private bool _Running = false;
         private int _Port = 0;
         private int _MaxConnections = 0;
-        private System.Threading.Thread _UDPListener = null;
-        private System.Net.Sockets.Socket _UDPSocket = null;
-        private System.Threading.Thread _TCPListener = null;
+        private System.Collections.Generic.List<System.Threading.Thread> _UDPListeners = null;
+        private System.Collections.Generic.List<System.Threading.Thread> _TCPListeners = null;
 
         #region IDisposable variables
         private bool _Disposed = false;
@@ -50,6 +49,8 @@ namespace OSDevGrp.WallStreetGame
                 if (s == null)
                     throw new System.Configuration.ConfigurationErrorsException("No key named 'Network.MaxConnections' in the application configuration.");
                 MaxConnections = int.Parse(s);
+                UDPListeners = new System.Collections.Generic.List<System.Threading.Thread>();
+                TCPListeners = new System.Collections.Generic.List<System.Threading.Thread>();
             }
             catch (System.Exception ex)
             {
@@ -129,39 +130,27 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private System.Threading.Thread UDPListener
+        private System.Collections.Generic.List<System.Threading.Thread> UDPListeners
         {
             get
             {
-                return _UDPListener;
+                return _UDPListeners;
             }
             set
             {
-                _UDPListener = value;
+                _UDPListeners = value;
             }
         }
 
-        private System.Net.Sockets.Socket UDPSocket
+        private System.Collections.Generic.List<System.Threading.Thread> TCPListeners
         {
             get
             {
-                return _UDPSocket;
+                return _TCPListeners;
             }
             set
             {
-                _UDPSocket = value;
-            }
-        }
-
-        private System.Threading.Thread TCPListener
-        {
-            get
-            {
-                return _TCPListener;
-            }
-            set
-            {
-                _TCPListener = value;
+                _TCPListeners = value;
             }
         }
 
@@ -273,10 +262,10 @@ namespace OSDevGrp.WallStreetGame
                             Game = null;
                         if (Version != null)
                             Version = null;
-                        if (UDPListener != null)
-                            UDPListener = null;
-                        if (TCPListener != null)
-                            TCPListener = null;
+                        if (UDPListeners != null)
+                            UDPListeners = null;
+                        if (TCPListeners != null)
+                            TCPListeners = null;
                         if (BeforeStartEvent != null)
                             BeforeStartEvent = null;
                         if (AfterStartEvent != null)
@@ -310,17 +299,77 @@ namespace OSDevGrp.WallStreetGame
                     if (b)
                     {
                         Game.Reset(Game.Random, true);
-                        if (UDPListener == null)
+                        foreach (System.Net.IPAddress ipaddress in System.Net.Dns.GetHostAddresses(System.Net.Dns.GetHostName()))
                         {
-                            UDPListener = new System.Threading.Thread(new System.Threading.ThreadStart(this.UDPListenerThread));
-                            UDPListener.Start();
+                            System.Net.Sockets.Socket socket = null;
+                            System.Threading.Thread thread = null;
+                            try
+                            {
+                                // Create UDP socket and thread.
+                                if (UDPListeners.Count == 0)
+                                {
+                                    socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
+                                    socket.DontFragment = true;
+                                    socket.EnableBroadcast = true;
+                                    socket.MulticastLoopback = false;
+                                    //socket.Bind(new System.Net.IPEndPoint(ipaddress, Port));
+                                    socket.Bind(new System.Net.IPEndPoint(new System.Net.IPAddress(0), Port));
+                                    thread = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(this.UDPListenerThread));
+                                    thread.Start(socket);
+                                    UDPListeners.Add(thread);
+                                }
+                                // Create TCP socket and thread.
+                                socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
+                                socket.Bind(new System.Net.IPEndPoint(ipaddress, Port));
+                                socket.Listen(MaxConnections);
+                                thread = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(this.TCPListenerThread));
+                                thread.Start(socket);
+                                TCPListeners.Add(thread);
+                            }
+                            catch (System.Net.Sockets.SocketException ex)
+                            {
+                                if (thread != null)
+                                {
+                                    if (thread.IsAlive)
+                                    {
+                                        thread.Abort();
+                                        while (thread.IsAlive)
+                                        {
+                                            System.Threading.Thread.Sleep(250);
+                                        }
+                                    }
+                                }
+                                if (socket != null)
+                                {
+                                    if (socket.Connected)
+                                        socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                                    socket.Close();
+                                }
+                                throw ex;
+                            }
+                            catch (System.Exception ex)
+                            {
+                                if (thread != null)
+                                {
+                                    if (thread.IsAlive)
+                                    {
+                                        thread.Abort();
+                                        while (thread.IsAlive)
+                                        {
+                                            System.Threading.Thread.Sleep(250);
+                                        }
+                                    }
+                                }
+                                if (socket != null)
+                                {
+                                    if (socket.Connected)
+                                        socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                                    socket.Close();
+                                }
+                                throw ex;
+                            }
                         }
-                        if (TCPListener == null)
-                        {
-                            TCPListener = new System.Threading.Thread(new System.Threading.ThreadStart(this.TCPListenerThread));
-                            TCPListener.Start();
-                        }
-                        Running = true;
+                        Running = (UDPListeners.Count > 0 || TCPListeners.Count > 0);
                         if (AfterStartEvent != null)
                             AfterStartEvent();
                     }
@@ -343,27 +392,36 @@ namespace OSDevGrp.WallStreetGame
                         b = BeforeStopEvent();
                     if (b)
                     {
-                        if (UDPListener != null)
+                        if (UDPListeners != null)
                         {
-                            if (UDPListener.IsAlive)
+                            while (UDPListeners.Count > 0)
                             {
-                                UDPListener.Abort();
-                                while (UDPListener.IsAlive)
+                                System.Threading.Thread thread = UDPListeners[0];
+                                if (thread.IsAlive)
                                 {
-                                    System.Threading.Thread.Sleep(250);
+                                    thread.Abort();
+                                    while (thread.IsAlive)
+                                    {
+                                        System.Threading.Thread.Sleep(250);
+                                    }
                                 }
+                                UDPListeners.Remove(thread);
                             }
-                            UDPListener = null;
                         }
-                        if (TCPListener != null)
+                        if (TCPListeners != null)
                         {
-                            if (TCPListener.IsAlive)
+                            while (TCPListeners.Count > 0)
                             {
-                                TCPListener.Abort();
-                                while (TCPListener.IsAlive)
+                                System.Threading.Thread thread = TCPListeners[0];
+                                if (thread.IsAlive)
                                 {
-                                    System.Threading.Thread.Sleep(250);
+                                    thread.Abort();
+                                    while (thread.IsAlive)
+                                    {
+                                        System.Threading.Thread.Sleep(250);
+                                    }
                                 }
+                                TCPListeners.Remove(thread);
                             }
                         }
                         Running = false;
@@ -378,33 +436,28 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private void UDPListenerThread()
+        private void UDPListenerThread(System.Object obj)
         {
+            System.Net.Sockets.Socket serversocket = (System.Net.Sockets.Socket) obj;
             try
             {
-                UDPSocket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
-                UDPSocket.Blocking = false;
-                UDPSocket.DontFragment = true;
-                UDPSocket.EnableBroadcast = true;
-                UDPSocket.MulticastLoopback = false;
-                UDPSocket.Bind(new System.Net.IPEndPoint(System.Net.IPAddress.Any, Port));
                 if (Version.Major > 0)
                 {
                     while (true)
                     {
-                        if (UDPSocket.Available > 0)
+                        while (serversocket.Available > 0)
                         {
-                            byte[] buffer = new byte[UDPSocket.Available];
+                            byte[] buffer = new byte[serversocket.Available];
                             System.Net.EndPoint client = (System.Net.EndPoint) new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
-                            if (UDPSocket.ReceiveFrom(buffer, ref client) > 0)
+                            if (serversocket.ReceiveFrom(buffer, ref client) > 0)
                             {
-                                string[] s = System.Text.Encoding.Unicode.GetString(buffer).Split('|');
-                                if (s.Length >= 3)
+                                string[] clientinformations = System.Text.Encoding.Unicode.GetString(buffer).Split('|');
+                                if (clientinformations.Length >= 3)
                                 {
-                                    switch ((Commands) decimal.Parse(s[0]))
+                                    switch ((Commands) decimal.Parse(clientinformations[0]))
                                     {
                                         case Commands.GetServerInformations:
-                                            Version clientversion = new Version(byte.Parse(s[1]), byte.Parse(s[2]));
+                                            Version clientversion = new Version(byte.Parse(clientinformations[1]), byte.Parse(clientinformations[2]));
                                             if (clientversion.Major < Version.Major || (clientversion.Major == Version.Major && clientversion.Minor <= Version.Minor))
                                             {
                                                 string serverinformation = "Wall Street Game Server on " + System.Environment.MachineName;
@@ -415,50 +468,102 @@ namespace OSDevGrp.WallStreetGame
                                                         serverinformation = String.Empty;
                                                     serverinformation = serverinformation.Replace("|", null);
                                                 }
-                                                serverinformation += "|" + Version.Major.ToString() + "|" + Version.Minor.ToString();
-                                                UDPSocket.SendTo(System.Text.Encoding.Unicode.GetBytes(serverinformation), client);
+                                                serverinformation += '|' + Version.Major.ToString() + "|" + Version.Minor.ToString();
+                                                serversocket.SendTo(System.Text.Encoding.Unicode.GetBytes(serverinformation), client);
                                             }
                                             break;
                                     }
                                 }
                             }
                         }
+                        System.Threading.Thread.Sleep(250);
                     }
                 }
-                UDPSocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                UDPSocket.Close();
-                UDPSocket = null;
+                if (serversocket.Connected)
+                    serversocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                serversocket.Close();
             }
             catch (System.Threading.ThreadAbortException)
             {
-                if (UDPSocket != null)
+                if (serversocket.Connected)
+                    serversocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                serversocket.Close();
+            }
+            catch (System.Exception ex)
+            {
+                if (serversocket.Connected)
+                    serversocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                serversocket.Close();
+                throw ex;
+            }
+        }
+
+        private void TCPListenerThread(System.Object obj)
+        {
+            System.Net.Sockets.Socket serversocket = (System.Net.Sockets.Socket)obj;
+            try
+            {
+                if (Version.Major > 0)
                 {
-                    UDPSocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                    UDPSocket.Close();
-                    UDPSocket = null;
+                    while (true)
+                    {
+                        serversocket.BeginAccept(new System.AsyncCallback(this.TCPListenerAcceptCallback), serversocket);
+                        System.Threading.Thread.Sleep(250);
+                    }
+                }
+                if (serversocket.Connected)
+                    serversocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                serversocket.Close();
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+                if (serversocket.Connected)
+                    serversocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                serversocket.Close();
+            }
+            catch (System.Exception ex)
+            {
+                if (serversocket.Connected)
+                    serversocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                serversocket.Close();
+                throw ex;
+            }
+        }
+
+        private void TCPListenerAcceptCallback(System.IAsyncResult ar)
+        {
+            System.Net.Sockets.Socket serversocket = (System.Net.Sockets.Socket) ar.AsyncState;
+            System.Net.Sockets.Socket clientsocket = null;
+            try
+            {
+                clientsocket = serversocket.EndAccept(ar);
+                Communication(clientsocket);
+            }
+            catch (System.ObjectDisposedException)
+            {
+                // The socket has been closed.
+                if (clientsocket != null)
+                {
+                    if (clientsocket.Connected)
+                        clientsocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                    clientsocket.Close();
                 }
             }
             catch (System.Exception ex)
             {
-                if (UDPSocket != null)
+                if (clientsocket != null)
                 {
-                    UDPSocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                    UDPSocket.Close();
-                    UDPSocket = null;
+                    if (clientsocket.Connected)
+                        clientsocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                    clientsocket.Close();
                 }
                 throw ex;
             }
         }
 
-        private void TCPListenerThread()
+        protected override void Communication(System.Net.Sockets.Socket socket)
         {
-            try
-            {
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            throw new Exception("The method or operation is not implemented.");
         }
     }
 }

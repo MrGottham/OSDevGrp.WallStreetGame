@@ -5,7 +5,7 @@ using OSDevGrp.WallStreetGame;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class ServerInformation : System.Object
+    public class ServerInformation : System.Object, ISelectable
     {
         private string _Information = null;
         private Version _Version = null;
@@ -60,6 +60,18 @@ namespace OSDevGrp.WallStreetGame
             private set
             {
                 _EndPoint = value;
+            }
+        }
+
+        public string GetSelectText()
+        {
+            try
+            {
+                return Information;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
             }
         }
     }
