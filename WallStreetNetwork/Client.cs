@@ -13,6 +13,7 @@ namespace OSDevGrp.WallStreetGame
         private Game _Game = null;
         private Version _Version = null;
         private int _Port = 0;
+        private System.Threading.ManualResetEvent _ManuelResetEvent = null;
         private ServerInformation _SelectedServer = null;
 
         #region IDisposable variables
@@ -41,6 +42,7 @@ namespace OSDevGrp.WallStreetGame
                 if (s == null)
                     throw new System.Configuration.ConfigurationErrorsException("No key named 'Network.Port' in the application configuration.");
                 Port = int.Parse(s);
+                ManuelResetEvent = new System.Threading.ManualResetEvent(true);
             }
             catch (System.Exception ex)
             {
@@ -93,6 +95,18 @@ namespace OSDevGrp.WallStreetGame
             set
             {
                 _Port = value;
+            }
+        }
+
+        private System.Threading.ManualResetEvent ManuelResetEvent
+        {
+            get
+            {
+                return _ManuelResetEvent;
+            }
+            set
+            {
+                _ManuelResetEvent = value;
             }
         }
 
@@ -218,12 +232,16 @@ namespace OSDevGrp.WallStreetGame
                             AfterDisconnectEvent = null;
                         Disconnect();
                     }
+                    if (ManuelResetEvent != null)
+                        ManuelResetEvent.Close();
                     if (disposing)
                     {
                         if (Game != null)
                             Game = null;
                         if (Version != null)
                             Version = null;
+                        if (ManuelResetEvent != null)
+                            ManuelResetEvent = null;
                         if (BeforeConnectEvent != null)
                             BeforeConnectEvent = null;
                         if (AfterConnectEvent != null)
@@ -257,31 +275,69 @@ namespace OSDevGrp.WallStreetGame
                     socket.DontFragment = true;
                     socket.EnableBroadcast = true;
                     socket.MulticastLoopback = false;
-                    //System.Net.IPEndPoint ep = new System.Net.IPEndPoint(System.Net.IPAddress.Broadcast, Port);
-                    System.Net.IPEndPoint ep = new System.Net.IPEndPoint(System.Net.Dns.GetHostAddresses(System.Net.Dns.GetHostName())[0], Port);
+                    socket.SetSocketOption(System.Net.Sockets.SocketOptionLevel.IP, System.Net.Sockets.SocketOptionName.DontFragment, true);
+                    socket.SetSocketOption(System.Net.Sockets.SocketOptionLevel.Socket, System.Net.Sockets.SocketOptionName.Broadcast, true);
+                    socket.SetSocketOption(System.Net.Sockets.SocketOptionLevel.IP, System.Net.Sockets.SocketOptionName.MulticastInterface, false);
+                    System.Collections.Generic.List<System.Net.IPEndPoint> endpoints = new System.Collections.Generic.List<System.Net.IPEndPoint>();
+                    endpoints.Add(new System.Net.IPEndPoint(System.Net.IPAddress.Broadcast, Port));
+                    foreach (System.Net.IPAddress ipaddress in System.Net.Dns.GetHostAddresses(System.Net.Dns.GetHostName()))
+                    {
+                        byte[] b = ipaddress.GetAddressBytes();
+                        b[b.Length - 1] = 255;
+                        for (int i = 0; i < b.Length; i++)
+                            b[i] = (byte) (b[i] & 0xFF);
+                        endpoints.Add(new System.Net.IPEndPoint(new System.Net.IPAddress(b), Port));
+                    }
+                    endpoints.Add(new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, Port));
                     if (Version.Major > 0)
                     {
                         string clientinformation = Commands.GetServerInformations.ToString("d") + '|' + Version.Major.ToString() + '|' + Version.Minor.ToString();
-                        if (socket.SendTo(System.Text.Encoding.Unicode.GetBytes(clientinformation), ep) > 0)
+                        foreach (System.Net.IPEndPoint ep in endpoints)
                         {
-                            int counter = 2500 / 250;
-                            while (counter > 0)
+                            try
                             {
-                                System.Threading.Thread.Sleep(250);
-                                while (socket.Available > 0)
+                                if (socket.SendTo(System.Text.Encoding.Unicode.GetBytes(clientinformation), ep) > 0)
                                 {
-                                    byte[] buffer = new byte[socket.Available];
-                                    System.Net.EndPoint server = (System.Net.EndPoint) new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
-                                    if (socket.ReceiveFrom(buffer, ref server) > 0)
+                                    int counter = (2500 / 250) / endpoints.Count;
+                                    while (counter > 0)
                                     {
-                                        string[] serverinformations = System.Text.Encoding.Unicode.GetString(buffer).Split('|');
-                                        if (serverinformations.Length >= 3)
+                                        System.Threading.Thread.Sleep(250);
+                                        while (socket.Available > 0)
                                         {
-                                            si.Add(new ServerInformation(serverinformations[0], new Version(byte.Parse(serverinformations[1]), byte.Parse(serverinformations[2])), server));
+                                            byte[] buffer = new byte[socket.Available];
+                                            System.Net.EndPoint server = (System.Net.EndPoint) new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
+                                            if (socket.ReceiveFrom(buffer, ref server) > 0)
+                                            {
+                                                string[] serverinformations = System.Text.Encoding.Unicode.GetString(buffer).Split('|');
+                                                if (serverinformations.Length >= 3)
+                                                {
+                                                    bool found = false;
+                                                    for (int i = 0; i < si.Count && !found; i++)
+                                                        found = (si[i].Information == serverinformations[0]);
+                                                    if (!found)
+                                                        si.Add(new ServerInformation(serverinformations[0], new Version(byte.Parse(serverinformations[1]), byte.Parse(serverinformations[2])), server));
+                                                }
+                                            }
                                         }
+                                        counter--;
                                     }
                                 }
-                                counter--;
+                            }
+                            catch (System.Net.Sockets.SocketException ex)
+                            {
+                                switch ((System.Net.Sockets.SocketError) ex.ErrorCode)
+                                {
+                                    case System.Net.Sockets.SocketError.ConnectionReset:
+                                    case System.Net.Sockets.SocketError.HostUnreachable:
+                                        // Nothing to do.
+                                        break;
+                                    default:
+                                        throw ex;
+                                }
+                            }
+                            catch (System.Exception ex)
+                            {
+                                throw ex;
                             }
                         }
                     }
@@ -329,8 +385,10 @@ namespace OSDevGrp.WallStreetGame
                             System.Net.Sockets.Socket socket = null;
                             try
                             {
+                                ManuelResetEvent.Reset();
                                 socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
-//                                socket.BeginConnect(
+                                System.IAsyncResult ar = socket.BeginConnect(SelectedServer.EndPoint, new System.AsyncCallback(this.ClientConnectCallback), socket);
+                                ManuelResetEvent.WaitOne();
                             }
                             catch (System.Exception ex)
                             {
@@ -386,9 +444,47 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private void ClientConnectCallback(System.IAsyncResult ar)
+        {
+            System.Net.Sockets.Socket clientsocket = (System.Net.Sockets.Socket) ar.AsyncState;
+            try
+            {
+                clientsocket.EndConnect(ar);
+                StartCommunication(clientsocket);
+                ManuelResetEvent.Set();
+                Communication(clientsocket);
+                clientsocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                clientsocket.Close();
+            }
+            catch (System.ObjectDisposedException)
+            {
+                // The socket has been closed.
+                if (clientsocket != null)
+                {
+                    if (clientsocket.Connected)
+                        clientsocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                    clientsocket.Close();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                if (clientsocket != null)
+                {
+                    if (clientsocket.Connected)
+                        clientsocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                    clientsocket.Close();
+                }
+                throw ex;
+            }
+        }
+
+        protected void StartCommunication(System.Net.Sockets.Socket socket)
+        {
+            System.Threading.Thread.Sleep(10000);
+        }
+
         protected override void Communication(System.Net.Sockets.Socket socket)
         {
-            throw new Exception("The method or operation is not implemented.");
         }
     }
 }

@@ -306,18 +306,11 @@ namespace OSDevGrp.WallStreetGame
                             try
                             {
                                 // Create UDP socket and thread.
-                                if (UDPListeners.Count == 0)
-                                {
-                                    socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
-                                    socket.DontFragment = true;
-                                    socket.EnableBroadcast = true;
-                                    socket.MulticastLoopback = false;
-                                    //socket.Bind(new System.Net.IPEndPoint(ipaddress, Port));
-                                    socket.Bind(new System.Net.IPEndPoint(new System.Net.IPAddress(0), Port));
-                                    thread = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(this.UDPListenerThread));
-                                    thread.Start(socket);
-                                    UDPListeners.Add(thread);
-                                }
+                                socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
+                                socket.Bind(new System.Net.IPEndPoint(ipaddress, Port));
+                                thread = new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(this.UDPListenerThread));
+                                thread.Start(socket);
+                                UDPListeners.Add(thread);
                                 // Create TCP socket and thread.
                                 socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
                                 socket.Bind(new System.Net.IPEndPoint(ipaddress, Port));
@@ -500,7 +493,7 @@ namespace OSDevGrp.WallStreetGame
 
         private void TCPListenerThread(System.Object obj)
         {
-            System.Net.Sockets.Socket serversocket = (System.Net.Sockets.Socket)obj;
+            System.Net.Sockets.Socket serversocket = (System.Net.Sockets.Socket) obj;
             try
             {
                 if (Version.Major > 0)
@@ -538,6 +531,8 @@ namespace OSDevGrp.WallStreetGame
             {
                 clientsocket = serversocket.EndAccept(ar);
                 Communication(clientsocket);
+                clientsocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                clientsocket.Close();
             }
             catch (System.ObjectDisposedException)
             {
@@ -563,7 +558,21 @@ namespace OSDevGrp.WallStreetGame
 
         protected override void Communication(System.Net.Sockets.Socket socket)
         {
-            throw new Exception("The method or operation is not implemented.");
+            try
+            {
+                bool disconnect = false;
+                while (!disconnect)
+                {
+                    if (socket.Available > 0)
+                    {
+                    }
+                    System.Threading.Thread.Sleep(250);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
