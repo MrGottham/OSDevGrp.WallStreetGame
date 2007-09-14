@@ -480,11 +480,30 @@ namespace OSDevGrp.WallStreetGame
 
         protected void StartCommunication(System.Net.Sockets.Socket socket)
         {
-            System.Threading.Thread.Sleep(10000);
+            try
+            {
+                if (SelectedServer.Version.Major > 0)
+                {
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
         }
 
         protected override void Communication(System.Net.Sockets.Socket socket)
         {
+            try
+            {
+                if (SelectedServer.Version.Major > 0)
+                {
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

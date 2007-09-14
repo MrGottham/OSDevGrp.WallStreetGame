@@ -560,13 +560,16 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                bool disconnect = false;
-                while (!disconnect)
+                if (Version.Major > 0)
                 {
-                    if (socket.Available > 0)
+                    bool disconnect = false;
+                    while (!disconnect)
                     {
+                        if (socket.Available > 0)
+                        {
+                        }
+                        System.Threading.Thread.Sleep(250);
                     }
-                    System.Threading.Thread.Sleep(250);
                 }
             }
             catch (System.Exception ex)
