@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Player : System.Object, IResetable, IPlayable, IStoreable
+    public class Player : System.Object, IResetable, IPlayable, IStoreable, INetworkable
     {
         private const double CAPITAL_INITIALIZE = 100000D;
         private const int MAX_STOCKS_TO_BUY = 1000;
@@ -41,13 +41,27 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public Player(Version fv, WsgFileStream fs, System.Object obj)
+        public Player(Version fv, WsgFileStream fs, System.Object obj) : base()
         {
             try
             {
                 Deposit = new Deposit(this, (Stocks) obj);
                 ValueHistory = new DoubleHistory();
                 Load(fv, fs, obj);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Player(Version serverversion, ICommunicateable communicator, bool full, System.Object obj) : base()
+        {
+            try
+            {
+                Deposit = new Deposit(this, (Stocks) obj);
+                ValueHistory = new DoubleHistory();
+                ClientCommunication(serverversion, communicator, full, obj);
             }
             catch (System.Exception ex)
             {
@@ -496,6 +510,50 @@ namespace OSDevGrp.WallStreetGame
                     Deposit.Load(fv, fs, obj);
                     ValueHistory.Load(fv, fs, obj);
                     Capital = fs.ReadDouble();
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    if (full)
+                    {
+                        Company = communicator.ReceiveString();
+                        Name = communicator.ReceiveString();
+                        IsComputer = communicator.ReceiveBool();
+                        IsYou = communicator.ReceiveBool();
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    if (full)
+                    {
+                        communicator.SendString(Company);
+                        communicator.SendString(Name);
+                        communicator.SendBool(IsComputer);
+                        communicator.SendBool(this.Equals(obj));
+                    }
                 }
                 return this;
             }

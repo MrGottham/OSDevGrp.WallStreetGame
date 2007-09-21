@@ -89,7 +89,7 @@ namespace OSDevGrp.WallStreetGame
         }
     }
 
-    public class DoubleHistory : History<double>, IStoreable
+    public class DoubleHistory : History<double>, IStoreable, INetworkable
     {
         public DoubleHistory() : base()
         {
@@ -169,11 +169,57 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (fv.Major > 0)
                 {
+                    while (this.Count > 0)
+                        this.Clear();
                     int c = fs.ReadInt();
                     if (c > 0)
                     {
                         for (int i = 0; i < c; i++)
                             this.Add(fs.ReadDouble());
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    while (this.Count > 0)
+                        this.Clear();
+                    int c = communicator.ReceiveInt();
+                    if (c > 0)
+                    {
+                        for (int i = 0; i < c; i++)
+                            this.Add(communicator.ReceiveDouble());
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    communicator.SendInt(this.Count);
+                    if (this.Count > 0)
+                    {
+                        foreach (double d in this)
+                            communicator.SendDouble(d);
                     }
                 }
                 return this;

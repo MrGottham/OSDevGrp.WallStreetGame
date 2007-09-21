@@ -7,6 +7,7 @@ namespace OSDevGrp.WallStreetGame
 {
     public enum Commands
     {
-        GetServerInformations = 1
+        GetServerInformations = 1,
+        NewNetworkPlayer = 2
     }
 }

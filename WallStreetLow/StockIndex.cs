@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class StockIndex : System.Object, IStoreable
+    public class StockIndex : System.Object, IStoreable, INetworkable
     {
         private string _Id = null;
         private string _Name = null;
@@ -24,12 +24,25 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public StockIndex(Version fv, WsgFileStream fs, System.Object obj)
+        public StockIndex(Version fv, WsgFileStream fs, System.Object obj) : base()
         {
             try
             {
                 Stocks = new Stocks();
                 Load(fv, fs, obj);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public StockIndex(Version serverversion, ICommunicateable communicator, bool full, System.Object obj) : base()
+        {
+            try
+            {
+                Stocks = new Stocks();
+                ClientCommunication(serverversion, communicator, full, obj);
             }
             catch (System.Exception ex)
             {
@@ -119,6 +132,46 @@ namespace OSDevGrp.WallStreetGame
                 {
                     Id = fs.ReadString();
                     Name = fs.ReadString();
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    if (full)
+                    {
+                        Id = communicator.ReceiveString();
+                        Name = communicator.ReceiveString();
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    if (full)
+                    {
+                        communicator.SendString(Id);
+                        communicator.SendString(Name);
+                    }
                 }
                 return this;
             }

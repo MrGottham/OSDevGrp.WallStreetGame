@@ -560,13 +560,21 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                base.Communication(socket);
                 if (Version.Major > 0)
                 {
+                    Player player = null;
                     bool disconnect = false;
                     while (!disconnect)
                     {
                         if (socket.Available > 0)
                         {
+                            switch (ReceiveCommand())
+                            {
+                                case Commands.NewNetworkPlayer:
+                                    player = (Player) Game.ServerCommunication(Version, this, true, player);
+                                    break;
+                            }
                         }
                         System.Threading.Thread.Sleep(250);
                     }

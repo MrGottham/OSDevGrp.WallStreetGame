@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Players : System.Collections.Generic.List<Player>, IResetable, IPlayable, IStoreable
+    public class Players : System.Collections.Generic.List<Player>, IResetable, IPlayable, IStoreable, INetworkable
     {
         public Players() : base()
         {
@@ -83,6 +83,57 @@ namespace OSDevGrp.WallStreetGame
                     }
                 }
                 return currentplayer;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    int c = communicator.ReceiveInt();
+                    if (c > 0)
+                    {
+                        Enumerator e = this.GetEnumerator();
+                        for (int i = 0; i < c; i++)
+                        {
+                            if (full)
+                            {
+                                Player player = new Player(serverversion, communicator, full, obj);
+                                this.Add(player);
+                            }
+                            else
+                                e.Current.ClientCommunication(serverversion, communicator, full, obj);
+                        }
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    communicator.SendInt(this.Count);
+                    if (this.Count > 0)
+                    {
+                        foreach (INetworkable n in this)
+                            n.ServerCommunication(serverversion, communicator, full, obj);
+                    }
+                }
+                return this;
             }
             catch (System.Exception ex)
             {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class StockIndexes : System.Collections.Generic.Dictionary<string, StockIndex>, IStoreable
+    public class StockIndexes : System.Collections.Generic.Dictionary<string, StockIndex>, IStoreable, INetworkable
     {
         public StockIndexes() : base()
         {
@@ -41,6 +41,57 @@ namespace OSDevGrp.WallStreetGame
                     {
                         StockIndex stockindex = new StockIndex(fv, fs, obj);
                         this.Add(stockindex.Id, stockindex);
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    int c = communicator.ReceiveInt();
+                    if (c > 0)
+                    {
+                        Enumerator e = this.GetEnumerator();
+                        for (int i = 0; i < c; i++)
+                        {
+                            if (full)
+                            {
+                                StockIndex stockindex = new StockIndex(serverversion, communicator, full, obj);
+                                this.Add(stockindex.Id, stockindex);
+                            }
+                            else if (e.MoveNext())
+                                e.Current.Value.ClientCommunication(serverversion, communicator, full, obj);
+                        }
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    communicator.SendInt(this.Count);
+                    if (this.Count > 0)
+                    {
+                        foreach (INetworkable n in this.Values)
+                            n.ServerCommunication(serverversion, communicator, full, obj);
                     }
                 }
                 return this;

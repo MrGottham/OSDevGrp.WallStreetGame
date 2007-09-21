@@ -20,6 +20,26 @@ namespace OSDevGrp.WallStreetGame
         System.Object Load(Version fv, WsgFileStream fs, System.Object obj);
     }
 
+    public interface ICommunicateable
+    {
+        byte ReceiveByte();
+        bool ReceiveBool();
+        int ReceiveInt();
+        double ReceiveDouble();
+        string ReceiveString();
+        void SendByte(byte b);
+        void SendBool(bool b);
+        void SendInt(int i);
+        void SendDouble(double d);
+        void SendString(string s);
+    }
+
+    public interface INetworkable
+    {
+        System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj);
+        System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj);
+    }
+
     public interface ISelectable
     {
         string GetSelectText();

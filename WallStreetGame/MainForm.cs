@@ -1236,6 +1236,11 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                if (ClientConnected)
+                {
+                    this.comboBoxStockIndex.Items.Clear();
+                    this.listViewStocks.Items.Clear();
+                }
                 GrayItems();
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
                     this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -1284,18 +1289,25 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
                 ServerInformation si = null;
-                SelectForm selectform = new SelectForm("Vælg server", "Servere", serverinformations, this.imageListLarge, this.imageListSmall, 0);
+                SelectForm selectform = new SelectForm("Vælg server", "Servere", serverinformations, this.imageListLarge, this.imageListSmall, 1);
                 if (selectform.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                 {
                     if (selectform.SelectedItems.Count > 0)
                         si = (ServerInformation)selectform.SelectedItems[0];
                 }
                 selectform.Dispose();
+                this.Update();
+                if (this.Cursor != System.Windows.Forms.Cursors.WaitCursor)
+                    this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 return si;
             }
             catch (System.Exception ex)
             {
+                if (this.Cursor != System.Windows.Forms.Cursors.WaitCursor)
+                    this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 throw ex;
             }
         }
@@ -1622,7 +1634,7 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (Server == null)
                 {
-                    Server = new Server(Game);
+                    Server = new Server(new Game(this));
                     Server.GetServerInformationEvent = this.GetServerInformation;
                     Server.Start();
                 }

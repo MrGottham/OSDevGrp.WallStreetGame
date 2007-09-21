@@ -66,6 +66,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.toolStripMenuItemDeposit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStatistics = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,6 +76,7 @@
             this.toolStripMenuItemFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemNewGame = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorOpen = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSave = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorExit = new System.Windows.Forms.ToolStripSeparator();
@@ -84,6 +86,9 @@
             this.toolStripSeparatorPause = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemPause = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemContinue = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemNetwork = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemServer = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemClient = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.panelStockInformations = new System.Windows.Forms.Panel();
@@ -152,11 +157,7 @@
             this.labelPlayer1Name = new System.Windows.Forms.Label();
             this.textBoxPlayer1Company = new System.Windows.Forms.TextBox();
             this.labelPlayer1Company = new System.Windows.Forms.Label();
-            this.toolStripMenuItemNetwork = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemServer = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemClient = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.panelStockInformations.SuspendLayout();
             this.groupBoxStockInformations.SuspendLayout();
@@ -174,24 +175,6 @@
             this.panelPlayer1.SuspendLayout();
             this.groupBoxPlayer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // toolStripMenuItemOpen
-            // 
-            toolStripMenuItemOpen.Image = global::OSDevGrp.Properties.Resources.OpenHS;
-            toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
-            toolStripMenuItemOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            toolStripMenuItemOpen.Size = new System.Drawing.Size(162, 22);
-            toolStripMenuItemOpen.Text = "&Åbn spil";
-            toolStripMenuItemOpen.Click += new System.EventHandler(this.toolStripMenuItemOpen_Click);
-            // 
-            // toolStripMenuItemView
-            // 
-            toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemDeposit,
-            this.toolStripMenuItemStatistics});
-            toolStripMenuItemView.Name = "toolStripMenuItemView";
-            toolStripMenuItemView.Size = new System.Drawing.Size(32, 20);
-            toolStripMenuItemView.Text = "&Vis";
             // 
             // toolStripMenuItemDeposit
             // 
@@ -265,6 +248,15 @@
             this.toolStripSeparatorOpen.Name = "toolStripSeparatorOpen";
             this.toolStripSeparatorOpen.Size = new System.Drawing.Size(159, 6);
             // 
+            // toolStripMenuItemOpen
+            // 
+            this.toolStripMenuItemOpen.Image = global::OSDevGrp.Properties.Resources.OpenHS;
+            this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
+            this.toolStripMenuItemOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.toolStripMenuItemOpen.Size = new System.Drawing.Size(162, 22);
+            this.toolStripMenuItemOpen.Text = "&Åbn spil";
+            this.toolStripMenuItemOpen.Click += new System.EventHandler(this.toolStripMenuItemOpen_Click);
+            // 
             // toolStripMenuItemSave
             // 
             this.toolStripMenuItemSave.Image = global::OSDevGrp.Properties.Resources.SaveHS;
@@ -293,6 +285,15 @@
             this.toolStripMenuItemExit.Size = new System.Drawing.Size(162, 22);
             this.toolStripMenuItemExit.Text = "&Afslut";
             this.toolStripMenuItemExit.Click += new System.EventHandler(this.toolStripMenuItemExit_Click);
+            // 
+            // toolStripMenuItemView
+            // 
+            toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemDeposit,
+            this.toolStripMenuItemStatistics});
+            toolStripMenuItemView.Name = "toolStripMenuItemView";
+            toolStripMenuItemView.Size = new System.Drawing.Size(32, 20);
+            toolStripMenuItemView.Text = "&Vis";
             // 
             // toolStripMenuItemFunctions
             // 
@@ -333,6 +334,29 @@
             this.toolStripMenuItemContinue.Size = new System.Drawing.Size(178, 22);
             this.toolStripMenuItemContinue.Text = "&Fortsæt";
             this.toolStripMenuItemContinue.Click += new System.EventHandler(this.toolStripMenuItemContinue_Click);
+            // 
+            // toolStripMenuItemNetwork
+            // 
+            this.toolStripMenuItemNetwork.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemServer,
+            this.toolStripMenuItemClient});
+            this.toolStripMenuItemNetwork.Name = "toolStripMenuItemNetwork";
+            this.toolStripMenuItemNetwork.Size = new System.Drawing.Size(81, 20);
+            this.toolStripMenuItemNetwork.Text = "&Netværksspil";
+            // 
+            // toolStripMenuItemServer
+            // 
+            this.toolStripMenuItemServer.Name = "toolStripMenuItemServer";
+            this.toolStripMenuItemServer.Size = new System.Drawing.Size(117, 22);
+            this.toolStripMenuItemServer.Text = "&Server";
+            this.toolStripMenuItemServer.Click += new System.EventHandler(this.toolStripMenuItemServer_Click);
+            // 
+            // toolStripMenuItemClient
+            // 
+            this.toolStripMenuItemClient.Name = "toolStripMenuItemClient";
+            this.toolStripMenuItemClient.Size = new System.Drawing.Size(117, 22);
+            this.toolStripMenuItemClient.Text = "&Klient";
+            this.toolStripMenuItemClient.Click += new System.EventHandler(this.toolStripMenuItemClient_Click);
             // 
             // toolStripMenuItemHelp
             // 
@@ -398,12 +422,14 @@
             this.imageListLarge.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListLarge.ImageStream")));
             this.imageListLarge.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListLarge.Images.SetKeyName(0, "Stock.bmp");
+            this.imageListLarge.Images.SetKeyName(1, "Server.bmp");
             // 
             // imageListSmall
             // 
             this.imageListSmall.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListSmall.ImageStream")));
             this.imageListSmall.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListSmall.Images.SetKeyName(0, "Stock.bmp");
+            this.imageListSmall.Images.SetKeyName(1, "Server.bmp");
             // 
             // panelStockIndex
             // 
@@ -966,29 +992,6 @@
             this.labelPlayer1Company.TabIndex = 0;
             this.labelPlayer1Company.Text = "Firma";
             // 
-            // toolStripMenuItemNetwork
-            // 
-            this.toolStripMenuItemNetwork.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemServer,
-            this.toolStripMenuItemClient});
-            this.toolStripMenuItemNetwork.Name = "toolStripMenuItemNetwork";
-            this.toolStripMenuItemNetwork.Size = new System.Drawing.Size(81, 20);
-            this.toolStripMenuItemNetwork.Text = "&Netværksspil";
-            // 
-            // toolStripMenuItemServer
-            // 
-            this.toolStripMenuItemServer.Name = "toolStripMenuItemServer";
-            this.toolStripMenuItemServer.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemServer.Text = "&Server";
-            this.toolStripMenuItemServer.Click += new System.EventHandler(this.toolStripMenuItemServer_Click);
-            // 
-            // toolStripMenuItemClient
-            // 
-            this.toolStripMenuItemClient.Name = "toolStripMenuItemClient";
-            this.toolStripMenuItemClient.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemClient.Text = "&Klient";
-            this.toolStripMenuItemClient.Click += new System.EventHandler(this.toolStripMenuItemClient_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1108,10 +1111,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFunctions;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTrade;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorOpen;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSave;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveAs;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDeposit;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStatistics;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemValueLineGraph;
@@ -1122,6 +1123,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNetwork;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemServer;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemClient;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpen;
     }
 }
 

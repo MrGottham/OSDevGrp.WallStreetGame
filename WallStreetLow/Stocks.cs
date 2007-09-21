@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Stocks : System.Collections.Generic.Dictionary<string, Stock>, IResetable, IPlayable, IStoreable
+    public class Stocks : System.Collections.Generic.Dictionary<string, Stock>, IResetable, IPlayable, IStoreable, INetworkable
     {
         public Stocks() : base()
         {
@@ -77,6 +77,57 @@ namespace OSDevGrp.WallStreetGame
                     {
                         Stock stock = new Stock(fv, fs, obj);
                         this.Add(stock.Id, stock);
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    int c = communicator.ReceiveInt();
+                    if (c > 0)
+                    {
+                        Enumerator e = this.GetEnumerator();
+                        for (int i = 0; i < c; i++)
+                        {
+                            if (full)
+                            {
+                                Stock stock = new Stock(serverversion, communicator, full, obj);
+                                this.Add(stock.Id, stock);
+                            }
+                            else if (e.MoveNext())
+                                e.Current.Value.ClientCommunication(serverversion, communicator, full, obj);
+                        }
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    communicator.SendInt(this.Count);
+                    if (this.Count > 0)
+                    {
+                        foreach (INetworkable n in this.Values)
+                            n.ServerCommunication(serverversion, communicator, full, obj);
                     }
                 }
                 return this;

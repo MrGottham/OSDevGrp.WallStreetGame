@@ -122,14 +122,6 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public bool Connected
-        {
-            get
-            {
-                return false;
-            }
-        }
-
         public BeforeConnect BeforeConnectEvent
         {
             get
@@ -482,8 +474,11 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                base.Communication(socket);
                 if (SelectedServer.Version.Major > 0)
                 {
+                    SendCommand(Commands.NewNetworkPlayer);
+                    Game.ClientCommunication(SelectedServer.Version, this, true, null);
                 }
             }
             catch (System.Exception ex)
@@ -496,6 +491,7 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
+                base.Communication(socket);
                 if (SelectedServer.Version.Major > 0)
                 {
                 }

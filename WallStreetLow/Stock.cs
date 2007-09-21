@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Stock : System.Object, IResetable, IPlayable, IStoreable
+    public class Stock : System.Object, IResetable, IPlayable, IStoreable, INetworkable
     {
         private const double MIN_PRICE = 2.50D;
         private const double MAX_PRICE = 250000.00D;
@@ -37,13 +37,27 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public Stock(Version fv, WsgFileStream fs, System.Object obj)
+        public Stock(Version fv, WsgFileStream fs, System.Object obj) : base()
         {
             try
             {
                 StockIndexes = new StockIndexes();
                 PriceHistory = new DoubleHistory();
                 Load(fv, fs, obj);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Stock(Version serverversion, ICommunicateable communicator, bool full, System.Object obj) : base()
+        {
+            try
+            {
+                StockIndexes = new StockIndexes();
+                PriceHistory = new DoubleHistory();
+                ClientCommunication(serverversion, communicator, full, obj);
             }
             catch (System.Exception ex)
             {
@@ -408,6 +422,77 @@ namespace OSDevGrp.WallStreetGame
                         PriceHistory.RemoveAt(PriceHistory.Count - 1);
                     Available = fs.ReadInt();
                     OwnedByPlayers = fs.ReadInt();
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    if (full)
+                    {
+                        Id = communicator.ReceiveString();
+                        Name = communicator.ReceiveString();
+                        int c = communicator.ReceiveInt();
+                        if (c > 0)
+                        {
+                            StockIndexes stockindexes = (StockIndexes) obj;
+                            for (int i = 0; i < c; i++)
+                            {
+                                string id = communicator.ReceiveString();
+                                StockIndex stockindex = null;
+                                if (stockindexes.TryGetValue(id, out stockindex))
+                                {
+                                    stockindex.Stocks.Add(Id, this);
+                                    StockIndexes.Add(stockindex.Id, stockindex);
+                                }
+                            }
+                        }
+                    }
+                    PriceHistory.ClientCommunication(serverversion, communicator, full, obj);
+                    Price = communicator.ReceiveDouble();
+                    if (PriceHistory.Count > 0)
+                        PriceHistory.RemoveAt(PriceHistory.Count - 1);
+                    Available = communicator.ReceiveInt();
+                    OwnedByPlayers = communicator.ReceiveInt();
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    if (full)
+                    {
+                        communicator.SendString(Id);
+                        communicator.SendString(Name);
+                        communicator.SendInt(StockIndexes.Count);
+                        if (StockIndexes.Count > 0)
+                        {
+                            foreach (StockIndex stockindex in StockIndexes.Values)
+                                communicator.SendString(stockindex.Id);
+                        }
+                    }
+                    PriceHistory.ServerCommunication(serverversion, communicator, full, obj);
+                    communicator.SendDouble(Price);
+                    communicator.SendInt(Available);
+                    communicator.SendInt(OwnedByPlayers);
                 }
                 return this;
             }

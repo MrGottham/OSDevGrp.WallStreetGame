@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Game : System.Object, IDisposable, IResetable, IPlayable, IStoreable
+    public class Game : System.Object, IDisposable, IResetable, IPlayable, IStoreable, INetworkable
     {
         private const string SETUP_FILENAME = "WallStreetGame.xml";
         private const byte FILEVERSION_MAJOR = 1;
@@ -739,6 +739,71 @@ namespace OSDevGrp.WallStreetGame
                     if (OnContinueEvent != null)
                         OnContinueEvent();
                 }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    if (full)
+                    {
+                        // Send information about the client.
+                        communicator.SendString(CurrentPlayer.Company);
+                        communicator.SendString(CurrentPlayer.Name);
+                        // Clear and reset game informations.
+                        while (PlayTimer.Enabled)
+                            PlayTimer.Stop();
+                        while (StockIndexes.Count > 0)
+                            StockIndexes.Clear();
+                        while (Stocks.Count > 0)
+                            Stocks.Clear();
+                        while (Players.Count > 0)
+                            Players.Clear();
+                        MarketState.Reset(Random);
+                        CurrentPlayer = null;
+                    }
+                    // Receive new game informations.
+                    StockIndexes.ClientCommunication(serverversion, communicator, full, null);
+                    Stocks.ClientCommunication(serverversion, communicator, full, StockIndexes);
+                    Players.ClientCommunication(serverversion, communicator, full, Stocks);
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                Player player = (Player) obj;
+                if (serverversion.Major > 0)
+                {
+                    if (full)
+                    {
+                        // Receive information about the new player.
+                        string company = communicator.ReceiveString();
+                        string name = communicator.ReceiveString();
+                        // Create the new player.
+                        player = new Player(company, name, Stocks, false, false);
+                        Players.Add(player);
+                    }
+                    // Send game informations.
+                    StockIndexes.ServerCommunication(serverversion, communicator, full, null);
+                    Stocks.ServerCommunication(serverversion, communicator, full, StockIndexes);
+                    Players.ServerCommunication(serverversion, communicator, full, player);
+                }
+                return player;
             }
             catch (System.Exception ex)
             {
