@@ -478,6 +478,8 @@ namespace OSDevGrp.WallStreetGame
                 if (SelectedServer.Version.Major > 0)
                 {
                     SendCommand(Commands.NewNetworkPlayer);
+                    SendByte(Version.Major);
+                    SendByte(Version.Minor);
                     Game.ClientCommunication(SelectedServer.Version, this, true, null);
                 }
             }

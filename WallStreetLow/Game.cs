@@ -782,12 +782,12 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        public System.Object ServerCommunication(Version clientversion, ICommunicateable communicator, bool full, System.Object obj)
         {
             try
             {
                 Player player = (Player) obj;
-                if (serverversion.Major > 0)
+                if (clientversion.Major > 0)
                 {
                     if (full)
                     {
@@ -799,9 +799,9 @@ namespace OSDevGrp.WallStreetGame
                         Players.Add(player);
                     }
                     // Send game informations.
-                    StockIndexes.ServerCommunication(serverversion, communicator, full, null);
-                    Stocks.ServerCommunication(serverversion, communicator, full, StockIndexes);
-                    Players.ServerCommunication(serverversion, communicator, full, player);
+                    StockIndexes.ServerCommunication(clientversion, communicator, full, null);
+                    Stocks.ServerCommunication(clientversion, communicator, full, StockIndexes);
+                    Players.ServerCommunication(clientversion, communicator, full, player);
                 }
                 return player;
             }

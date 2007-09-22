@@ -37,7 +37,7 @@ namespace OSDevGrp.WallStreetGame
     public interface INetworkable
     {
         System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj);
-        System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj);
+        System.Object ServerCommunication(Version clientversion, ICommunicateable communicator, bool full, System.Object obj);
     }
 
     public interface ISelectable

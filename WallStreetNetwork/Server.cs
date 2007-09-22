@@ -563,6 +563,7 @@ namespace OSDevGrp.WallStreetGame
                 base.Communication(socket);
                 if (Version.Major > 0)
                 {
+                    Version clientversion = new Version(1, 0);
                     Player player = null;
                     bool disconnect = false;
                     while (!disconnect)
@@ -572,7 +573,10 @@ namespace OSDevGrp.WallStreetGame
                             switch (ReceiveCommand())
                             {
                                 case Commands.NewNetworkPlayer:
-                                    player = (Player) Game.ServerCommunication(Version, this, true, player);
+                                    byte major = ReceiveByte();
+                                    byte minor = ReceiveByte();
+                                    clientversion = new Version(major, minor);
+                                    player = (Player) Game.ServerCommunication(clientversion, this, true, player);
                                     break;
                             }
                         }

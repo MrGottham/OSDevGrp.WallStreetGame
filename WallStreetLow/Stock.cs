@@ -472,11 +472,11 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public System.Object ServerCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        public System.Object ServerCommunication(Version clientversion, ICommunicateable communicator, bool full, System.Object obj)
         {
             try
             {
-                if (serverversion.Major > 0)
+                if (clientversion.Major > 0)
                 {
                     if (full)
                     {
@@ -489,7 +489,7 @@ namespace OSDevGrp.WallStreetGame
                                 communicator.SendString(stockindex.Id);
                         }
                     }
-                    PriceHistory.ServerCommunication(serverversion, communicator, full, obj);
+                    PriceHistory.ServerCommunication(clientversion, communicator, full, obj);
                     communicator.SendDouble(Price);
                     communicator.SendInt(Available);
                     communicator.SendInt(OwnedByPlayers);
