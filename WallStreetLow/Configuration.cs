@@ -221,7 +221,7 @@ namespace OSDevGrp.WallStreetGame
                         throw new System.Exception("No attribute named 'company' on a node named '" + xmlnode.LocalName + "' in the file named '" + SetupFileName + "'.");
                     if (xmlnode.HasChildNodes)
                     {
-                        Players.Add(new Player(xmlnode.Attributes["company"].Value, xmlnode.FirstChild.Value, Stocks));
+                        Players.Add(new Player(Players.NextPlayerId, xmlnode.Attributes["company"].Value, xmlnode.FirstChild.Value, Stocks));
                     }
                 }
             }

@@ -456,10 +456,10 @@ namespace OSDevGrp.WallStreetGame
                                 }
                             }
                         }
+                        PriceHistory.ClientCommunication(serverversion, communicator, full, obj);
                     }
-                    PriceHistory.ClientCommunication(serverversion, communicator, full, obj);
                     Price = communicator.ReceiveDouble();
-                    if (PriceHistory.Count > 0)
+                    if (full && PriceHistory.Count > 0)
                         PriceHistory.RemoveAt(PriceHistory.Count - 1);
                     Available = communicator.ReceiveInt();
                     OwnedByPlayers = communicator.ReceiveInt();
@@ -488,8 +488,8 @@ namespace OSDevGrp.WallStreetGame
                             foreach (StockIndex stockindex in StockIndexes.Values)
                                 communicator.SendString(stockindex.Id);
                         }
+                        PriceHistory.ServerCommunication(clientversion, communicator, full, obj);
                     }
-                    PriceHistory.ServerCommunication(clientversion, communicator, full, obj);
                     communicator.SendDouble(Price);
                     communicator.SendInt(Available);
                     communicator.SendInt(OwnedByPlayers);

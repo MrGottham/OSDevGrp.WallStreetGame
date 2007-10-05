@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class DepositContent : System.Object, IResetable, IStoreable
+    public class DepositContent : System.Object, IResetable, IStoreable, INetworkable
     {
         private Deposit _Deposit = null;
         private Stock _Stock = null;
@@ -180,6 +180,42 @@ namespace OSDevGrp.WallStreetGame
                     Count = fs.ReadInt();
                     LastBuyPrice = fs.ReadDouble();
                     LastSellPrice = fs.ReadDouble();
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    Count = communicator.ReceiveInt();
+                    LastBuyPrice = communicator.ReceiveDouble();
+                    LastSellPrice = communicator.ReceiveDouble();
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version clientversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (clientversion.Major > 0)
+                {
+                    communicator.SendInt(Count);
+                    communicator.SendDouble(LastBuyPrice);
+                    communicator.SendDouble(LastSellPrice);
                 }
                 return this;
             }

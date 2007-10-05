@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Deposit : System.Collections.Generic.Dictionary<string, DepositContent>, IResetable, IStoreable
+    public class Deposit : System.Collections.Generic.Dictionary<string, DepositContent>, IResetable, IStoreable, INetworkable
     {
         private Player _Player = null;
 
@@ -174,6 +174,52 @@ namespace OSDevGrp.WallStreetGame
                         DepositContent content = null;
                         if (this.TryGetValue(s, out content))
                             content.Load(fv, fs, obj);
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    int c = communicator.ReceiveInt();
+                    if (c > 0)
+                    {
+                        System.Collections.Generic.Dictionary<string, DepositContent>.ValueCollection.Enumerator e = this.Values.GetEnumerator();
+                        for (int i = 0; i < c; i++)
+                        {
+                            if (e.MoveNext())
+                                e.Current.ClientCommunication(serverversion, communicator, full, obj);
+                        }
+                    }
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version clientversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (clientversion.Major > 0)
+                {
+                    communicator.SendInt(this.Count);
+                    if (this.Count > 0)
+                    {
+                        foreach (INetworkable n in this.Values)
+                            n.ServerCommunication(clientversion, communicator, full, obj);
                     }
                 }
                 return this;

@@ -11,7 +11,7 @@ namespace OSDevGrp.WallStreetGame
         Boom = 2
     }
 
-    public class MarketState : System.Object, IResetable, IPlayable, IStoreable
+    public class MarketState : System.Object, IResetable, IPlayable, IStoreable, INetworkable
     {
         private const double BROKERAGE_INITIALIZE = 2.5D;
         private const double MIN_BROKERAGE = 1.0D;
@@ -180,6 +180,42 @@ namespace OSDevGrp.WallStreetGame
                     State = (MarketStateType) fs.ReadInt();
                     Epochs = fs.ReadInt();
                     Brokerage = fs.ReadDouble();
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ClientCommunication(Version serverversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    State = (MarketStateType) communicator.ReceiveInt();
+                    Epochs = communicator.ReceiveInt();
+                    Brokerage = communicator.ReceiveDouble();
+                }
+                return this;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public System.Object ServerCommunication(Version clientversion, ICommunicateable communicator, bool full, System.Object obj)
+        {
+            try
+            {
+                if (clientversion.Major > 0)
+                {
+                    communicator.SendInt((int) State);
+                    communicator.SendInt(Epochs);
+                    communicator.SendDouble(Brokerage);
                 }
                 return this;
             }

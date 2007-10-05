@@ -20,6 +20,7 @@ namespace OSDevGrp.WallStreetGame
         private Configuration _Configuration = null;
         private MarketState _MarketState = null;
         private Player _CurrentPlayer = null;
+        private Singleton _SyncRoot = null;
         private System.Timers.Timer _PlayTimer = null;
 
         #region IDisposable variables
@@ -69,8 +70,9 @@ namespace OSDevGrp.WallStreetGame
                 if (Players == null)
                     Players = Configuration.Players;
                 MarketState = new MarketState();
-                CurrentPlayer = new Player(String.Empty, String.Empty, Stocks, false, true);
+                CurrentPlayer = new Player(Players.NextPlayerId, String.Empty, String.Empty, Stocks, false, true);
                 Players.Add(CurrentPlayer);
+                SyncRoot = Singleton.Instance;
                 PlayTimer = new System.Timers.Timer(PLAY_TIMER_INTERVAL);
                 PlayTimer.AutoReset = true;
                 PlayTimer.Elapsed += new System.Timers.ElapsedEventHandler(PlayTimerElapsed);
@@ -221,6 +223,18 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private Singleton SyncRoot
+        {
+            get
+            {
+                return _SyncRoot;
+            }
+            set
+            {
+                _SyncRoot = value;
+            }
+        }
+
         private System.Timers.Timer PlayTimer
         {
             get
@@ -238,6 +252,14 @@ namespace OSDevGrp.WallStreetGame
             get
             {
                 return PlayTimer.Enabled == false;
+            }
+        }
+
+        public double UpdateInterval
+        {
+            get
+            {
+                return PlayTimer.Interval;
             }
         }
 
@@ -538,9 +560,12 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                Players.Play(marketstate, random);
-                Stocks.Play(marketstate, random);
-                MarketState.Play(marketstate, random);
+                lock (SyncRoot)
+                {
+                    Players.Play(marketstate, random);
+                    Stocks.Play(marketstate, random);
+                    MarketState.Play(marketstate, random);
+                }
                 if (UpdateStockInformationsEvent != null)
                     UpdateStockInformationsEvent();
                 if (UpdatePlayerInformationsEvent != null)
@@ -772,7 +797,8 @@ namespace OSDevGrp.WallStreetGame
                     // Receive new game informations.
                     StockIndexes.ClientCommunication(serverversion, communicator, full, null);
                     Stocks.ClientCommunication(serverversion, communicator, full, StockIndexes);
-                    Players.ClientCommunication(serverversion, communicator, full, Stocks);
+                    CurrentPlayer = (Player) Players.ClientCommunication(serverversion, communicator, full, Stocks);
+                    MarketState.ClientCommunication(serverversion, communicator, full, null);
                 }
                 return this;
             }
@@ -789,19 +815,24 @@ namespace OSDevGrp.WallStreetGame
                 Player player = (Player) obj;
                 if (clientversion.Major > 0)
                 {
-                    if (full)
+                    lock (SyncRoot)
                     {
-                        // Receive information about the new player.
-                        string company = communicator.ReceiveString();
-                        string name = communicator.ReceiveString();
-                        // Create the new player.
-                        player = new Player(company, name, Stocks, false, false);
-                        Players.Add(player);
+                        if (full)
+                        {
+                            // Receive information about the new player.
+                            string company = communicator.ReceiveString();
+                            string name = communicator.ReceiveString();
+                            // Create the new player.
+                            player = new Player(Players.NextPlayerId, company, name, Stocks, false, false);
+                            player.Capital = ((int)System.Math.Round(Players.AverageValue / 1000, 0)) * 1000;
+                            Players.Add(player);
+                        }
+                        // Send game informations.
+                        StockIndexes.ServerCommunication(clientversion, communicator, full, null);
+                        Stocks.ServerCommunication(clientversion, communicator, full, StockIndexes);
+                        Players.ServerCommunication(clientversion, communicator, full, player.Id);
+                        MarketState.ServerCommunication(clientversion, communicator, full, null);
                     }
-                    // Send game informations.
-                    StockIndexes.ServerCommunication(clientversion, communicator, full, null);
-                    Stocks.ServerCommunication(clientversion, communicator, full, StockIndexes);
-                    Players.ServerCommunication(clientversion, communicator, full, player);
                 }
                 return player;
             }

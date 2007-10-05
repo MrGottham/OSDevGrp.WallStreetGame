@@ -11,6 +11,7 @@ namespace OSDevGrp.WallStreetGame
         private const int MAX_BUY_PR_EPOCH = 3;
         private const int MAX_SELL_PR_EPOCH = 3;
 
+        private int _Id = 0;
         private string _Company = null;
         private string _Name = null;
         private bool _IsComputer = true;
@@ -19,14 +20,15 @@ namespace OSDevGrp.WallStreetGame
         private DoubleHistory _ValueHistory = null;
         private double _Capital = CAPITAL_INITIALIZE;
 
-        public Player(string company, string name, Stocks stocks) : this(company, name, stocks, true, false)
+        public Player(int id, string company, string name, Stocks stocks) : this(id, company, name, stocks, true, false)
         {
         }
 
-        public Player(string company, string name, Stocks stocks, bool iscomputer, bool isyou) : base()
+        public Player(int id, string company, string name, Stocks stocks, bool iscomputer, bool isyou) : base()
         {
             try
             {
+                Id = id;
                 Company = company;
                 Name = name;
                 IsComputer = iscomputer;
@@ -41,10 +43,11 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public Player(Version fv, WsgFileStream fs, System.Object obj) : base()
+        public Player(int id, Version fv, WsgFileStream fs, System.Object obj) : base()
         {
             try
             {
+                Id = id;
                 Deposit = new Deposit(this, (Stocks) obj);
                 ValueHistory = new DoubleHistory();
                 Load(fv, fs, obj);
@@ -55,10 +58,11 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public Player(Version serverversion, ICommunicateable communicator, bool full, System.Object obj) : base()
+        public Player(int id, Version serverversion, ICommunicateable communicator, bool full, System.Object obj) : base()
         {
             try
             {
+                Id = id;
                 Deposit = new Deposit(this, (Stocks) obj);
                 ValueHistory = new DoubleHistory();
                 ClientCommunication(serverversion, communicator, full, obj);
@@ -66,6 +70,18 @@ namespace OSDevGrp.WallStreetGame
             catch (System.Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public int Id
+        {
+            get
+            {
+                return _Id;
+            }
+            private set
+            {
+                _Id = value;
             }
         }
 
@@ -525,13 +541,17 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (serverversion.Major > 0)
                 {
+                    Company = communicator.ReceiveString();
+                    Name = communicator.ReceiveString();
                     if (full)
                     {
-                        Company = communicator.ReceiveString();
-                        Name = communicator.ReceiveString();
                         IsComputer = communicator.ReceiveBool();
                         IsYou = communicator.ReceiveBool();
+                        ValueHistory.ClientCommunication(serverversion, communicator, full, obj);
                     }
+                    Deposit.ClientCommunication(serverversion, communicator, full, obj);
+                    Capital = communicator.ReceiveDouble();
+                    ValueHistory.AddHistory(Value);
                 }
                 return this;
             }
@@ -547,13 +567,16 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (clientversion.Major > 0)
                 {
+                    communicator.SendString(Company);
+                    communicator.SendString(Name);
                     if (full)
                     {
-                        communicator.SendString(Company);
-                        communicator.SendString(Name);
                         communicator.SendBool(IsComputer);
-                        communicator.SendBool(this.Equals(obj));
+                        communicator.SendBool(Id == (int) obj);
+                        ValueHistory.ServerCommunication(clientversion, communicator, full, obj);
                     }
+                    Deposit.ServerCommunication(clientversion, communicator, full, obj);
+                    communicator.SendDouble(Capital);
                 }
                 return this;
             }

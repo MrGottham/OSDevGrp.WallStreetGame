@@ -41,6 +41,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Deposit.cs" />
     <Compile Include="DepositContent.cs" />
+    <Compile Include="Singleton.cs" />
     <Compile Include="WsgFileStream.cs" />
     <Compile Include="History.cs" />
     <Compile Include="Interfaces.cs" />
