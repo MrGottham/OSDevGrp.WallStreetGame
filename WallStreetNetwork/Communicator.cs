@@ -12,7 +12,7 @@ namespace OSDevGrp.WallStreetGame
         {
         }
 
-        private System.Net.Sockets.Socket Socket
+        protected System.Net.Sockets.Socket Socket
         {
             get
             {

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, System.ComponentModel.ISynchronizeInvoke
     {
         private const string PRODUCT_NAME = "Aktiespillet";
         private const string WSG_FILE_INFORMATION = "Aktiespillet, gemt spil";
@@ -957,6 +957,17 @@ namespace OSDevGrp.WallStreetGame
                         System.Windows.Forms.ComboBox combobox = (System.Windows.Forms.ComboBox) panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["comboBoxPlayer" + panelno.ToString() + "Company"];
                         if (combobox.Items.Count > 0)
                         {
+                            foreach (Player p in Game.Players)
+                            {
+                                if (!combobox.Items.Contains(p))
+                                    combobox.Items.Add(p);
+                            }
+                            for (int i = combobox.Items.Count - 1; i >= 0; i--)
+                            {
+                                if (!Game.Players.Contains((Player) combobox.Items[i]))
+                                    combobox.Items.RemoveAt(i);
+
+                            }
                             if (combobox.SelectedItem != null)
                                 player = (Player) combobox.SelectedItem;
                         }
@@ -1025,16 +1036,26 @@ namespace OSDevGrp.WallStreetGame
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 foreach (Player player in Game.Players)
                 {
+                    string showcompany = string.Empty;
+                    if (player.Company.Length > 0)
+                        showcompany = "&" + player.Company;
                     if (this.toolStripMenuItemDeposit.DropDownItems.Count > 0)
                     {
-                        if (player.Company.Length > 0 && !player.IsYou)
+                        if (showcompany.Length > 0 && !player.IsYou)
                         {
                             bool found = false;
                             for (int i = 0; i < this.toolStripMenuItemDeposit.DropDownItems.Count && !found; i++)
+                            {
                                 found = ((Player) this.toolStripMenuItemDeposit.DropDownItems[i].Tag == player);
+                                if (found)
+                                {
+                                    if (showcompany != this.toolStripMenuItemDeposit.DropDownItems[i].Text)
+                                        this.toolStripMenuItemDeposit.DropDownItems[i].Text = showcompany;
+                                }
+                            }
                             if (!found)
                             {
-                                System.Windows.Forms.ToolStripMenuItem tsmi = new System.Windows.Forms.ToolStripMenuItem("&" + player.Company);
+                                System.Windows.Forms.ToolStripMenuItem tsmi = new System.Windows.Forms.ToolStripMenuItem(showcompany);
                                 tsmi.CheckOnClick = true;
                                 tsmi.Tag = player;
                                 tsmi.Click += new System.EventHandler(this.toolStripMenuItemDeposit_Click);
@@ -1042,13 +1063,21 @@ namespace OSDevGrp.WallStreetGame
                             }
                         }
                     }
-                    else if (player.Company.Length > 0 && !player.IsYou)
+                    else if (showcompany.Length > 0 && !player.IsYou)
                     {
-                        System.Windows.Forms.ToolStripMenuItem tsmi = new System.Windows.Forms.ToolStripMenuItem("&" + player.Company);
+                        System.Windows.Forms.ToolStripMenuItem tsmi = new System.Windows.Forms.ToolStripMenuItem(showcompany);
                         tsmi.CheckOnClick = true;
                         tsmi.Tag = player;
                         tsmi.Click += new System.EventHandler(this.toolStripMenuItemDeposit_Click);
                         this.toolStripMenuItemDeposit.DropDownItems.Add(tsmi);
+                    }
+                }
+                if (this.toolStripMenuItemDeposit.DropDownItems.Count > 0)
+                {
+                    for (int i = this.toolStripMenuItemDeposit.DropDownItems.Count - 1; i >= 0; i--)
+                    {
+                        if (!Game.Players.Contains((Player) this.toolStripMenuItemDeposit.DropDownItems[i].Tag))
+                            this.toolStripMenuItemDeposit.DropDownItems.RemoveAt(i);
                     }
                 }
                 this.UpdatePlayerInformations(this.panelPlayer1);
@@ -1238,8 +1267,18 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (ClientConnected)
                 {
-                    this.comboBoxStockIndex.Items.Clear();
-                    this.listViewStocks.Items.Clear();
+                    while (this.toolStripMenuItemDeposit.DropDownItems.Count > 0)
+                        this.toolStripMenuItemDeposit.DropDownItems.Clear();
+                    while (this.comboBoxStockIndex.Items.Count > 0)
+                        this.comboBoxStockIndex.Items.Clear();
+                    while (this.listViewStocks.Items.Count > 0)
+                        this.listViewStocks.Items.Clear();
+                    while (this.comboBoxPlayer2Company.Items.Count > 0)
+                        this.comboBoxPlayer2Company.Items.Clear();
+                    while (this.comboBoxPlayer3Company.Items.Count > 0)
+                        this.comboBoxPlayer3Company.Items.Clear();
+                    while (this.comboBoxPlayer4Company.Items.Count > 0)
+                        this.comboBoxPlayer4Company.Items.Clear();
                 }
                 GrayItems();
                 if (this.Cursor != System.Windows.Forms.Cursors.Default)
@@ -1644,7 +1683,7 @@ namespace OSDevGrp.WallStreetGame
                     Client.BeforeConnectEvent = this.BeforeClientConnect;
                     Client.AfterConnectEvent = this.AfterClientConnect;
                     Client.BeforeDisconnectEvent = this.BeforeClientDisconnect;
-                    Client.AfterConnectEvent = this.AfterClientDisconnect;
+                    Client.AfterDisconnectEvent = this.AfterClientDisconnect;
                     Client.SelectServerEvent = this.SelectServer;
                 }
                 if (this.toolStripMenuItemClient.Checked)
