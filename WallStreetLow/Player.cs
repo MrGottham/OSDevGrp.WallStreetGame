@@ -89,7 +89,9 @@ namespace OSDevGrp.WallStreetGame
         {
             get
             {
-                return _Company;
+                if (_Company != null)
+                    return _Company;
+                return String.Empty;
             }
             set
             {
@@ -101,7 +103,9 @@ namespace OSDevGrp.WallStreetGame
         {
             get
             {
-                return _Name;
+                if (_Name != null)
+                    return _Name;
+                return string.Empty;
             }
             set
             {
@@ -541,13 +545,21 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (serverversion.Major > 0)
                 {
-                    Company = communicator.ReceiveString();
-                    Name = communicator.ReceiveString();
                     if (full)
                     {
                         IsComputer = communicator.ReceiveBool();
                         IsYou = communicator.ReceiveBool();
                         ValueHistory.ClientCommunication(serverversion, communicator, full, obj);
+                    }
+                    if (IsYou)
+                    {
+                        communicator.SendString(Company);
+                        communicator.SendString(Name);
+                    }
+                    else
+                    {
+                        Company = communicator.ReceiveString();
+                        Name = communicator.ReceiveString();
                     }
                     Deposit.ClientCommunication(serverversion, communicator, full, obj);
                     Capital = communicator.ReceiveDouble();
@@ -567,13 +579,21 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (clientversion.Major > 0)
                 {
-                    communicator.SendString(Company);
-                    communicator.SendString(Name);
                     if (full)
                     {
                         communicator.SendBool(IsComputer);
                         communicator.SendBool(Id == (int) obj);
                         ValueHistory.ServerCommunication(clientversion, communicator, full, obj);
+                    }
+                    if (Id == (int) obj)
+                    {
+                        Company = communicator.ReceiveString();
+                        Name = communicator.ReceiveString();
+                    }
+                    else
+                    {
+                        communicator.SendString(Company);
+                        communicator.SendString(Name);
                     }
                     Deposit.ServerCommunication(clientversion, communicator, full, obj);
                     communicator.SendDouble(Capital);

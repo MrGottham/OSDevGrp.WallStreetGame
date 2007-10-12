@@ -10,9 +10,6 @@ namespace OSDevGrp.WallStreetGame
         private const byte CLIENTVERSION_MAJOR = 1;
         private const byte CLIENTVERSION_MINOR = 0;
 
-        private Game _Game = null;
-        private Version _Version = null;
-        private int _Port = 0;
         private int _WaitForServers = 0;
         private System.Threading.ManualResetEvent _ManuelResetEvent = null;
         private ServerInformation _SelectedServer = null;
@@ -26,19 +23,21 @@ namespace OSDevGrp.WallStreetGame
         public delegate bool BeforeDisconnect();
         public delegate void AfterDisconnect();
         public delegate ServerInformation SelectServer(ServerInformations serverinformations);
+        public delegate void OnPlayerConnected(Player player);
+        public delegate void OnPlayerDisconnected(Player player);
 
         private event BeforeConnect _BeforeConnectEvent = null;
         private event AfterConnect _AfterConnectEvent = null;
         private event BeforeDisconnect _BeforeDisconnectEvent = null;
         private event AfterDisconnect _AfterDisconnectEvent = null;
         private event SelectServer _SelectServerEvent = null;
+        private event OnPlayerConnected _OnPlayerConnectedEvent = null;
+        private event OnPlayerDisconnected _OnPlayerDisconnectEvent = null;
 
-        public Client(Game game) : base()
+        public Client(Game game, System.ComponentModel.ISynchronizeInvoke synchronize) : base(game, new Version(CLIENTVERSION_MAJOR, CLIENTVERSION_MINOR), synchronize)
         {
             try
             {
-                Game = game;
-                Version = new Version(CLIENTVERSION_MAJOR, CLIENTVERSION_MINOR);
                 string s = System.Configuration.ConfigurationManager.AppSettings["Network.Port"];
                 if (s == null)
                     throw new System.Configuration.ConfigurationErrorsException("No key named 'Network.Port' in the application configuration.");
@@ -64,42 +63,6 @@ namespace OSDevGrp.WallStreetGame
             catch (System.Exception ex)
             {
                 throw ex;
-            }
-        }
-
-        public Game Game
-        {
-            get
-            {
-                return _Game;
-            }
-            private set
-            {
-                _Game = value;
-            }
-        }
-
-        public Version Version
-        {
-            get
-            {
-                return _Version;
-            }
-            private set
-            {
-                _Version = value;
-            }
-        }
-
-        private int Port
-        {
-            get
-            {
-                return _Port;
-            }
-            set
-            {
-                _Port = value;
             }
         }
 
@@ -199,6 +162,30 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public OnPlayerConnected OnPlayerConnectedEvent
+        {
+            get
+            {
+                return _OnPlayerConnectedEvent;
+            }
+            set
+            {
+                _OnPlayerConnectedEvent = value;
+            }
+        }
+
+        public OnPlayerDisconnected OnPlayerDisconnectedEvent
+        {
+            get
+            {
+                return _OnPlayerDisconnectEvent;
+            }
+            set
+            {
+                _OnPlayerDisconnectEvent = value;
+            }
+        }
+
         #region IDisposable properties
         private bool Disposed
         {
@@ -239,7 +226,13 @@ namespace OSDevGrp.WallStreetGame
                             BeforeDisconnectEvent = null;
                         if (AfterDisconnectEvent != null)
                             AfterDisconnectEvent = null;
+                        Game.UpdateStockInformations usi = Game.UpdateStockInformationsEvent;
+                        Game.UpdateStockInformationsEvent = null;
+                        Game.UpdatePlayerInformations upi = Game.UpdatePlayerInformationsEvent;
+                        Game.UpdatePlayerInformationsEvent = null;
                         Disconnect();
+                        Game.UpdateStockInformationsEvent = usi;
+                        Game.UpdatePlayerInformationsEvent = upi;
                     }
                     if (ManuelResetEvent != null)
                         ManuelResetEvent.Close();
@@ -261,6 +254,10 @@ namespace OSDevGrp.WallStreetGame
                             AfterDisconnectEvent = null;
                         if (SelectServerEvent != null)
                             SelectServerEvent = null;
+                        if (OnPlayerConnectedEvent != null)
+                            OnPlayerConnectedEvent = null;
+                        if (OnPlayerDisconnectedEvent != null)
+                            OnPlayerDisconnectedEvent = null;
                     }
                     Disposed = true;
                 }
@@ -271,6 +268,43 @@ namespace OSDevGrp.WallStreetGame
             }
         }
         #endregion
+
+        private System.Net.IPAddress GetBroadcastAddress(System.Net.IPAddress address)
+        {
+            try
+            {
+                if (!address.Equals(System.Net.IPAddress.Loopback))
+                {
+                    byte[] b = address.GetAddressBytes();
+                    b[b.Length - 1] = 255;
+                    for (int i = 0; i < b.Length; i++)
+                        b[i] = (byte) (b[i] & 0xFF);
+                    return new System.Net.IPAddress(b);
+                }
+                return address;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private System.Net.Sockets.Socket CreateBroadcastSocket(System.Net.IPAddress ipaddress)
+        {
+            try
+            {
+                System.Net.Sockets.Socket socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
+                socket.EnableBroadcast = true;
+                socket.SetSocketOption(System.Net.Sockets.SocketOptionLevel.Socket, System.Net.Sockets.SocketOptionName.ReuseAddress, 1);
+                socket.SetSocketOption(System.Net.Sockets.SocketOptionLevel.Socket, System.Net.Sockets.SocketOptionName.Broadcast, 1);
+                socket.Bind(new System.Net.IPEndPoint(ipaddress, 0));
+                return socket;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         private ServerInformations GetServerInformations()
         {
@@ -283,34 +317,30 @@ namespace OSDevGrp.WallStreetGame
                     try
                     {
                         // Initialize and bind sockets.
+                        bool containsloopback = false;
                         foreach (System.Net.IPAddress ipaddress in System.Net.Dns.GetHostAddresses(System.Net.Dns.GetHostName()))
                         {
-                            System.Net.Sockets.Socket socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, System.Net.Sockets.ProtocolType.Udp);
-                            socket.DontFragment = true;
-                            socket.EnableBroadcast = true;
-                            socket.MulticastLoopback = false;
-                            socket.Bind(new System.Net.IPEndPoint(ipaddress, 0));
-                            sockets.Add(socket);
+                            sockets.Add(CreateBroadcastSocket(ipaddress));
+                            if (ipaddress.Equals(System.Net.IPAddress.Loopback))
+                                containsloopback = true;
                         }
+                        if (!containsloopback)
+                            sockets.Add(CreateBroadcastSocket(System.Net.IPAddress.Loopback));
                         if (sockets.Count > 0)
                         {
                             // Broadcast client information on each socket
+                            bool broadcasted = false;
                             foreach (System.Net.Sockets.Socket socket in sockets)
                             {
                                 try
                                 {
-                                    string clientinformation = Commands.GetServerInformations.ToString("d") + '|' + Version.Major.ToString() + '|' + Version.Minor.ToString();
-                                    System.Net.IPAddress ipaddress = ((System.Net.IPEndPoint) socket.LocalEndPoint).Address;
-                                    byte[] b = ipaddress.GetAddressBytes();
-                                    if (!ipaddress.Equals(System.Net.IPAddress.Loopback))
+                                    string clientinformation = Commands.GetServerInformations.ToString("d") + '|' + Version.Major.ToString() + '|' + Version.Minor.ToString() + '|';
+                                    socket.SendTo(System.Text.Encoding.Unicode.GetBytes(clientinformation), System.Net.Sockets.SocketFlags.None, new System.Net.IPEndPoint(GetBroadcastAddress(((System.Net.IPEndPoint) socket.LocalEndPoint).Address), Port));
+                                    if (!broadcasted)
                                     {
-                                        b[b.Length - 1] = 255;
-                                        for (int i = 0; i < b.Length; i++)
-                                            b[i] = (byte) (b[i] & 0xFF);
+                                        socket.SendTo(System.Text.Encoding.Unicode.GetBytes(clientinformation), System.Net.Sockets.SocketFlags.None, new System.Net.IPEndPoint(System.Net.IPAddress.Broadcast, Port));
+                                        broadcasted = true;
                                     }
-                                    socket.SendTo(System.Text.Encoding.Unicode.GetBytes(clientinformation), new System.Net.IPEndPoint(System.Net.IPAddress.Broadcast, Port));
-                                    socket.SendTo(System.Text.Encoding.Unicode.GetBytes(clientinformation), new System.Net.IPEndPoint(new System.Net.IPAddress(b), Port));
-
                                 }
                                 catch (System.Net.Sockets.SocketException ex)
                                 {
@@ -346,7 +376,7 @@ namespace OSDevGrp.WallStreetGame
                                             try
                                             {
                                                 byte[] buffer = new byte[listenersocket.Available];
-                                                System.Net.EndPoint server = (System.Net.EndPoint) new System.Net.IPEndPoint(System.Net.IPAddress.Any, 0);
+                                                System.Net.EndPoint server = (System.Net.EndPoint) new System.Net.IPEndPoint(System.Net.IPAddress.None, 0);
                                                 if (listenersocket.ReceiveFrom(buffer, ref server) > 0)
                                                 {
                                                     string[] serverinformations = System.Text.Encoding.Unicode.GetString(buffer).Split('|');
@@ -473,9 +503,13 @@ namespace OSDevGrp.WallStreetGame
                         b = BeforeDisconnectEvent();
                     if (b)
                     {
-                        Socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                        Socket.Disconnect(false);
-                        Socket.Close();
+                        if (Socket != null)
+                        {
+                            Socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                            Socket.Disconnect(false);
+                            Socket.Close();
+                            Socket = null;
+                        }
                         if (SelectedServer != null)
                             SelectedServer = null;
                         if (AfterDisconnectEvent != null)
@@ -578,18 +612,34 @@ namespace OSDevGrp.WallStreetGame
                             {
                                 foreach (Player p in Game.Players.NewPlayers)
                                 {
+                                    if (OnPlayerConnectedEvent != null)
+                                    {
+                                        System.Object[] objs = new System.Object[1];
+                                        objs.SetValue(p, 0);
+                                        Synchronize.Invoke(OnPlayerConnectedEvent, objs);
+                                    }
                                 }
                             }
                             if (Game.Players.DisconnectedPlayers.Count > 0)
                             {
                                 foreach (Player p in Game.Players.DisconnectedPlayers)
                                 {
+                                    if (OnPlayerDisconnectedEvent != null)
+                                    {
+                                        System.Object[] objs = new System.Object[1];
+                                        objs.SetValue(p, 0);
+                                        Synchronize.Invoke(OnPlayerDisconnectedEvent, objs);
+                                    }
                                 }
                             }
                             if (Game.UpdateStockInformationsEvent != null)
-                                Game.UpdateStockInformationsEvent();
+                            {
+                                Synchronize.Invoke(Game.UpdateStockInformationsEvent, null);
+                            }
                             if (Game.UpdatePlayerInformationsEvent != null)
-                                Game.UpdatePlayerInformationsEvent();
+                            {
+                                Synchronize.Invoke(Game.UpdatePlayerInformationsEvent, null);
+                            }
                         }
                     }
                 }

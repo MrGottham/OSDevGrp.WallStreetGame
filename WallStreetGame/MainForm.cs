@@ -959,12 +959,14 @@ namespace OSDevGrp.WallStreetGame
                         {
                             foreach (Player p in Game.Players)
                             {
-                                if (!combobox.Items.Contains(p))
+                                if (!combobox.Items.Contains(p) && p.Company.Length > 0 && !p.IsYou)
                                     combobox.Items.Add(p);
                             }
                             for (int i = combobox.Items.Count - 1; i >= 0; i--)
                             {
-                                if (!Game.Players.Contains((Player) combobox.Items[i]))
+                                if (!Game.Players.Contains((Player)combobox.Items[i]))
+                                    combobox.Items.RemoveAt(i);
+                                else if (((Player)combobox.Items[i]).Company.Length == 0)
                                     combobox.Items.RemoveAt(i);
 
                             }
@@ -1271,6 +1273,12 @@ namespace OSDevGrp.WallStreetGame
                         this.toolStripMenuItemDeposit.DropDownItems.Clear();
                     while (this.comboBoxStockIndex.Items.Count > 0)
                         this.comboBoxStockIndex.Items.Clear();
+                    while (this.textBoxPlayer1Company.DataBindings.Count > 0)
+                        this.textBoxPlayer1Company.DataBindings.Clear();
+                    this.textBoxPlayer1Company.DataBindings.Add(new System.Windows.Forms.Binding("Text", Game.CurrentPlayer, "Company"));
+                    while (this.textBoxPlayer1Name.DataBindings.Count > 0)
+                        this.textBoxPlayer1Name.DataBindings.Clear();
+                    this.textBoxPlayer1Name.DataBindings.Add(new System.Windows.Forms.Binding("Text", Game.CurrentPlayer, "Name"));
                     while (this.listViewStocks.Items.Count > 0)
                         this.listViewStocks.Items.Clear();
                     while (this.comboBoxPlayer2Company.Items.Count > 0)
@@ -1324,6 +1332,44 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private void OnPlayerConnected(Player player)
+        {
+            try
+            {
+                this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+                this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                throw ex;
+            }
+        }
+
+        private void OnPlayerDisconnected(Player player)
+        {
+            try
+            {
+                this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+                if (this.toolStripMenuItemDeposit.DropDownItems.Count > 0)
+                {
+                    foreach (System.Windows.Forms.ToolStripMenuItem menuitem in this.toolStripMenuItemDeposit.DropDownItems)
+                    {
+                        if (menuitem.Checked && menuitem.Tag.Equals(player))
+                            menuitem.Checked = false;
+                    }
+                }
+                this.Cursor = System.Windows.Forms.Cursors.Default;
+            }
+            catch (System.Exception ex)
+            {
+                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                    this.Cursor = System.Windows.Forms.Cursors.Default;
+                throw ex;
+            }
+        }
+
         private ServerInformation SelectServer(ServerInformations serverinformations)
         {
             try
@@ -1355,13 +1401,14 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                this.toolStripMenuItemNewGame.Enabled = !ServerRunning;
-                this.toolStripMenuItemOpen.Enabled = !ServerRunning;
-                this.toolStripMenuItemSave.Enabled = !ServerRunning;
-                this.toolStripMenuItemSaveAs.Enabled = !ServerRunning;
+                this.toolStripMenuItemNewGame.Enabled = !ServerRunning && !ClientConnected;
+                this.toolStripMenuItemOpen.Enabled = !ServerRunning && !ClientConnected;
+                this.toolStripMenuItemSave.Enabled = !ServerRunning && !ClientConnected;
+                this.toolStripMenuItemSaveAs.Enabled = !ServerRunning && !ClientConnected;
                 this.toolStripMenuItemTrade.Enabled = false;
-                this.toolStripMenuItemPause.Visible = !Game.IsPaused;
-                this.toolStripMenuItemContinue.Visible = Game.IsPaused;
+                this.toolStripSeparatorPause.Visible = !ClientConnected;
+                this.toolStripMenuItemPause.Visible = !Game.IsPaused && !ClientConnected;
+                this.toolStripMenuItemContinue.Visible = Game.IsPaused && !ClientConnected;
                 this.toolStripMenuItemServer.Enabled = !ClientConnected;
                 this.toolStripMenuItemClient.Enabled = !ServerRunning;
                 if (this.listViewStocks.Items.Count > 0)
@@ -1384,6 +1431,18 @@ namespace OSDevGrp.WallStreetGame
                     if (ServerRunning)
                     {
                         switch (System.Windows.Forms.MessageBox.Show(this, "Afslut netværksspil?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question))
+                        {
+                            case System.Windows.Forms.DialogResult.Yes:
+                                e.Cancel = false;
+                                break;
+                            default:
+                                e.Cancel = true;
+                                break;
+                        }
+                    }
+                    else if (ClientConnected)
+                    {
+                        switch (System.Windows.Forms.MessageBox.Show(this, "Afbryd netværksspil?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question))
                         {
                             case System.Windows.Forms.DialogResult.Yes:
                                 e.Cancel = false;
@@ -1642,7 +1701,7 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (Server == null)
                 {
-                    Server = new Server(Game);
+                    Server = new Server(Game, this);
                     Server.BeforeStartEvent = this.BeforeSeverStart;
                     Server.AfterStartEvent = this.AfterServerStart;
                     Server.BeforeStopEvent = this.BeforeServerStop;
@@ -1671,20 +1730,16 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                if (Server == null)
-                {
-                    Server = new Server(new Game(this));
-                    Server.GetServerInformationEvent = this.GetServerInformation;
-                    Server.Start();
-                }
                 if (Client == null)
                 {
-                    Client = new Client(Game);
+                    Client = new Client(Game, this);
                     Client.BeforeConnectEvent = this.BeforeClientConnect;
                     Client.AfterConnectEvent = this.AfterClientConnect;
                     Client.BeforeDisconnectEvent = this.BeforeClientDisconnect;
                     Client.AfterDisconnectEvent = this.AfterClientDisconnect;
                     Client.SelectServerEvent = this.SelectServer;
+                    Client.OnPlayerConnectedEvent = this.OnPlayerConnected;
+                    Client.OnPlayerDisconnectedEvent = this.OnPlayerDisconnected;
                 }
                 if (this.toolStripMenuItemClient.Checked)
                 {

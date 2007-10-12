@@ -20,7 +20,7 @@ namespace OSDevGrp.WallStreetGame
         private Configuration _Configuration = null;
         private MarketState _MarketState = null;
         private Player _CurrentPlayer = null;
-        private Singleton _SyncRoot = null;
+        private Singleton _SynchronizeRoot = null;
         private System.Timers.Timer _PlayTimer = null;
 
         #region IDisposable variables
@@ -72,7 +72,7 @@ namespace OSDevGrp.WallStreetGame
                 MarketState = new MarketState();
                 CurrentPlayer = new Player(Players.NextPlayerId, String.Empty, String.Empty, Stocks, false, true);
                 Players.Add(CurrentPlayer);
-                SyncRoot = Singleton.Instance;
+                SynchronizeRoot = Singleton.Instance;
                 PlayTimer = new System.Timers.Timer(PLAY_TIMER_INTERVAL);
                 PlayTimer.AutoReset = true;
                 PlayTimer.Elapsed += new System.Timers.ElapsedEventHandler(PlayTimerElapsed);
@@ -223,15 +223,15 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private Singleton SyncRoot
+        private Singleton SynchronizeRoot
         {
             get
             {
-                return _SyncRoot;
+                return _SynchronizeRoot;
             }
             set
             {
-                _SyncRoot = value;
+                _SynchronizeRoot = value;
             }
         }
 
@@ -560,7 +560,7 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                lock (SyncRoot)
+                lock (SynchronizeRoot)
                 {
                     Players.Play(marketstate, random);
                     Stocks.Play(marketstate, random);
@@ -815,7 +815,7 @@ namespace OSDevGrp.WallStreetGame
                 Player player = (Player) obj;
                 if (clientversion.Major > 0)
                 {
-                    lock (SyncRoot)
+                    lock (SynchronizeRoot)
                     {
                         if (full)
                         {

@@ -6,10 +6,72 @@ namespace OSDevGrp.WallStreetGame
 {
     public abstract class Communicator : System.Object, ICommunicateable
     {
+        private Game _Game = null;
+        private Version _Version = null;
+        private System.ComponentModel.ISynchronizeInvoke _Synchronize = null;
+        private int _Port = 0;
         private System.Net.Sockets.Socket _Socket = null;
 
-        public Communicator() : base()
+        public Communicator(Game game, Version version, System.ComponentModel.ISynchronizeInvoke synchronize) : base()
         {
+            try
+            {
+                Game = game;
+                Version = version;
+                Synchronize = synchronize;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Game Game
+        {
+            get
+            {
+                return _Game;
+            }
+            protected set
+            {
+                _Game = value;
+            }
+        }
+
+        public Version Version
+        {
+            get
+            {
+                return _Version;
+            }
+            protected set
+            {
+                _Version = value;
+            }
+        }
+
+        protected System.ComponentModel.ISynchronizeInvoke Synchronize
+        {
+            get
+            {
+                return _Synchronize;
+            }
+            private set
+            {
+                _Synchronize = value;
+            }
+        }
+
+        protected int Port
+        {
+            get
+            {
+                return _Port;
+            }
+            set
+            {
+                _Port = value;
+            }
         }
 
         protected System.Net.Sockets.Socket Socket
