@@ -957,6 +957,7 @@ namespace OSDevGrp.WallStreetGame
                         System.Windows.Forms.ComboBox combobox = (System.Windows.Forms.ComboBox) panel.Controls["GroupBoxPlayer" + panelno.ToString()].Controls["comboBoxPlayer" + panelno.ToString() + "Company"];
                         if (combobox.Items.Count > 0)
                         {
+                            combobox.DisplayMember = String.Empty;
                             foreach (Player p in Game.Players)
                             {
                                 if (!combobox.Items.Contains(p) && p.Company.Length > 0 && !p.IsYou)
@@ -964,12 +965,12 @@ namespace OSDevGrp.WallStreetGame
                             }
                             for (int i = combobox.Items.Count - 1; i >= 0; i--)
                             {
-                                if (!Game.Players.Contains((Player)combobox.Items[i]))
+                                if (!Game.Players.Contains((Player) combobox.Items[i]))
                                     combobox.Items.RemoveAt(i);
                                 else if (((Player)combobox.Items[i]).Company.Length == 0)
                                     combobox.Items.RemoveAt(i);
-
                             }
+                            combobox.DisplayMember = "Company";
                             if (combobox.SelectedItem != null)
                                 player = (Player) combobox.SelectedItem;
                         }
@@ -1052,7 +1053,20 @@ namespace OSDevGrp.WallStreetGame
                                 if (found)
                                 {
                                     if (showcompany != this.toolStripMenuItemDeposit.DropDownItems[i].Text)
+                                    {
                                         this.toolStripMenuItemDeposit.DropDownItems[i].Text = showcompany;
+                                        if (((System.Windows.Forms.ToolStripMenuItem) this.toolStripMenuItemDeposit.DropDownItems[i]).Checked)
+                                        {
+                                            foreach (System.Windows.Forms.ColumnHeader ch in this.listViewStocks.Columns)
+                                            {
+                                                if (ch.Tag.Equals(player))
+                                                {
+                                                    ch.Text = player.Company;
+                                                    ch.AutoResize(System.Windows.Forms.ColumnHeaderAutoResizeStyle.HeaderSize);
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             if (!found)
@@ -1079,7 +1093,15 @@ namespace OSDevGrp.WallStreetGame
                     for (int i = this.toolStripMenuItemDeposit.DropDownItems.Count - 1; i >= 0; i--)
                     {
                         if (!Game.Players.Contains((Player) this.toolStripMenuItemDeposit.DropDownItems[i].Tag))
+                        {
+                            System.Windows.Forms.ToolStripMenuItem tsmi = (System.Windows.Forms.ToolStripMenuItem) this.toolStripMenuItemDeposit.DropDownItems[i];
+                            if (tsmi.Checked)
+                            {
+                                tsmi.Checked = false;
+                                this.toolStripMenuItemDeposit_Click(tsmi, new System.EventArgs());
+                            }
                             this.toolStripMenuItemDeposit.DropDownItems.RemoveAt(i);
+                        }
                     }
                 }
                 this.UpdatePlayerInformations(this.panelPlayer1);
@@ -1357,7 +1379,10 @@ namespace OSDevGrp.WallStreetGame
                     foreach (System.Windows.Forms.ToolStripMenuItem menuitem in this.toolStripMenuItemDeposit.DropDownItems)
                     {
                         if (menuitem.Checked && menuitem.Tag.Equals(player))
+                        {
                             menuitem.Checked = false;
+                            this.toolStripMenuItemDeposit_Click(menuitem, new System.EventArgs());
+                        }
                     }
                 }
                 this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -1410,7 +1435,9 @@ namespace OSDevGrp.WallStreetGame
                 this.toolStripMenuItemPause.Visible = !Game.IsPaused && !ClientConnected;
                 this.toolStripMenuItemContinue.Visible = Game.IsPaused && !ClientConnected;
                 this.toolStripMenuItemServer.Enabled = !ClientConnected;
+                this.toolStripMenuItemServer.Checked = ServerRunning;
                 this.toolStripMenuItemClient.Enabled = !ServerRunning;
+                this.toolStripMenuItemClient.Checked = ClientConnected;
                 if (this.listViewStocks.Items.Count > 0)
                 {
                     this.toolStripMenuItemTrade.Enabled = (this.listViewStocks.SelectedItems.Count > 0);
@@ -1707,6 +1734,8 @@ namespace OSDevGrp.WallStreetGame
                     Server.BeforeStopEvent = this.BeforeServerStop;
                     Server.AfterStopEvent = this.AfterServerStop;
                     Server.GetServerInformationEvent = this.GetServerInformation;
+                    Server.OnPlayerConnectedEvent = this.OnPlayerConnected;
+                    Server.OnPlayerDisconnectedEvent = this.OnPlayerDisconnected;
                 }
                 if (this.toolStripMenuItemServer.Checked)
                 {

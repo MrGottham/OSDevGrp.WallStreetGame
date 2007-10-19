@@ -824,7 +824,8 @@ namespace OSDevGrp.WallStreetGame
                             string name = communicator.ReceiveString();
                             // Create the new player.
                             player = new Player(Players.NextPlayerId, company, name, Stocks, false, false);
-                            player.Capital = ((int)System.Math.Round(Players.AverageValue / 1000, 0)) * 1000;
+                            player.Capital = ((int) System.Math.Round(Players.AverageValue / 1000, 0)) * 1000;
+                            player.ValueHistory.Clear();
                             Players.Add(player);
                         }
                         // Send game informations.
@@ -835,6 +836,32 @@ namespace OSDevGrp.WallStreetGame
                     }
                 }
                 return player;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void RemovePlayer(Player player)
+        {
+            try
+            {
+                lock (SynchronizeRoot)
+                {
+                    while (Players.Contains(player))
+                    {
+                        if (player.Deposit.Count > 0)
+                        {
+                            foreach (DepositContent content in player.Deposit.Values)
+                            {
+                                content.Stock.OwnedByPlayers -= content.Count;
+                                content.Reset(Random);
+                            }
+                        }
+                        Players.Remove(player);
+                    }
+                }
             }
             catch (System.Exception ex)
             {

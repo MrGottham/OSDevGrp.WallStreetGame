@@ -226,6 +226,8 @@ namespace OSDevGrp.WallStreetGame
                             BeforeDisconnectEvent = null;
                         if (AfterDisconnectEvent != null)
                             AfterDisconnectEvent = null;
+                        if (OnPlayerDisconnectedEvent != null)
+                            OnPlayerDisconnectedEvent = null;
                         Game.UpdateStockInformations usi = Game.UpdateStockInformationsEvent;
                         Game.UpdateStockInformationsEvent = null;
                         Game.UpdatePlayerInformations upi = Game.UpdatePlayerInformationsEvent;
@@ -505,6 +507,7 @@ namespace OSDevGrp.WallStreetGame
                     {
                         if (Socket != null)
                         {
+                            SendCommand(Commands.DisconnectPlayer);
                             Socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
                             Socket.Disconnect(false);
                             Socket.Close();
@@ -530,44 +533,55 @@ namespace OSDevGrp.WallStreetGame
         private void ClientConnectCallback(System.IAsyncResult ar)
         {
             System.Net.Sockets.Socket clientsocket = (System.Net.Sockets.Socket) ar.AsyncState;
+            bool disconnecting = false;
             try
             {
                 clientsocket.EndConnect(ar);
                 StartCommunication(clientsocket);
                 ManuelResetEvent.Set();
                 Communication(clientsocket);
+            }
+            catch (System.ObjectDisposedException)
+            {
+                // The socket has been closed.
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                switch (ex.SocketErrorCode)
+                {
+                    case System.Net.Sockets.SocketError.ConnectionAborted:
+                        // Don't throw an excetion, the connection has just aborted.
+                        disconnecting = true;
+                        break;
+                    default:
+                        throw ex;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
                 if (clientsocket.Connected)
                 {
                     clientsocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
                     clientsocket.Disconnect(false);
                 }
                 clientsocket.Close();
-            }
-            catch (System.ObjectDisposedException)
-            {
-                // The socket has been closed.
-                if (clientsocket != null)
+                if (disconnecting)
                 {
-                    if (clientsocket.Connected)
-                    {
-                        clientsocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                        clientsocket.Disconnect(false);
-                    }
-                    clientsocket.Close();
+                    if (Socket != null)
+                        Socket = null;
+                    if (SelectedServer != null)
+                        SelectedServer = null;
+                    if (AfterDisconnectEvent != null)
+                        Synchronize.Invoke(AfterDisconnectEvent, null);
+                    if (Game.UpdateStockInformationsEvent != null)
+                        Synchronize.Invoke(Game.UpdateStockInformationsEvent, null);
+                    if (Game.UpdatePlayerInformationsEvent != null)
+                        Synchronize.Invoke(Game.UpdatePlayerInformationsEvent, null);
                 }
-            }
-            catch (System.Exception ex)
-            {
-                if (clientsocket != null)
-                {
-                    if (clientsocket.Connected)
-                    {
-                        clientsocket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                        clientsocket.Disconnect(false);
-                    }
-                    clientsocket.Close();
-                }
-                throw ex;
             }
         }
 
@@ -583,6 +597,10 @@ namespace OSDevGrp.WallStreetGame
                     SendByte(Version.Minor);
                     Game.ClientCommunication(SelectedServer.Version, this, true, null);
                 }
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                throw ex;
             }
             catch (System.Exception ex)
             {
@@ -630,19 +648,20 @@ namespace OSDevGrp.WallStreetGame
                                         objs.SetValue(p, 0);
                                         Synchronize.Invoke(OnPlayerDisconnectedEvent, objs);
                                     }
+                                    Game.RemovePlayer(p);
                                 }
                             }
                             if (Game.UpdateStockInformationsEvent != null)
-                            {
                                 Synchronize.Invoke(Game.UpdateStockInformationsEvent, null);
-                            }
                             if (Game.UpdatePlayerInformationsEvent != null)
-                            {
                                 Synchronize.Invoke(Game.UpdatePlayerInformationsEvent, null);
-                            }
                         }
                     }
                 }
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                throw ex;
             }
             catch (System.Exception ex)
             {

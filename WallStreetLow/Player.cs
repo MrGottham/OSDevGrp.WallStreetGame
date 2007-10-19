@@ -551,7 +551,7 @@ namespace OSDevGrp.WallStreetGame
                         IsYou = communicator.ReceiveBool();
                         ValueHistory.ClientCommunication(serverversion, communicator, full, obj);
                     }
-                    if (IsYou)
+                    if (IsYou && !full)
                     {
                         communicator.SendString(Company);
                         communicator.SendString(Name);
@@ -585,7 +585,7 @@ namespace OSDevGrp.WallStreetGame
                         communicator.SendBool(Id == (int) obj);
                         ValueHistory.ServerCommunication(clientversion, communicator, full, obj);
                     }
-                    if (Id == (int) obj)
+                    if (Id == (int) obj && !full)
                     {
                         Company = communicator.ReceiveString();
                         Name = communicator.ReceiveString();
