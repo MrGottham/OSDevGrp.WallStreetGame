@@ -14,6 +14,7 @@ namespace OSDevGrp.WallStreetGame
         private GraphType _GraphType = GraphType.Line;
         private LineGraph _LineGraph = null;
         private BarGraph _BarGraph = null;
+        private Players _Players = null;
 
         private struct MinAndMax<T>
         {
@@ -43,6 +44,7 @@ namespace OSDevGrp.WallStreetGame
                         BarGraph.BarSpace = 20;
                         break;
                 }
+                Players = players;
                 this.Text = header;
                 this.checkBoxPlayer1.ForeColor = System.Drawing.Color.Blue;
                 this.checkBoxPlayer1.Enabled = false;
@@ -53,15 +55,13 @@ namespace OSDevGrp.WallStreetGame
                 {
                     this.checkBoxPlayer1.Enabled = true;
                     this.checkBoxPlayer1.Checked = true;
-                    this.textBoxPlayer1.Text = player1.Company;
                     this.textBoxPlayer1.Tag = player1;
+                    this.textBoxPlayer1.DataBindings.Add(new System.Windows.Forms.Binding("Text", player1, "Company", false, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
                 }
                 this.checkBoxPlayer2.ForeColor = System.Drawing.Color.Red;
                 this.checkBoxPlayer2.Checked = false;
                 this.comboBoxPlayer2.DisplayMember = "Company";
-                Player[] p2 = new Player[players.Count];
-                players.CopyTo(p2);
-                this.comboBoxPlayer2.DataSource = p2;
+                UpdateList(this.comboBoxPlayer2, player1);
                 if (player2 != null)
                 {
                     this.checkBoxPlayer2.Checked = true;
@@ -70,9 +70,7 @@ namespace OSDevGrp.WallStreetGame
                 this.checkBoxPlayer3.ForeColor = System.Drawing.Color.Green;
                 this.checkBoxPlayer3.Checked = false;
                 this.comboBoxPlayer3.DisplayMember = "Company";
-                Player[] p3 = new Player[players.Count];
-                players.CopyTo(p3);
-                this.comboBoxPlayer3.DataSource = p3;
+                UpdateList(this.comboBoxPlayer3, player1);
                 if (player3 != null)
                 {
                     this.checkBoxPlayer3.Checked = true;
@@ -81,9 +79,7 @@ namespace OSDevGrp.WallStreetGame
                 this.checkBoxPlayer4.ForeColor = System.Drawing.Color.Yellow;
                 this.checkBoxPlayer4.Checked = false;
                 this.comboBoxPlayer4.DisplayMember = "Company";
-                Player[] p4 = new Player[players.Count];
-                players.CopyTo(p4);
-                this.comboBoxPlayer4.DataSource = p4;
+                UpdateList(this.comboBoxPlayer4, player1);
                 if (player4 != null)
                 {
                     this.checkBoxPlayer4.Checked = true;
@@ -145,10 +141,84 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private Players Players
+        {
+            get
+            {
+                return _Players;
+            }
+            set
+            {
+                _Players = value;
+            }
+        }
+
+        private void UpdateList(System.Windows.Forms.ComboBox combobox, Player current)
+        {
+            try
+            {
+                combobox.BeginUpdate();
+                combobox.DisplayMember = String.Empty;
+                if (combobox.Items.Count > 0)
+                {
+                    for (int i = combobox.Items.Count - 1; i >= 0; i--)
+                    {
+                        Player player = (Player) combobox.Items[i];
+                        if (!Players.Contains(player))
+                        {
+                            if (combobox.SelectedIndex == i)
+                            {
+                                if (combobox.Items.Count - 1> i)
+                                    combobox.SelectedIndex = i;
+                                else if (combobox.Items.Count - 1 > i - 1)
+                                    combobox.SelectedIndex = i - 1;
+                                else if (combobox.Items.Count - 1 > 0)
+                                    combobox.SelectedIndex = 0;
+                            }
+                            combobox.Items.RemoveAt(i);
+                        }
+                        else if (player.Company.Length == 0)
+                        {
+                            if (combobox.SelectedIndex == i)
+                            {
+                                if (combobox.Items.Count - 1 > i)
+                                    combobox.SelectedIndex = i;
+                                else if (combobox.Items.Count - 1 > i - 1)
+                                    combobox.SelectedIndex = i - 1;
+                                else if (combobox.Items.Count - 1 > 0)
+                                    combobox.SelectedIndex = 0;
+                            }
+                            combobox.Items.RemoveAt(i);
+                        }
+                    }
+                }
+                if (Players.Count > 0)
+                {
+                    foreach (Player player in Players)
+                    {
+                        if (!combobox.Items.Contains(player) && player.Company.Length > 0 && player.Id != current.Id)
+                            combobox.Items.Add(player);
+                    }
+                }
+                combobox.DisplayMember = "Company";
+                combobox.EndUpdate();
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void UpdatePlayerInformations()
         {
             try
             {
+                if (textBoxPlayer1.Tag != null)
+                {
+                    UpdateList(this.comboBoxPlayer2, (Player) textBoxPlayer1.Tag);
+                    UpdateList(this.comboBoxPlayer3, (Player) textBoxPlayer1.Tag);
+                    UpdateList(this.comboBoxPlayer4, (Player) textBoxPlayer1.Tag);
+                }
                 this.panelGraph.Refresh();
             }
             catch (System.Exception ex)
@@ -364,7 +434,12 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                UpdatePlayerInformations();
+                if (sender is System.Windows.Forms.ComboBox)
+                {
+                    System.Windows.Forms.ComboBox combobox = (System.Windows.Forms.ComboBox) sender;
+                    if (combobox.DisplayMember.Length > 0)
+                        this.panelGraph.Refresh();
+                }
             }
             catch (System.Exception ex)
             {
@@ -376,7 +451,12 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                UpdatePlayerInformations();
+                if (sender is System.Windows.Forms.ComboBox)
+                {
+                    System.Windows.Forms.ComboBox combobox = (System.Windows.Forms.ComboBox) sender;
+                    if (combobox.DisplayMember.Length > 0)
+                        this.panelGraph.Refresh();
+                }
             }
             catch (System.Exception ex)
             {

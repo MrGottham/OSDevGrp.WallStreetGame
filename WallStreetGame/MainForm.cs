@@ -1449,6 +1449,49 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        private bool SaveAs()
+        {
+            try
+            {
+                bool cancel = false;
+                System.Windows.Forms.SaveFileDialog fd = new System.Windows.Forms.SaveFileDialog();
+                fd.Filter = "Gemte spil (*.wsg)|*.wsg|Alle filer (*.*)|*.*";
+                fd.FilterIndex = 0;
+                switch (fd.ShowDialog())
+                {
+                    case System.Windows.Forms.DialogResult.OK:
+                        Game.Save(fd.FileName);
+                        break;
+                    default:
+                        cancel = true;
+                        break;
+                }
+                fd.Dispose();
+               return cancel;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private bool Save()
+        {
+            try
+            {
+                bool cancel = false;
+                if (Game.FileName != String.Empty)
+                    Game.Save();
+                else
+                    cancel = SaveAs();
+                return cancel;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -1484,8 +1527,7 @@ namespace OSDevGrp.WallStreetGame
                         switch (System.Windows.Forms.MessageBox.Show(this, "Gem spillet?", ProductName, System.Windows.Forms.MessageBoxButtons.YesNoCancel, System.Windows.Forms.MessageBoxIcon.Question))
                         {
                             case System.Windows.Forms.DialogResult.Yes:
-                                toolStripMenuItemSave_Click(sender, new System.EventArgs());
-                                e.Cancel = false;
+                                e.Cancel = Save();
                                 break;
                             case System.Windows.Forms.DialogResult.No:
                                 e.Cancel = false;
@@ -1563,10 +1605,7 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                if (Game.FileName != String.Empty)
-                    Game.Save();
-                else
-                    toolStripMenuItemSaveAs_Click(sender, e);
+                Save();
             }
             catch (System.Exception ex)
             {
@@ -1581,14 +1620,7 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                System.Windows.Forms.SaveFileDialog fd = new System.Windows.Forms.SaveFileDialog();
-                fd.Filter = "Gemte spil (*.wsg)|*.wsg|Alle filer (*.*)|*.*";
-                fd.FilterIndex = 0;
-                if (fd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    Game.Save(fd.FileName);
-                }
-                fd.Dispose();
+                SaveAs();
             }
             catch (System.Exception ex)
             {
