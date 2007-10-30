@@ -699,6 +699,12 @@ namespace OSDevGrp.WallStreetGame
                                     Socket.Disconnect(false);
                                     Socket.Close();
                                     break;
+                                case Commands.BuyStocks:
+                                    Game.ClientBuyingStocks(clientversion, this, ReceiveString(), player);
+                                    break;
+                                case Commands.SellStocks:
+                                    Game.ClientSellingStokcs(clientversion, this, ReceiveString(), player);
+                                    break;
                             }
                         }
                         else if (System.DateTime.Now > until)

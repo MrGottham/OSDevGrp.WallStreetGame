@@ -843,6 +843,50 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public void ClientBuyingStocks(Version clientversion, ICommunicateable communicator, string stockid, Player player)
+        {
+            try
+            {
+                if (clientversion.Major > 0)
+                {
+                    lock (SynchronizeRoot)
+                    {
+                        DepositContent content = null;
+                        if (player.Deposit.TryGetValue(stockid, out content))
+                        {
+                            content.ServerBuyStocks(clientversion, communicator);
+                        }
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void ClientSellingStokcs(Version clientversion, ICommunicateable communicator, string stockid, Player player)
+        {
+            try
+            {
+                if (clientversion.Major > 0)
+                {
+                    lock (SynchronizeRoot)
+                    {
+                        DepositContent content = null;
+                        if (player.Deposit.TryGetValue(stockid, out content))
+                        {
+                            content.ServerSellStocks(clientversion, communicator);
+                        }
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void RemovePlayer(Player player)
         {
             try

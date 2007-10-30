@@ -40,6 +40,14 @@ namespace OSDevGrp.WallStreetGame
         System.Object ServerCommunication(Version clientversion, ICommunicateable communicator, bool full, System.Object obj);
     }
 
+    public interface INetworkTradeable
+    {
+        void ClientBuyStocks(Version serverversion, ICommunicateable communicator);
+        void ClientSellStocks(Version serverversion, ICommunicateable communicator);
+        void ServerBuyStocks(Version clientversion, ICommunicateable communicator);
+        void ServerSellStocks(Version clientversion, ICommunicateable communicator);
+    }
+
     public interface ISelectable
     {
         string GetSelectText();

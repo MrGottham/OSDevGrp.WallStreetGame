@@ -505,6 +505,13 @@ namespace OSDevGrp.WallStreetGame
                         b = BeforeDisconnectEvent();
                     if (b)
                     {
+                        foreach (DepositContent content in Game.CurrentPlayer.Deposit.Values)
+                        {
+                            if (content.OnClientBuyStocksEvent != null)
+                                content.OnClientBuyStocksEvent = null;
+                            if (content.OnClientSellStocksEvent != null)
+                                content.OnClientSellStocksEvent = null;
+                        }
                         if (Socket != null)
                         {
                             SendCommand(Commands.DisconnectPlayer);
@@ -571,6 +578,13 @@ namespace OSDevGrp.WallStreetGame
                 clientsocket.Close();
                 if (disconnecting)
                 {
+                    foreach (DepositContent content in Game.CurrentPlayer.Deposit.Values)
+                    {
+                        if (content.OnClientBuyStocksEvent != null)
+                            content.OnClientBuyStocksEvent = null;
+                        if (content.OnClientSellStocksEvent != null)
+                            content.OnClientSellStocksEvent = null;
+                    }
                     if (Socket != null)
                         Socket = null;
                     if (SelectedServer != null)
@@ -596,6 +610,11 @@ namespace OSDevGrp.WallStreetGame
                     SendByte(Version.Major);
                     SendByte(Version.Minor);
                     Game.ClientCommunication(SelectedServer.Version, this, true, null);
+                    foreach (DepositContent content in Game.CurrentPlayer.Deposit.Values)
+                    {
+                        content.OnClientBuyStocksEvent = this.BuyStocks;
+                        content.OnClientSellStocksEvent = this.SellStocks;
+                    }
                 }
             }
             catch (System.Net.Sockets.SocketException ex)
@@ -662,6 +681,70 @@ namespace OSDevGrp.WallStreetGame
             catch (System.Net.Sockets.SocketException ex)
             {
                 throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void BuyStocks(string stockid, INetworkTradeable tradeable, int stockstobuy)
+        {
+            try
+            {
+                if (SelectedServer.Version.Major > 0)
+                {
+                    SendCommand(Commands.BuyStocks);
+                    SendString(stockid);
+                    tradeable.ClientBuyStocks(SelectedServer.Version, this);
+                }
+            }
+            catch (System.ObjectDisposedException)
+            {
+                // The socket has been closed.
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                switch (ex.SocketErrorCode)
+                {
+                    case System.Net.Sockets.SocketError.ConnectionAborted:
+                        // Don't throw an excetion, the connection has just aborted.
+                        break;
+                    default:
+                        throw ex;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void SellStocks(string stockid, INetworkTradeable tradeable, int stockstosell)
+        {
+            try
+            {
+                if (SelectedServer.Version.Major > 0)
+                {
+                    SendCommand(Commands.BuyStocks);
+                    SendString(stockid);
+                    tradeable.ClientSellStocks(SelectedServer.Version, this);
+                }
+            }
+            catch (System.ObjectDisposedException)
+            {
+                // The socket has been closed.
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                switch (ex.SocketErrorCode)
+                {
+                    case System.Net.Sockets.SocketError.ConnectionAborted:
+                        // Don't throw an excetion, the connection has just aborted.
+                        break;
+                    default:
+                        throw ex;
+                }
             }
             catch (System.Exception ex)
             {

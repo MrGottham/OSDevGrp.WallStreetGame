@@ -10,6 +10,8 @@ namespace OSDevGrp.WallStreetGame
         GetServerInformations = 1,
         NewNetworkPlayer = 2,
         UpdateGameInformations = 3,
-        DisconnectPlayer = 4
+        DisconnectPlayer = 4,
+        BuyStocks = 5,
+        SellStocks = 6
     }
 }
