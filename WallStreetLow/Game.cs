@@ -448,6 +448,8 @@ namespace OSDevGrp.WallStreetGame
                             MarketState = null;
                         if (CurrentPlayer != null)
                             CurrentPlayer = null;
+                        if (SynchronizeRoot != null)
+                            SynchronizeRoot = null;
                         if (PlayTimer != null)
                             PlayTimer.Dispose();
                         if (BeforeResetEvent != null)
@@ -777,28 +779,31 @@ namespace OSDevGrp.WallStreetGame
             {
                 if (serverversion.Major > 0)
                 {
-                    if (full)
+                    lock (SynchronizeRoot)
                     {
-                        // Send information about the client.
-                        communicator.SendString(CurrentPlayer.Company);
-                        communicator.SendString(CurrentPlayer.Name);
-                        // Clear and reset game informations.
-                        while (PlayTimer.Enabled)
-                            PlayTimer.Stop();
-                        while (StockIndexes.Count > 0)
-                            StockIndexes.Clear();
-                        while (Stocks.Count > 0)
-                            Stocks.Clear();
-                        while (Players.Count > 0)
-                            Players.Clear();
-                        MarketState.Reset(Random);
-                        CurrentPlayer = null;
+                        if (full)
+                        {
+                            // Send information about the client.
+                            communicator.SendString(CurrentPlayer.Company);
+                            communicator.SendString(CurrentPlayer.Name);
+                            // Clear and reset game informations.
+                            while (PlayTimer.Enabled)
+                                PlayTimer.Stop();
+                            while (StockIndexes.Count > 0)
+                                StockIndexes.Clear();
+                            while (Stocks.Count > 0)
+                                Stocks.Clear();
+                            while (Players.Count > 0)
+                                Players.Clear();
+                            MarketState.Reset(Random);
+                            CurrentPlayer = null;
+                        }
+                        // Receive new game informations.
+                        StockIndexes.ClientCommunication(serverversion, communicator, full, null);
+                        Stocks.ClientCommunication(serverversion, communicator, full, StockIndexes);
+                        CurrentPlayer = (Player)Players.ClientCommunication(serverversion, communicator, full, Stocks);
+                        MarketState.ClientCommunication(serverversion, communicator, full, null);
                     }
-                    // Receive new game informations.
-                    StockIndexes.ClientCommunication(serverversion, communicator, full, null);
-                    Stocks.ClientCommunication(serverversion, communicator, full, StockIndexes);
-                    CurrentPlayer = (Player) Players.ClientCommunication(serverversion, communicator, full, Stocks);
-                    MarketState.ClientCommunication(serverversion, communicator, full, null);
                 }
                 return this;
             }
@@ -843,6 +848,24 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
+        public void ClientBuyingStocks(Version serverversion, ICommunicateable communicator, INetworkTradeable tradeable, MarketState marketstate, int stockstobuy)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    lock (SynchronizeRoot)
+                    {
+                        tradeable.ClientBuyStocks(serverversion, communicator, marketstate, stockstobuy);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void ClientBuyingStocks(Version clientversion, ICommunicateable communicator, string stockid, Player player)
         {
             try
@@ -865,7 +888,25 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        public void ClientSellingStokcs(Version clientversion, ICommunicateable communicator, string stockid, Player player)
+        public void ClientSellingStocks(Version serverversion, ICommunicateable communicator, INetworkTradeable tradeable, MarketState marketstate, int stockstosell)
+        {
+            try
+            {
+                if (serverversion.Major > 0)
+                {
+                    lock (SynchronizeRoot)
+                    {
+                        tradeable.ClientSellStocks(serverversion, communicator, marketstate, stockstosell);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void ClientSellingStocks(Version clientversion, ICommunicateable communicator, string stockid, Player player)
         {
             try
             {

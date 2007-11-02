@@ -12,6 +12,7 @@ namespace OSDevGrp.WallStreetGame
 
         private int _WaitForServers = 0;
         private System.Threading.ManualResetEvent _ManuelResetEvent = null;
+        private Singleton _SynchronizeRoot = null;
         private ServerInformation _SelectedServer = null;
 
         #region IDisposable variables
@@ -47,6 +48,7 @@ namespace OSDevGrp.WallStreetGame
                     throw new System.Configuration.ConfigurationErrorsException("No key named 'Network.WaitForServers' in the application configuration.");
                 WaitForServers = int.Parse(s);
                 ManuelResetEvent = new System.Threading.ManualResetEvent(true);
+                SynchronizeRoot = Singleton.Instance;
             }
             catch (System.Exception ex)
             {
@@ -87,6 +89,18 @@ namespace OSDevGrp.WallStreetGame
             set
             {
                 _ManuelResetEvent = value;
+            }
+        }
+
+        private Singleton SynchronizeRoot
+        {
+            get
+            {
+                return _SynchronizeRoot;
+            }
+            set
+            {
+                _SynchronizeRoot = value;
             }
         }
 
@@ -246,6 +260,8 @@ namespace OSDevGrp.WallStreetGame
                             Version = null;
                         if (ManuelResetEvent != null)
                             ManuelResetEvent = null;
+                        if (SynchronizeRoot != null)
+                            SynchronizeRoot = null;
                         if (BeforeConnectEvent != null)
                             BeforeConnectEvent = null;
                         if (AfterConnectEvent != null)
@@ -505,20 +521,23 @@ namespace OSDevGrp.WallStreetGame
                         b = BeforeDisconnectEvent();
                     if (b)
                     {
-                        foreach (DepositContent content in Game.CurrentPlayer.Deposit.Values)
+                        lock (SynchronizeRoot)
                         {
-                            if (content.OnClientBuyStocksEvent != null)
-                                content.OnClientBuyStocksEvent = null;
-                            if (content.OnClientSellStocksEvent != null)
-                                content.OnClientSellStocksEvent = null;
-                        }
-                        if (Socket != null)
-                        {
-                            SendCommand(Commands.DisconnectPlayer);
-                            Socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                            Socket.Disconnect(false);
-                            Socket.Close();
-                            Socket = null;
+                            foreach (DepositContent content in Game.CurrentPlayer.Deposit.Values)
+                            {
+                                if (content.OnClientBuyStocksEvent != null)
+                                    content.OnClientBuyStocksEvent = null;
+                                if (content.OnClientSellStocksEvent != null)
+                                    content.OnClientSellStocksEvent = null;
+                            }
+                            if (Socket != null)
+                            {
+                                SendCommand(Commands.DisconnectPlayer);
+                                Socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
+                                Socket.Disconnect(false);
+                                Socket.Close();
+                                Socket = null;
+                            }
                         }
                         if (SelectedServer != null)
                             SelectedServer = null;
@@ -578,15 +597,18 @@ namespace OSDevGrp.WallStreetGame
                 clientsocket.Close();
                 if (disconnecting)
                 {
-                    foreach (DepositContent content in Game.CurrentPlayer.Deposit.Values)
+                    lock (SynchronizeRoot)
                     {
-                        if (content.OnClientBuyStocksEvent != null)
-                            content.OnClientBuyStocksEvent = null;
-                        if (content.OnClientSellStocksEvent != null)
-                            content.OnClientSellStocksEvent = null;
+                        foreach (DepositContent content in Game.CurrentPlayer.Deposit.Values)
+                        {
+                            if (content.OnClientBuyStocksEvent != null)
+                                content.OnClientBuyStocksEvent = null;
+                            if (content.OnClientSellStocksEvent != null)
+                                content.OnClientSellStocksEvent = null;
+                        }
+                        if (Socket != null)
+                            Socket = null;
                     }
-                    if (Socket != null)
-                        Socket = null;
                     if (SelectedServer != null)
                         SelectedServer = null;
                     if (AfterDisconnectEvent != null)
@@ -606,14 +628,17 @@ namespace OSDevGrp.WallStreetGame
                 base.Communication(socket);
                 if (SelectedServer.Version.Major > 0)
                 {
-                    SendCommand(Commands.NewNetworkPlayer);
-                    SendByte(Version.Major);
-                    SendByte(Version.Minor);
-                    Game.ClientCommunication(SelectedServer.Version, this, true, null);
-                    foreach (DepositContent content in Game.CurrentPlayer.Deposit.Values)
+                    lock (SynchronizeRoot)
                     {
-                        content.OnClientBuyStocksEvent = this.BuyStocks;
-                        content.OnClientSellStocksEvent = this.SellStocks;
+                        SendCommand(Commands.NewNetworkPlayer);
+                        SendByte(Version.Major);
+                        SendByte(Version.Minor);
+                        Game.ClientCommunication(SelectedServer.Version, this, true, null);
+                        foreach (DepositContent content in Game.CurrentPlayer.Deposit.Values)
+                        {
+                            content.OnClientBuyStocksEvent = this.BuyStocks;
+                            content.OnClientSellStocksEvent = this.SellStocks;
+                        }
                     }
                 }
             }
@@ -643,8 +668,11 @@ namespace OSDevGrp.WallStreetGame
                         }
                         if (Connected)
                         {
-                            SendCommand(Commands.UpdateGameInformations);
-                            Game.ClientCommunication(SelectedServer.Version, this, false, null);
+                            lock (SynchronizeRoot)
+                            {
+                                SendCommand(Commands.UpdateGameInformations);
+                                Game.ClientCommunication(SelectedServer.Version, this, false, null);
+                            }
                             if (Game.Players.NewPlayers.Count > 0)
                             {
                                 foreach (Player p in Game.Players.NewPlayers)
@@ -688,15 +716,22 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private void BuyStocks(string stockid, INetworkTradeable tradeable, int stockstobuy)
+        private void BuyStocks(string stockid, INetworkTradeable tradeable, MarketState marketstate, int stockstobuy)
         {
             try
             {
                 if (SelectedServer.Version.Major > 0)
                 {
-                    SendCommand(Commands.BuyStocks);
-                    SendString(stockid);
-                    tradeable.ClientBuyStocks(SelectedServer.Version, this);
+                    lock (SynchronizeRoot)
+                    {
+                        SendCommand(Commands.BuyStocks);
+                        SendString(stockid);
+                        Game.ClientBuyingStocks(SelectedServer.Version, this, tradeable, marketstate, stockstobuy);
+                    }
+                    if (Game.UpdateStockInformationsEvent != null)
+                        Synchronize.Invoke(Game.UpdateStockInformationsEvent, null);
+                    if (Game.UpdatePlayerInformationsEvent != null)
+                        Synchronize.Invoke(Game.UpdatePlayerInformationsEvent, null);
                 }
             }
             catch (System.ObjectDisposedException)
@@ -720,15 +755,22 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private void SellStocks(string stockid, INetworkTradeable tradeable, int stockstosell)
+        private void SellStocks(string stockid, INetworkTradeable tradeable, MarketState marketstate, int stockstosell)
         {
             try
             {
                 if (SelectedServer.Version.Major > 0)
                 {
-                    SendCommand(Commands.BuyStocks);
-                    SendString(stockid);
-                    tradeable.ClientSellStocks(SelectedServer.Version, this);
+                    lock (SynchronizeRoot)
+                    {
+                        SendCommand(Commands.SellStocks);
+                        SendString(stockid);
+                        Game.ClientSellingStocks(SelectedServer.Version, this, tradeable, marketstate, stockstosell);
+                    }
+                    if (Game.UpdateStockInformationsEvent != null)
+                        Synchronize.Invoke(Game.UpdateStockInformationsEvent, null);
+                    if (Game.UpdatePlayerInformationsEvent != null)
+                        Synchronize.Invoke(Game.UpdatePlayerInformationsEvent, null);
                 }
             }
             catch (System.ObjectDisposedException)

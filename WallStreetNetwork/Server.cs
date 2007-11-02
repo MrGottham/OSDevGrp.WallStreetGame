@@ -701,9 +701,17 @@ namespace OSDevGrp.WallStreetGame
                                     break;
                                 case Commands.BuyStocks:
                                     Game.ClientBuyingStocks(clientversion, this, ReceiveString(), player);
+                                    if (Game.UpdateStockInformationsEvent != null)
+                                        Synchronize.Invoke(Game.UpdateStockInformationsEvent, null);
+                                    if (Game.UpdatePlayerInformationsEvent != null)
+                                        Synchronize.Invoke(Game.UpdatePlayerInformationsEvent, null);
                                     break;
                                 case Commands.SellStocks:
-                                    Game.ClientSellingStokcs(clientversion, this, ReceiveString(), player);
+                                    Game.ClientSellingStocks(clientversion, this, ReceiveString(), player);
+                                    if (Game.UpdateStockInformationsEvent != null)
+                                        Synchronize.Invoke(Game.UpdateStockInformationsEvent, null);
+                                    if (Game.UpdatePlayerInformationsEvent != null)
+                                        Synchronize.Invoke(Game.UpdatePlayerInformationsEvent, null);
                                     break;
                             }
                         }

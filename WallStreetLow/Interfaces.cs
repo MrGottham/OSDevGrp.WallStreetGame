@@ -42,8 +42,8 @@ namespace OSDevGrp.WallStreetGame
 
     public interface INetworkTradeable
     {
-        void ClientBuyStocks(Version serverversion, ICommunicateable communicator);
-        void ClientSellStocks(Version serverversion, ICommunicateable communicator);
+        void ClientBuyStocks(Version serverversion, ICommunicateable communicator, MarketState marketstate, int stockstobuy);
+        void ClientSellStocks(Version serverversion, ICommunicateable communicator, MarketState marketstate, int stockstosell);
         void ServerBuyStocks(Version clientversion, ICommunicateable communicator);
         void ServerSellStocks(Version clientversion, ICommunicateable communicator);
     }
