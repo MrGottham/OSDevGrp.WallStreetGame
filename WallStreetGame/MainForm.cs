@@ -650,8 +650,12 @@ namespace OSDevGrp.WallStreetGame
                 }
                 while (this.listViewStocks.Items.Count > 0)
                     this.listViewStocks.Items.Clear();
-                this.textBoxPlayer1Company.Text = Game.CurrentPlayer.Company;
-                this.textBoxPlayer1Name.Text = Game.CurrentPlayer.Name;
+                while (this.textBoxPlayer1Company.DataBindings.Count > 0)
+                    this.textBoxPlayer1Company.DataBindings.Clear();
+                this.textBoxPlayer1Company.DataBindings.Add(new System.Windows.Forms.Binding("Text", Game.CurrentPlayer, "Company"));
+                while (this.textBoxPlayer1Name.DataBindings.Count > 0)
+                    this.textBoxPlayer1Name.DataBindings.Clear();
+                this.textBoxPlayer1Name.DataBindings.Add(new System.Windows.Forms.Binding("Text", Game.CurrentPlayer, "Name"));
                 while (this.comboBoxPlayer2Company.Items.Count > 0)
                     this.comboBoxPlayer2Company.Items.Clear();
                 while (this.comboBoxPlayer3Company.Items.Count > 0)
