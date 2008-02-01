@@ -305,7 +305,11 @@ namespace OSDevGrp.WallStreetGame
                 this.panelPlayer3.Width = (this.panelPlayer3And4.Width / 2);
                 int m = this.labelPlayer1Company.Location.X;
                 this.panelPlayer1.MinimumSize = new System.Drawing.Size(m + this.labelPlayer1DepositValue.Width + m + this.textBoxPlayer1DepositValue.Width + m, this.panelPlayer1.Height);
+                while (this.textBoxPlayer1Company.DataBindings.Count > 0)
+                    this.textBoxPlayer1Company.DataBindings.Clear();
                 this.textBoxPlayer1Company.DataBindings.Add(new System.Windows.Forms.Binding("Text", Game.CurrentPlayer, "Company", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+                while (this.textBoxPlayer1Name.DataBindings.Count > 0)
+                    this.textBoxPlayer1Name.DataBindings.Clear();
                 this.textBoxPlayer1Name.DataBindings.Add(new System.Windows.Forms.Binding("Text", Game.CurrentPlayer, "Name", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
                 this.textBoxPlayer1Capital.MinimumSize = new System.Drawing.Size(this.textBoxPlayer1Capital.Width, this.textBoxPlayer1Capital.Height);
                 this.textBoxPlayer1Capital.ReadOnly = true;
