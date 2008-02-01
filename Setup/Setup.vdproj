@@ -33,38 +33,38 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4FDAEC427901B05DDFF59DF35AE195A9"
+        "MsmKey" = "8:_4C29264AF0E5BECC7B21B18B4CA291BD"
         "OwnerKey" = "8:_2EE7CFD2073F48EDB810EFF7554139D2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_4FDAEC427901B05DDFF59DF35AE195A9"
-        "OwnerKey" = "8:_DA137254C4836E29E590FF06C77EE86E"
+        "MsmKey" = "8:_4C29264AF0E5BECC7B21B18B4CA291BD"
+        "OwnerKey" = "8:_CF6C37BE38C62B54DD7908999196563F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DA137254C4836E29E590FF06C77EE86E"
-        "OwnerKey" = "8:_2EE7CFD2073F48EDB810EFF7554139D2"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_CF6C37BE38C62B54DD7908999196563F"
         "OwnerKey" = "8:_2EE7CFD2073F48EDB810EFF7554139D2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DA137254C4836E29E590FF06C77EE86E"
+        "OwnerKey" = "8:_2EE7CFD2073F48EDB810EFF7554139D2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4FDAEC427901B05DDFF59DF35AE195A9"
+        "OwnerKey" = "8:_CF6C37BE38C62B54DD7908999196563F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4C29264AF0E5BECC7B21B18B4CA291BD"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -192,14 +192,14 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4FDAEC427901B05DDFF59DF35AE195A9"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4C29264AF0E5BECC7B21B18B4CA291BD"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WallStreetLow, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:WallStreetLow, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4FDAEC427901B05DDFF59DF35AE195A9"
+                    "_4C29264AF0E5BECC7B21B18B4CA291BD"
                     {
                     "Name" = "8:WallStreetLow.dll"
                     "Attributes" = "3:512"
@@ -223,14 +223,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DA137254C4836E29E590FF06C77EE86E"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CF6C37BE38C62B54DD7908999196563F"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WallStreetNetwork, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:WallStreetNetwork, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_DA137254C4836E29E590FF06C77EE86E"
+                    "_CF6C37BE38C62B54DD7908999196563F"
                     {
                     "Name" = "8:WallStreetNetwork.dll"
                     "Attributes" = "3:512"
@@ -320,14 +320,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:The Wallstreet Game"
-        "ProductCode" = "8:{C56328E1-9F6D-4CE7-9F26-57B1C7EC8CA7}"
-        "PackageCode" = "8:{DF3D4F85-290B-4BC8-80F2-DECC4393FEEA}"
+        "ProductCode" = "8:{DA7EE579-6F81-432B-86E8-9E23AAEA46F2}"
+        "PackageCode" = "8:{CA35A52F-1A15-46F1-962E-E4CCB5115CA5}"
         "UpgradeCode" = "8:{C9946E42-A5EC-4C56-B5AE-AB6C3C893274}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.1.0"
+        "ProductVersion" = "8:1.1.2"
         "Manufacturer" = "8:OS Development Group"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
