@@ -946,7 +946,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        private void UpdatePlayerInformations(System.Windows.Forms.Panel panel)
+        private void UpdatePlayerInformations(System.Windows.Forms.Panel panel, Players computerplayers)
         {
             try
             {
@@ -994,6 +994,22 @@ namespace OSDevGrp.WallStreetGame
                             {
                                 combobox.SelectedIndex = panelno - 2;
                                 player = (Player) combobox.SelectedItem;
+                            }
+                        }
+                        if (computerplayers != null && combobox.SelectedItem != null)
+                        {
+                            if (computerplayers.Count > 0)
+                            {
+                                player = (Player) combobox.SelectedItem;
+                                if (player.IsComputer)
+                                {
+                                    if (combobox.Items.Contains(computerplayers[0]))
+                                    {
+                                        combobox.SelectedIndex = combobox.Items.IndexOf(computerplayers[0]);
+                                        player = (Player) combobox.SelectedItem;
+                                        computerplayers.RemoveAt(0);
+                                    }
+                                }
                             }
                         }
                     }
@@ -1112,10 +1128,12 @@ namespace OSDevGrp.WallStreetGame
                         }
                     }
                 }
-                this.UpdatePlayerInformations(this.panelPlayer1);
-                this.UpdatePlayerInformations(this.panelPlayer2);
-                this.UpdatePlayerInformations(this.panelPlayer3);
-                this.UpdatePlayerInformations(this.panelPlayer4);
+                Players computerplayers = (Players) Game.Players.Clone();
+                computerplayers.Sort();
+                this.UpdatePlayerInformations(this.panelPlayer1, computerplayers);
+                this.UpdatePlayerInformations(this.panelPlayer2, computerplayers);
+                this.UpdatePlayerInformations(this.panelPlayer3, computerplayers);
+                this.UpdatePlayerInformations(this.panelPlayer4, computerplayers);
                 if (this.StockForms.Count > 0)
                 {
                     foreach (StockForm stockform in this.StockForms)
@@ -2017,7 +2035,7 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
-                this.UpdatePlayerInformations((System.Windows.Forms.Panel) ((System.Windows.Forms.ComboBox) sender).Parent.Parent);
+                this.UpdatePlayerInformations((System.Windows.Forms.Panel) ((System.Windows.Forms.ComboBox) sender).Parent.Parent, null);
                 this.Cursor = System.Windows.Forms.Cursors.Default;
             }
             catch (System.Exception ex)

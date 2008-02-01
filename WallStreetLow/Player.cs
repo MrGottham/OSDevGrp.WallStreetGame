@@ -85,7 +85,7 @@ namespace OSDevGrp.WallStreetGame
                         if (this.Value > other.Value)
                             return -1;
                         else if (this.Value == other.Value)
-                            return 0;
+                            return this.Id.CompareTo(other.Id);
                         else
                             return 1;
                     }
@@ -95,12 +95,12 @@ namespace OSDevGrp.WallStreetGame
                     }
                     else if (!this.IsComputer && other.IsComputer)
                     {
-                        return 0;
+                        return 1;
                     }
                     else if (this.Value > other.Value)
                         return -1;
                     else if (this.Value == other.Value)
-                        return 0;
+                        return this.Id.CompareTo(other.Id);
                     else
                         return 1;
                 }
