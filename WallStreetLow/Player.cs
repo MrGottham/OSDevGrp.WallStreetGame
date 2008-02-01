@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Player : System.Object, IResetable, IPlayable, IStoreable, INetworkable
+    public class Player : System.Object, IComparable<Player>, IResetable, IPlayable, IStoreable, INetworkable
     {
         private const double CAPITAL_INITIALIZE = 100000D;
         private const int MAX_STOCKS_TO_BUY = 1000;
@@ -72,6 +72,46 @@ namespace OSDevGrp.WallStreetGame
                 throw ex;
             }
         }
+
+        #region IComparable<Player> Members
+        public int CompareTo(Player other)
+        {
+            try
+            {
+                if (this != other)
+                {
+                    if (this.IsComputer && other.IsComputer)
+                    {
+                        if (this.Value > other.Value)
+                            return -1;
+                        else if (this.Value == other.Value)
+                            return 0;
+                        else
+                            return 1;
+                    }
+                    else if (this.IsComputer && !other.IsComputer)
+                    {
+                        return -1;
+                    }
+                    else if (!this.IsComputer && other.IsComputer)
+                    {
+                        return 0;
+                    }
+                    else if (this.Value > other.Value)
+                        return -1;
+                    else if (this.Value == other.Value)
+                        return 0;
+                    else
+                        return 1;
+                }
+                return 0;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
 
         public int Id
         {

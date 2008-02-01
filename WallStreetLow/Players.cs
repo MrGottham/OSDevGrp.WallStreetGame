@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OSDevGrp.WallStreetGame
 {
-    public class Players : System.Collections.Generic.List<Player>, IResetable, IPlayable, IStoreable, INetworkable
+    public class Players : System.Collections.Generic.List<Player>, ICloneable, IResetable, IPlayable, IStoreable, INetworkable
     {
         private System.Collections.Generic.List<Player> _NewPlayers = null;
         private System.Collections.Generic.List<Player> _DisconnectedPlayers = null;
@@ -21,6 +21,23 @@ namespace OSDevGrp.WallStreetGame
                 throw ex;
             }
         }
+
+        #region ICloneable Members
+        public object Clone()
+        {
+            try
+            {
+                Players players = new Players();
+                foreach (Player player in this)
+                    players.Add(player);
+                return players;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
 
         public System.Collections.Generic.List<Player> NewPlayers
         {
