@@ -7,7 +7,7 @@ namespace OSDevGrp.WallStreetGame
     public class Player : System.Object, IComparable<Player>, IResetable, IPlayable, IStoreable, INetworkable
     {
         private const double CAPITAL_INITIALIZE = 100000D;
-        private const int MAX_STOCKS_TO_BUY = 1000;
+        private const int MAX_STOCKS_TO_BUY = 25000;
         private const int MAX_BUY_PR_EPOCH = 3;
         private const int MAX_SELL_PR_EPOCH = 3;
 
@@ -299,6 +299,7 @@ namespace OSDevGrp.WallStreetGame
                     {
                         StockIndex lastindex = null;
                         double lastpriceaverage = 0D;
+                        double savecapital = 0D;
                         foreach (DepositContent content in Deposit.Values)
                         {
                             if (content.Stock.StockIndexes.Count > 0)
@@ -310,11 +311,13 @@ namespace OSDevGrp.WallStreetGame
                                     {
                                         lastindex = e.Current.Value;
                                         lastpriceaverage = lastindex.PriceAverage;
+                                        savecapital = (lastindex.PriceAverage * 15);
                                     }
                                     else if (e.Current.Value.Id != lastindex.Id)
                                     {
                                         lastindex = e.Current.Value;
                                         lastpriceaverage = lastindex.PriceAverage;
+                                        savecapital = (lastindex.PriceAverage * 15);
                                     }
                                     // Handle computer players deposit.
                                     int buyprocentlow = 0, buyprocentmiddle = 0, buyprocenthigh = 0, maxbuyprepoch = MAX_BUY_PR_EPOCH, stockstobuy = 0;
@@ -357,12 +360,12 @@ namespace OSDevGrp.WallStreetGame
                                     // Try to buy stocks.
                                     if (content.Stock.Price < content.Stock.MinPrice * 4 && content.Stock.Available > 0)
                                     {
-                                        if (maxbuyprepoch > 0)
+                                        if (random.Next(100) > buyprocentlow / 1.75 && maxbuyprepoch > 0)
                                         {
                                             stockstobuy = MAX_STOCKS_TO_BUY;
                                             if (stockstobuy > content.Stock.Available)
                                                 stockstobuy = content.Stock.Available;
-                                            while (stockstobuy > 0 && content.Stock.CalculatePrice(stockstobuy) + content.Stock.CalculateBrokerage(marketstate, stockstobuy) > Capital)
+                                            while (stockstobuy > 0 && content.Stock.CalculatePrice(stockstobuy) + content.Stock.CalculateBrokerage(marketstate, stockstobuy) > Capital - savecapital)
                                                 stockstobuy = (int) System.Math.Floor((double) (stockstobuy / 10));
                                             if (stockstobuy > 5)
                                             {
@@ -376,7 +379,7 @@ namespace OSDevGrp.WallStreetGame
                                             }
                                         }
                                     }
-                                    else if (content.Stock.Price < lastpriceaverage / 8 && content.Stock.Available > 0)
+                                    else if (content.Stock.Price < lastpriceaverage / 8 && (content.LastSellPrice == 0 || content.Stock.Price < content.LastSellPrice || content.Stock.Price > content.LastSellPrice * 1.5) && content.Stock.Available > 0)
                                     {
                                         // Try to buy stocks.
                                         if (random.Next(100) > buyprocentlow && maxbuyprepoch > 0)
@@ -384,7 +387,7 @@ namespace OSDevGrp.WallStreetGame
                                             stockstobuy = MAX_STOCKS_TO_BUY;
                                             if (stockstobuy > content.Stock.Available)
                                                 stockstobuy = content.Stock.Available;
-                                            while (stockstobuy > 0 && content.Stock.CalculatePrice(stockstobuy) + content.Stock.CalculateBrokerage(marketstate, stockstobuy) > Capital)
+                                            while (stockstobuy > 0 && content.Stock.CalculatePrice(stockstobuy) + content.Stock.CalculateBrokerage(marketstate, stockstobuy) > Capital - savecapital)
                                                 stockstobuy = (int) System.Math.Floor((double) (stockstobuy / 10));
                                             if (stockstobuy > 5)
                                             {
@@ -398,7 +401,7 @@ namespace OSDevGrp.WallStreetGame
                                             }
                                         }
                                     }
-                                    else if (content.Stock.Price < lastpriceaverage / 4 && content.Stock.Available > 0)
+                                    else if (content.Stock.Price < lastpriceaverage / 4 && (content.LastSellPrice == 0 || content.Stock.Price < content.LastSellPrice || content.Stock.Price > content.LastSellPrice * 1.5) && content.Stock.Available > 0)
                                     {
                                         // Try to buy stocks.
                                         if (random.Next(100) > buyprocentmiddle && maxbuyprepoch > 0)
@@ -406,7 +409,7 @@ namespace OSDevGrp.WallStreetGame
                                             stockstobuy = MAX_STOCKS_TO_BUY;
                                             if (stockstobuy > content.Stock.Available)
                                                 stockstobuy = content.Stock.Available;
-                                            while (stockstobuy > 0 && content.Stock.CalculatePrice(stockstobuy) + content.Stock.CalculateBrokerage(marketstate, stockstobuy) > Capital)
+                                            while (stockstobuy > 0 && content.Stock.CalculatePrice(stockstobuy) + content.Stock.CalculateBrokerage(marketstate, stockstobuy) > Capital - savecapital)
                                                 stockstobuy = (int) System.Math.Floor((double) (stockstobuy / 10));
                                             if (stockstobuy >= 10)
                                             {
@@ -424,7 +427,7 @@ namespace OSDevGrp.WallStreetGame
                                             }
                                         }
                                     }
-                                    else if (content.Stock.Price < lastpriceaverage && content.Stock.Available > 0)
+                                    else if (content.Stock.Price < lastpriceaverage && (content.LastSellPrice == 0 || content.Stock.Price < content.LastSellPrice || content.Stock.Price > content.LastSellPrice * 1.5) && content.Stock.Available > 0)
                                     {
                                         // Try to buy stocks.
                                         if (random.Next(100) > buyprocenthigh && maxbuyprepoch > 0)
@@ -432,7 +435,7 @@ namespace OSDevGrp.WallStreetGame
                                             stockstobuy = MAX_STOCKS_TO_BUY;
                                             if (stockstobuy > content.Stock.Available)
                                                 stockstobuy = content.Stock.Available;
-                                            while (stockstobuy > 0 && content.Stock.CalculatePrice(stockstobuy) + content.Stock.CalculateBrokerage(marketstate, stockstobuy) > Capital)
+                                            while (stockstobuy > 0 && content.Stock.CalculatePrice(stockstobuy) + content.Stock.CalculateBrokerage(marketstate, stockstobuy) > Capital - savecapital)
                                                 stockstobuy = (int) System.Math.Floor((double) (stockstobuy / 10));
                                             if (stockstobuy >= 20)
                                             {
@@ -451,7 +454,22 @@ namespace OSDevGrp.WallStreetGame
                                         }
                                     }
                                     // Try to sell stocks.
-                                    if (content.Count > 0 && content.Stock.Price > content.LastBuyPrice * 2.00)
+                                    if (marketstate.State == MarketStateType.Depression && content.Stock.Price < content.LastBuyPrice / 4 && content.LastBuyPrice > content.Stock.MinPrice * 50)
+                                    {
+                                        // No profit expected.
+                                        stockstosell = content.Count;
+                                        if (stockstosell > 5)
+                                        {
+                                            content.Sell(marketstate, random.Next(stockstosell));
+                                            maxsellprepoch -= 1;
+                                        }
+                                        else
+                                        {
+                                            content.Sell(marketstate, stockstosell);
+                                            maxsellprepoch -= 1;
+                                        }
+                                    }
+                                    else if (content.Count > 0 && content.Stock.Price > content.LastBuyPrice * 2 && content.Stock.Price > content.Stock.MinPrice * 5)
                                     {
                                         // Try to sell stocks.
                                         if (random.Next(100) > sellprocentlow && maxsellprepoch > 0)
@@ -469,7 +487,7 @@ namespace OSDevGrp.WallStreetGame
                                             }
                                         }
                                     }
-                                    else if (content.Count > 0 && content.Stock.Price > content.LastBuyPrice * 1.50)
+                                    else if (content.Count > 0 && content.Stock.Price > content.LastBuyPrice * 1.5 && content.Stock.Price > content.Stock.MinPrice * 5)
                                     {
                                         // Try to sell stocks.
                                         if (random.Next(100) > sellprocentmiddle && maxsellprepoch > 0)
@@ -496,7 +514,7 @@ namespace OSDevGrp.WallStreetGame
                                             }
                                         }
                                     }
-                                    else if (content.Count > 0 && content.Stock.Price > content.LastBuyPrice * 1.25)
+                                    else if (content.Count > 0 && content.Stock.Price > content.LastBuyPrice * 1.25 && content.Stock.Price > content.Stock.MinPrice * 5)
                                     {
                                         // Try to sell stocks.
                                         if (random.Next(100) > sellprocenthigh && maxsellprepoch > 0)

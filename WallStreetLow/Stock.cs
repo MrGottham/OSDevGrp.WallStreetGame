@@ -329,8 +329,8 @@ namespace OSDevGrp.WallStreetGame
                 switch (marketstate.State)
                 {
                     case MarketStateType.Normal:
-                        d_up = (Price / 100) * 5;
-                        d_down = (Price / 100) * 5;
+                        d_up = (Price / 100) * 7;
+                        d_down = (Price / 100) * 7;
                         i_up_down = (Available / 100) * 10;
                         if (d_up <= MinPrice)
                             d_up = MinPrice;
@@ -338,8 +338,8 @@ namespace OSDevGrp.WallStreetGame
                             d_down = MinPrice;
                         break;
                     case MarketStateType.Depression:
-                        d_up = (Price / 100) * 2.5;
-                        d_down = (Price / 100) * 5;
+                        d_up = (Price / 100) * 3.5;
+                        d_down = (Price / 100) * 7;
                         i_up_down = (Available / 100) * 5;
                         if (d_up <= MinPrice)
                             d_up = MinPrice;
@@ -347,8 +347,8 @@ namespace OSDevGrp.WallStreetGame
                             d_down = MinPrice * 2;
                         break;
                     case MarketStateType.Boom:
-                        d_up = (Price / 100) * 5;
-                        d_down = (Price / 100) * 2.5;
+                        d_up = (Price / 100) * 7;
+                        d_down = (Price / 100) * 3.5;
                         i_up_down = (Available / 100) * 15;
                         if (d_up <= MinPrice * 2)
                             d_up = MinPrice * 2;

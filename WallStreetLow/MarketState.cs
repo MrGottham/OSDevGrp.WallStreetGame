@@ -102,7 +102,7 @@ namespace OSDevGrp.WallStreetGame
                             while (Epochs == 0)
                                 Epochs = random.Next(20);
                         }
-                        else if (r > 90)
+                        else if (r > 85)
                         {
                             State = MarketStateType.Boom;
                             while (Epochs == 0)
