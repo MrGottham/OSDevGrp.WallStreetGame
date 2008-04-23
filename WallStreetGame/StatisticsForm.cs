@@ -434,11 +434,9 @@ namespace OSDevGrp.WallStreetGame
         {
             try
             {
-                if (sender is System.Windows.Forms.ComboBox)
+                if (sender is System.Windows.Forms.CheckBox)
                 {
-                    System.Windows.Forms.ComboBox combobox = (System.Windows.Forms.ComboBox) sender;
-                    if (combobox.DisplayMember.Length > 0)
-                        this.panelGraph.Refresh();
+                    this.panelGraph.Refresh();
                 }
             }
             catch (System.Exception ex)
