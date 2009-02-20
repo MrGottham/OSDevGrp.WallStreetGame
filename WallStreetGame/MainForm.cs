@@ -386,7 +386,7 @@ namespace OSDevGrp.WallStreetGame
             }
         }
 
-        static public string ProductName
+        static public new string ProductName
         {
             get
             {

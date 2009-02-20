@@ -178,7 +178,7 @@
             // 
             // toolStripMenuItemDeposit
             // 
-            this.toolStripMenuItemDeposit.Image = global::OSDevGrp.Properties.Resources.StockHS;
+            this.toolStripMenuItemDeposit.Image = global::OSDevGrp.WallStreetGame.Properties.Resources.StockHS;
             this.toolStripMenuItemDeposit.Name = "toolStripMenuItemDeposit";
             this.toolStripMenuItemDeposit.Size = new System.Drawing.Size(149, 22);
             this.toolStripMenuItemDeposit.Text = "&Aktier i depot";
@@ -188,7 +188,7 @@
             this.toolStripMenuItemStatistics.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemValueLineGraph,
             this.toolStripMenuItemValueBarGraph});
-            this.toolStripMenuItemStatistics.Image = global::OSDevGrp.Properties.Resources.StatisticsHS;
+            this.toolStripMenuItemStatistics.Image = global::OSDevGrp.WallStreetGame.Properties.Resources.StatisticsHS;
             this.toolStripMenuItemStatistics.Name = "toolStripMenuItemStatistics";
             this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(149, 22);
             this.toolStripMenuItemStatistics.Text = "&Statistikker";
@@ -237,7 +237,7 @@
             // 
             // toolStripMenuItemNewGame
             // 
-            this.toolStripMenuItemNewGame.Image = global::OSDevGrp.Properties.Resources.NewDocumentHS;
+            this.toolStripMenuItemNewGame.Image = global::OSDevGrp.WallStreetGame.Properties.Resources.NewDocumentHS;
             this.toolStripMenuItemNewGame.Name = "toolStripMenuItemNewGame";
             this.toolStripMenuItemNewGame.Size = new System.Drawing.Size(162, 22);
             this.toolStripMenuItemNewGame.Text = "&Nyt spil";
@@ -250,7 +250,7 @@
             // 
             // toolStripMenuItemOpen
             // 
-            this.toolStripMenuItemOpen.Image = global::OSDevGrp.Properties.Resources.OpenHS;
+            this.toolStripMenuItemOpen.Image = global::OSDevGrp.WallStreetGame.Properties.Resources.OpenHS;
             this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
             this.toolStripMenuItemOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.toolStripMenuItemOpen.Size = new System.Drawing.Size(162, 22);
@@ -259,7 +259,7 @@
             // 
             // toolStripMenuItemSave
             // 
-            this.toolStripMenuItemSave.Image = global::OSDevGrp.Properties.Resources.SaveHS;
+            this.toolStripMenuItemSave.Image = global::OSDevGrp.WallStreetGame.Properties.Resources.SaveHS;
             this.toolStripMenuItemSave.Name = "toolStripMenuItemSave";
             this.toolStripMenuItemSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.toolStripMenuItemSave.Size = new System.Drawing.Size(162, 22);
@@ -308,7 +308,7 @@
             // 
             // toolStripMenuItemTrade
             // 
-            this.toolStripMenuItemTrade.Image = global::OSDevGrp.Properties.Resources.StockHS;
+            this.toolStripMenuItemTrade.Image = global::OSDevGrp.WallStreetGame.Properties.Resources.StockHS;
             this.toolStripMenuItemTrade.Name = "toolStripMenuItemTrade";
             this.toolStripMenuItemTrade.Size = new System.Drawing.Size(178, 22);
             this.toolStripMenuItemTrade.Text = "&Købe / sælge aktier";
@@ -321,7 +321,7 @@
             // 
             // toolStripMenuItemPause
             // 
-            this.toolStripMenuItemPause.Image = global::OSDevGrp.Properties.Resources.PauseHS;
+            this.toolStripMenuItemPause.Image = global::OSDevGrp.WallStreetGame.Properties.Resources.PauseHS;
             this.toolStripMenuItemPause.Name = "toolStripMenuItemPause";
             this.toolStripMenuItemPause.Size = new System.Drawing.Size(178, 22);
             this.toolStripMenuItemPause.Text = "&Pause";
@@ -329,7 +329,7 @@
             // 
             // toolStripMenuItemContinue
             // 
-            this.toolStripMenuItemContinue.Image = global::OSDevGrp.Properties.Resources.PlayHS;
+            this.toolStripMenuItemContinue.Image = global::OSDevGrp.WallStreetGame.Properties.Resources.PlayHS;
             this.toolStripMenuItemContinue.Name = "toolStripMenuItemContinue";
             this.toolStripMenuItemContinue.Size = new System.Drawing.Size(178, 22);
             this.toolStripMenuItemContinue.Text = "&Fortsæt";

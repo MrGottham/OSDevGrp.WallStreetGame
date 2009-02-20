@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("OS Development Group")]
 [assembly: AssemblyProduct("Wall Street Game")]
-[assembly: AssemblyCopyright("Copyright © 2007 OS Development Group")]
+[assembly: AssemblyCopyright("Copyright © 2009 OS Development Group")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.1.3.0")]
-[assembly: AssemblyFileVersion("1.1.3.0")]
+[assembly: AssemblyVersion("1.1.4.0")]
+[assembly: AssemblyFileVersion("1.1.4.0")]
