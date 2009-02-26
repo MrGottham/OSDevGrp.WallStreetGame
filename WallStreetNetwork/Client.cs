@@ -8,7 +8,7 @@ namespace OSDevGrp.WallStreetGame
     public class Client : Communicator, IDisposable
     {
         private const byte CLIENTVERSION_MAJOR = 1;
-        private const byte CLIENTVERSION_MINOR = 0;
+        private const byte CLIENTVERSION_MINOR = 1;
 
         private int _WaitForServers = 0;
         private System.Threading.ManualResetEvent _ManuelResetEvent = null;

@@ -16,6 +16,8 @@ namespace OSDevGrp.WallStreetGame
         private string _Name = null;
         private StockIndexes _StockIndexes = null;
         private DoubleHistory _PriceHistory = null;
+        private double _MinPrice = MIN_PRICE;
+        private double _MaxPrice = MAX_PRICE;
         private double _Price = MIN_PRICE;
         private int _Available = MIN_AVAILABLE;
         private int _OwnedByPlayers = 0;
@@ -121,7 +123,34 @@ namespace OSDevGrp.WallStreetGame
         {
             get
             {
-                return MIN_PRICE;
+                return _MinPrice;
+            }
+            private set
+            {
+                _MinPrice = value * 100;
+                double d = _MinPrice % 100;
+                if (d >= 0 && d < 26)
+                {
+                    _MinPrice = (_MinPrice - d + (d >= 13 ? 25 : 0)) / 100;
+                }
+                else if (d >= 26 && d < 51)
+                {
+                    _MinPrice = (_MinPrice - d + (d >= 38 ? 50 : 25)) / 100;
+                }
+                else if (d >= 51 && d < 75)
+                {
+                    _MinPrice = (_MinPrice - d + (d >= 63 ? 75 : 50)) / 100;
+                }
+                else if (d >= 75 && d < 100)
+                {
+                    _MinPrice = (_MinPrice - d + (d >= 88 ? 100 : 75)) / 100;
+                }
+                if (_MinPrice < MIN_PRICE)
+                    _MinPrice = MIN_PRICE;
+                if (_MinPrice > MAX_PRICE)
+                    _MinPrice = MAX_PRICE;
+                if (_MinPrice > MaxPrice)
+                    _MinPrice = MaxPrice;
             }
         }
 
@@ -129,7 +158,34 @@ namespace OSDevGrp.WallStreetGame
         {
             get
             {
-                return MAX_PRICE;
+                return _MaxPrice;
+            }
+            private set
+            {
+                _MaxPrice = value * 100;
+                double d = _MaxPrice % 100;
+                if (d >= 0 && d < 26)
+                {
+                    _MaxPrice = (_MaxPrice - d + (d >= 13 ? 25 : 0)) / 100;
+                }
+                else if (d >= 26 && d < 51)
+                {
+                    _MaxPrice = (_MaxPrice - d + (d >= 38 ? 50 : 25)) / 100;
+                }
+                else if (d >= 51 && d < 75)
+                {
+                    _MaxPrice = (_MaxPrice - d + (d >= 63 ? 75 : 50)) / 100;
+                }
+                else if (d >= 75 && d < 100)
+                {
+                    _MaxPrice = (_MaxPrice - d + (d >= 88 ? 100 : 75)) / 100;
+                }
+                if (_MaxPrice < MIN_PRICE)
+                    _MaxPrice = MIN_PRICE;
+                if (_MaxPrice > MAX_PRICE)
+                    _MaxPrice = MAX_PRICE;
+                if (_MaxPrice < MinPrice)
+                    _MaxPrice = MinPrice;
             }
         }
 
@@ -307,6 +363,8 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 PriceHistory.Reset(random);
+                MinPrice = MIN_PRICE + (random.Next(1000) / 100);
+                MaxPrice = MAX_PRICE - (random.Next(1000) / 100);
                 if (random.Next(100) > 95)
                     Price = random.Next(MAX_INITIALIZE_PRICE * 5) + random.NextDouble();
                 else
@@ -325,13 +383,15 @@ namespace OSDevGrp.WallStreetGame
             try
             {
                 double d_up = 0D, d_down = 0D;
-                int i_up_down = 0;
+                int i_up_down = 0, i_min_adjust = 0, i_max_adjust = 0;
                 switch (marketstate.State)
                 {
                     case MarketStateType.Normal:
                         d_up = (Price / 100) * 7;
                         d_down = (Price / 100) * 7;
                         i_up_down = (Available / 100) * 10;
+                        i_min_adjust = 1000;
+                        i_max_adjust = 1000;
                         if (d_up <= MinPrice)
                             d_up = MinPrice;
                         if (d_down <= MinPrice)
@@ -341,6 +401,8 @@ namespace OSDevGrp.WallStreetGame
                         d_up = (Price / 100) * 3.5;
                         d_down = (Price / 100) * 7;
                         i_up_down = (Available / 100) * 5;
+                        i_min_adjust = 1500;
+                        i_max_adjust = 500;
                         if (d_up <= MinPrice)
                             d_up = MinPrice;
                         if (d_down <= MinPrice * 2)
@@ -350,6 +412,8 @@ namespace OSDevGrp.WallStreetGame
                         d_up = (Price / 100) * 7;
                         d_down = (Price / 100) * 3.5;
                         i_up_down = (Available / 100) * 15;
+                        i_min_adjust = 500;
+                        i_max_adjust = 1500;
                         if (d_up <= MinPrice * 2)
                             d_up = MinPrice * 2;
                         if (d_down <= MinPrice)
@@ -358,6 +422,8 @@ namespace OSDevGrp.WallStreetGame
                 }
                 if (i_up_down <= 0)
                     i_up_down = MAX_AVAILABLE / 1000;
+                MinPrice += (random.Next(i_max_adjust) / 100) - (random.Next(i_min_adjust) / 100);
+                MaxPrice += (random.Next(i_max_adjust) / 100) - (random.Next(i_min_adjust) / 100);
                 Price += random.Next(d_up > int.MaxValue ? int.MaxValue : (int) d_up) - random.Next(d_down > int.MaxValue ? int.MaxValue : (int) d_down);
                 Available += random.Next(i_up_down) - random.Next(i_up_down);
             }
@@ -382,6 +448,11 @@ namespace OSDevGrp.WallStreetGame
                             fs.WriteString(stockindex.Id);
                     }
                     PriceHistory.Save(fv, fs);
+                    if (fv.Major > 0 && fv.Minor >= 1)
+                    {
+                        fs.WriteDouble(MinPrice);
+                        fs.WriteDouble(MaxPrice);
+                    }
                     fs.WriteDouble(Price);
                     fs.WriteInt(Available);
                     fs.WriteInt(OwnedByPlayers);
@@ -417,6 +488,16 @@ namespace OSDevGrp.WallStreetGame
                         }
                     }
                     PriceHistory.Load(fv, fs, obj);
+                    if (fv.Major > 0 && fv.Minor >= 1)
+                    {
+                        MinPrice = fs.ReadDouble();
+                        MaxPrice = fs.ReadDouble();
+                    }
+                    else
+                    {
+                        MinPrice = MIN_PRICE;
+                        MaxPrice = MAX_PRICE;
+                    }
                     Price = fs.ReadDouble();
                     if (PriceHistory.Count > 0)
                         PriceHistory.RemoveAt(PriceHistory.Count - 1);
@@ -458,6 +539,16 @@ namespace OSDevGrp.WallStreetGame
                         }
                         PriceHistory.ClientCommunication(serverversion, communicator, full, obj);
                     }
+                    if (serverversion.Major > 0 && serverversion.Minor >= 1)
+                    {
+                        MinPrice = communicator.ReceiveDouble();
+                        MaxPrice = communicator.ReceiveDouble();
+                    }
+                    else
+                    {
+                        MinPrice = MIN_PRICE;
+                        MaxPrice = MAX_PRICE;
+                    }
                     Price = communicator.ReceiveDouble();
                     if (full && PriceHistory.Count > 0)
                         PriceHistory.RemoveAt(PriceHistory.Count - 1);
@@ -489,6 +580,11 @@ namespace OSDevGrp.WallStreetGame
                                 communicator.SendString(stockindex.Id);
                         }
                         PriceHistory.ServerCommunication(clientversion, communicator, full, obj);
+                    }
+                    if (clientversion.Major > 0 && clientversion.Minor >= 1)
+                    {
+                        communicator.SendDouble(MinPrice);
+                        communicator.SendDouble(MaxPrice);
                     }
                     communicator.SendDouble(Price);
                     communicator.SendInt(Available);

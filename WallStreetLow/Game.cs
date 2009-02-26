@@ -8,7 +8,7 @@ namespace OSDevGrp.WallStreetGame
     {
         private const string SETUP_FILENAME = "WallStreetGame.xml";
         private const byte FILEVERSION_MAJOR = 1;
-        private const byte FILEVERSION_MINOR = 0;
+        private const byte FILEVERSION_MINOR = 1;
         private const int PLAY_TIMER_INTERVAL = 30000;
 
         private System.Random _Random = null;

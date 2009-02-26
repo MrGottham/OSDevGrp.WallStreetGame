@@ -9,7 +9,7 @@ namespace OSDevGrp.WallStreetGame
     public class Server : Communicator, IDisposable
     {
         private const byte SERVERVERSION_MAJOR = 1;
-        private const byte SERVERVERSION_MINOR = 0;
+        private const byte SERVERVERSION_MINOR = 1;
 
         private bool _Running = false;
         private int _MaxConnections = 0;
